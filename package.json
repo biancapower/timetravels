@@ -1,0 +1,14 @@
+{
+  "name": "timetravels",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A time calculator you talk to in one sentence.",
+  "license": "MIT",
+  "author": "Bianca Power",
+  "repository": "github:biancapower/timetravels",
+  "type": "module",
+  "packageManager": "pnpm@12.9.1",
+  "engines": {
+    "node": ">=24"
+  }
+}
