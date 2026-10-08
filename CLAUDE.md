@@ -23,9 +23,11 @@ For any PR with a 🔴 or 🟡 item, offer a short teach-back: the maintainer ex
 
 ## Testing
 
-- `src/time/` is the time logic: plain TypeScript, no React imports, one entry file, its own tests. **Test-first here**: write the failing test, commit it, then the implementation, as separate commits inside the PR. `main` stays green on its first-parent line because PRs land with a merge commit (decision 0004).
+- `src/time/` is the time logic: plain TypeScript, no React imports, one entry file, its own tests. **Test-first here**: write the test, run it and see it fail, then write the implementation. Red is a working-tree state, never a commit: each commit holds the test and the code that passes it, and `pnpm check` is green on every commit. PRs land with a merge commit so the small commits survive (decision 0004).
 - The interface is test-alongside: build the screen, check it live in Chrome (strategically, about once per screen or tricky interaction, because it is token-heavy), then write the Playwright test from the issue's acceptance criteria, not from what happened to work.
 - Flake policy: Vitest `sequence.shuffle` on; Playwright `retries: 0`; a lint rule bans `setTimeout` in tests; web-first assertions, never waits. Flakiness is fixed before merge, not retried.
+- **User testing is a human step, not a Claude step.** Before any release, the maintainer uses the app on a real phone and a real desktop browser, offline and online, working through each sentence in the release. Claude's part: before the test, draft a short script from the issues' acceptance criteria (what to try, what should happen, what to look for); after it, turn every finding into an issue, verbatim where possible, labelled by severity, and never fix anything from the test without an issue. A Playwright test passing is not evidence that the interface is usable; only this step is. Findings that change the design are 🟡 items on the PR that addresses them.
+- Stubs are fine, skips are not. A planned case may be committed as `test.todo('…')`, a name with no body, so the acceptance criteria are in the suite before the code is. `test.skip` and `test.only` never reach `main`: a disabled test with a body is a bug with no issue. The check command fails on `test.only`.
 
 ## Commands
 
