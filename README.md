@@ -10,11 +10,21 @@ Tap an underlined word to change it; the answer sits underneath and updates as y
 
 ## Running it
 
-Comes with the scaffold (issue #1).
+Nothing to run yet.
 
 ## Stack
 
-React 19, TypeScript (strict), Vite, the Temporal API with a polyfill where it's missing, Vitest and Playwright, ESLint and Prettier, pnpm, custom CSS with Open Props, a headless component library for the pickers, Cloudflare Pages.
+- React 19
+- TypeScript
+- Vite
+- Temporal API, with a polyfill where it's missing
+- Vitest and Playwright
+- ESLint and Prettier
+- pnpm
+- Custom CSS with Open Props; a headless component library for the pickers
+- Cloudflare Pages
+
+Time-zone rules come from the browser's own `Intl` data, or from the polyfill where Temporal isn't native. That's why the app works offline, and why zone rules update with the browser rather than with the app.
 
 ## Documentation
 
@@ -23,4 +33,4 @@ React 19, TypeScript (strict), Vite, the Temporal API with a polyfill where it's
 
 ## Licence
 
-MIT for the code. Time-zone data comes from the IANA Time Zone Database through the browser's own `Intl` support and the Temporal polyfill.
+MIT for the code.

@@ -13,4 +13,4 @@ Decided one point at a time on 2026-10-05, each after weighing the alternatives.
 9. **Component library: a headless one** (React Aria or Radix, chosen at the first picker issue) for picker behaviour only; styling stays in the project's CSS.
 10. **CI: one GitHub Actions workflow** running `pnpm check`; path filters so docs-only changes skip tests; a single required gate job; 15-minute timeouts; a weekly scheduled run; Cloudflare preview deploys per PR.
 
-**Status.** Approved by the maintainer, 2026-10-05.
+**Status.** Approved by @biancapower, 2026-10-05.

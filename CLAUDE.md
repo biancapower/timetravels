@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-TimeTravels: a time calculator with a one-sentence interface. React 19, TypeScript strict, Vite, Temporal, pnpm. Read `README.md`, then `docs/decisions/README.md`. The decisions are not up for quiet revision.
+TimeTravels: a time calculator with a one-sentence interface. React 19, TypeScript strict, Vite, Temporal, pnpm. Read `README.md`, then `docs/decisions/README.md`. Follow the recorded decisions. Changing one is itself a 🔴 decision: raise it, get a yes, add a new record that supersedes the old one.
 
 ## Claude never
 
@@ -15,7 +15,7 @@ Enforced by `.claude/settings.json` (a `permissions.deny` for `.env*` reads and 
 
 Decisions have tiers, flagged with emoji that are used for nothing else.
 
-- 🔴 **Must confirm before doing:** architecture and module boundaries, dependencies added or removed, the time library, licences, repository visibility, release tags, deployment targets, anything that changes a claim in the README. Explain the options and the trade-off plainly, get an explicit yes from the maintainer, then record it in `docs/decisions/` with "approved by the maintainer, <date>".
+- 🔴 **Must confirm before doing:** architecture and module boundaries, dependencies added or removed, the time library, licences, repository visibility, release tags, deployment targets, anything that changes a claim in the README. Explain the options and the trade-off plainly, get an explicit yes from the maintainer, then record it in `docs/decisions/` with "approved by @<the maintainer's GitHub handle>, <date>".
 - 🟡 **Review at the PR:** notable but reversible choices inside an issue's scope. List them under a "Decisions in this PR" heading in the PR description. Any loosening of a strictness setting (TypeScript flags, lint rules, the no-retries test policy) is a 🟡 item with its reason.
 - Everything else is routine and lands in the PR like normal code.
 
