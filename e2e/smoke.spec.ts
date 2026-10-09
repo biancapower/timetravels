@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('the page shows the sentence and a time', async ({ page }) => {
   await page.goto('/');
+  await expect(page).toHaveTitle('TimeTravels');
   await expect(
     page.getByRole('heading', { name: 'What time is it now here?' }),
   ).toBeVisible();
