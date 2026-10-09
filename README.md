@@ -6,7 +6,7 @@ A time calculator you talk to in one sentence.
 
 Tap an underlined word to change it; the answer sits underneath and updates as you go. Time-zone conversion, hours from now and ago, and warnings when a daylight-saving change is about to move the goalposts. A web app you can install on your phone, which works offline.
 
-**Status:** pre-release. The app shows a placeholder; the first issues are being worked through.
+**Status:** pre-release. The app answers the first sentence, "What time is it now here?"; the rest of release 0.1.0 is being worked through.
 
 ## Running it
 
@@ -43,4 +43,4 @@ Time-zone rules come from the browser's own `Intl` data, or from the polyfill wh
 
 ## Licence
 
-MIT for the code.
+MIT for the code, except `src/styles/reset.css`, which is Andy Bell's CSS reset under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/).

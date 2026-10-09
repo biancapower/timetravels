@@ -166,6 +166,9 @@ importers:
 
   .:
     dependencies:
+      open-props:
+        specifier: 1.7.23
+        version: 1.7.23
       react:
         specifier: 19.3.0
         version: 19.3.0
@@ -1154,6 +1157,9 @@ packages:
   obug@2.2.1:
     resolution: {integrity: sha512-XrsrhT5sybtKI6wakr2SPOlGZWWYbUXZ7a0jT8/QOeAPau+1X/bSegNe5YR75oJmEZQbKningirmGOEJCIk61Q==}
     engines: {node: '>=12.20.0'}
+
+  open-props@1.7.23:
+    resolution: {integrity: sha512-+xyrJmxV9QUBFbSwPROYhOg/FLXry+uuPr4R+B5EaE4556Oc18/8ZC/fL5A+/lbRSwNvA0Alh+C0KpyFWLmLZg==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -2345,6 +2351,8 @@ snapshots:
   node-releases@2.0.57: {}
 
   obug@2.2.1: {}
+
+  open-props@1.7.23: {}
 
   optionator@0.9.4:
     dependencies:

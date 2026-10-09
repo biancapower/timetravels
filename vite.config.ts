@@ -25,7 +25,7 @@ export default defineConfig({
           environment: 'jsdom',
           include: ['src/**/*.test.{ts,tsx}'],
           exclude: ['src/time/**'],
-          setupFiles: ['src/test-setup.ts'],
+          setupFiles: ['temporal-polyfill/global', 'src/test-setup.ts'],
         },
       },
     ],

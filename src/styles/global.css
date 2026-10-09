@@ -1,0 +1,30 @@
+@import 'open-props/fonts';
+@import 'open-props/sizes';
+@import 'open-props/gray';
+@import 'open-props/indigo';
+
+/* The five semantic colour tokens. Components take colours only from these. */
+:root {
+  color-scheme: light dark;
+  --ground: var(--gray-0);
+  --surface: #fff;
+  --text: var(--gray-9);
+  --muted: var(--gray-7);
+  --accent: var(--indigo-8);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: var(--gray-11);
+    --surface: var(--gray-10);
+    --text: var(--gray-1);
+    --muted: var(--gray-5);
+    --accent: var(--indigo-3);
+  }
+}
+
+body {
+  font-family: var(--font-system-ui);
+  background: var(--ground);
+  color: var(--text);
+}

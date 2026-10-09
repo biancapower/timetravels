@@ -8,6 +8,7 @@ TimeTravels: a time calculator with a one-sentence interface. React 19, TypeScri
 - Reads `.env*` files. None are expected here; if one appears, ask.
 - Starts the dev server unasked. When asked, bind it to `0.0.0.0` so it can be opened from a phone.
 - Opens an issue to match work already done. Work only against an issue the maintainer has written or approved.
+- Edits an issue once work on it has started. A correction or clarification goes in a comment on the issue.
 
 Enforced by `.claude/settings.json` (a `permissions.deny` for `.env*` reads and a `PreToolUse` hook, `scripts/claude-guard.sh`, blocking any force-push, `--no-verify`, `wrangler deploy`, `pnpm publish`, `gh release create`, tag creation and visibility changes), with `scripts/test-hooks.sh` as its regression test. The guard matches patterns in the command text, not a parsed shell, so it over-blocks some harmless commands; edit files containing those patterns with the file tools rather than through the shell. A correction made twice becomes a hook or a line in this file, not a memory.
 

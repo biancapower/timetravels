@@ -1,0 +1,12 @@
+.sentence {
+  font-size: var(--font-size-fluid-2);
+  font-weight: var(--font-weight-6);
+  line-height: var(--font-lineheight-1);
+}
+
+.slot {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
