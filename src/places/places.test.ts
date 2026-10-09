@@ -21,7 +21,7 @@ test('a place is named after the city in its zone id', () => {
   const places = buildPlaces(zones, []);
   expect(cities(places)).toContain('Sydney');
   expect(cities(places)).toContain('New York');
-  expect(cities(places)).toContain('Buenos Aires');
+  expect(cities(places)).toContain('Buenos Aires, Argentina');
 });
 
 test('zones that are not cities are left out', () => {
@@ -69,7 +69,7 @@ test('cities that start with the query come before other matches', () => {
   ]);
   expect(cities(filterPlaces(places, 'aires'))).toEqual([
     'Aires Town',
-    'Buenos Aires',
+    'Buenos Aires, Argentina',
   ]);
 });
 
@@ -82,4 +82,9 @@ test('cityOf names the city of a zone, with current spellings', () => {
   expect(cityOf('Asia/Calcutta')).toBe('Kolkata');
   expect(cityOf('America/New_York')).toBe('New York');
   expect(cityOf('UTC')).toBeUndefined();
+});
+
+test('a city in a three-part zone id is named with its region', () => {
+  expect(cityOf('America/North_Dakota/Center')).toBe('Center, North Dakota');
+  expect(cityOf('America/Indiana/Knox')).toBe('Knox, Indiana');
 });

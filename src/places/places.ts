@@ -20,7 +20,10 @@ export function cityOf(zone: string): string | undefined {
   if (!zone.includes('/') || zone.startsWith('Etc/')) return undefined;
   const renamed = currentNames[zone];
   if (renamed) return renamed;
-  return zone.split('/').at(-1)?.replaceAll('_', ' ');
+  const parts = zone.split('/').map((part) => part.replaceAll('_', ' '));
+  const city = parts.at(-1);
+  // "America/North_Dakota/Center": the city alone would be just "Center".
+  return parts.length > 2 ? `${city ?? ''}, ${parts.at(-2) ?? ''}` : city;
 }
 
 /** Every city zone, plus the aliases, in alphabetical order. */
