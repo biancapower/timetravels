@@ -2,7 +2,7 @@
 
 A time calculator you talk to in one sentence.
 
-> What time will it be **10 hours** **from now** in **London**?
+> What time will it be in **London** **10 hours** **from now**?
 
 Tap an underlined word to change it; the answer sits underneath and updates as you go. Time-zone conversion, hours from now and ago, and warnings when a daylight-saving change is about to move the goalposts. A web app you can install on your phone, which works offline.
 

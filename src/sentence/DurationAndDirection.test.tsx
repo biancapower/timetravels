@@ -30,7 +30,7 @@ test('choosing "from now" rewrites the sentence and adds a duration', async () =
   await chooseWhen('now', 'from now');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time will it be 1 hour from now here?'),
+      name: named('What time will it be here 1 hour from now?'),
     }),
   ).toBeInTheDocument();
 });
@@ -40,7 +40,7 @@ test('choosing "ago" changes the verb to the past', async () => {
   await chooseWhen('now', 'ago');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time was it 1 hour ago here?'),
+      name: named('What time was it here 1 hour ago?'),
     }),
   ).toBeInTheDocument();
 });
@@ -65,7 +65,7 @@ test('a typed duration sets the slot', async () => {
   fireEvent.submit(input);
   expect(
     await screen.findByRole('heading', {
-      name: named('What time will it be 1 hour 30 minutes from now here?'),
+      name: named('What time will it be here 1 hour 30 minutes from now?'),
     }),
   ).toBeInTheDocument();
 });
@@ -93,7 +93,7 @@ test('a common duration can be picked with one tap', async () => {
   fireEvent.click(await screen.findByRole('button', { name: '8 hours' }));
   expect(
     await screen.findByRole('heading', {
-      name: named('What time was it 8 hours ago here?'),
+      name: named('What time was it here 8 hours ago?'),
     }),
   ).toBeInTheDocument();
 });
@@ -183,4 +183,22 @@ test('the error area is present, and empty, before anything is typed', async () 
   fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
   await screen.findByRole('textbox', { name: 'Type a duration' });
   expect(screen.getByRole('alert')).toBeEmptyDOMElement();
+});
+
+test('with a place, it comes before the duration, and focus stays on the slot', async () => {
+  localStorage.setItem(
+    'timetravels.place',
+    JSON.stringify({ city: 'London', zone: 'Europe/London' }),
+  );
+  render(<App zone="Australia/Sydney" locale="en" />);
+  await chooseWhen('now', 'ago');
+  expect(
+    await screen.findByRole('heading', {
+      name: named('What time was it in London 1 hour ago?'),
+    }),
+  ).toBeInTheDocument();
+  const slot = within(heading()).getByRole('button', { name: 'ago' });
+  await waitFor(() => {
+    expect(slot).toHaveFocus();
+  });
 });

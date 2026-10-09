@@ -19,7 +19,7 @@ test('10 hours from now, then ago, by keyboard', async ({ page }) => {
   await page.getByRole('menuitemradio', { name: 'from now' }).press('Enter');
   await expect(heading.getByRole('button', { name: 'from now' })).toBeFocused();
   await expect(heading).toHaveAccessibleName(
-    sentence('What time will it be 1 hour from now here?'),
+    sentence('What time will it be here 1 hour from now?'),
   );
 
   await heading.getByRole('button', { name: '1 hour' }).focus();
@@ -27,7 +27,7 @@ test('10 hours from now, then ago, by keyboard', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Type a duration' }).fill('10');
   await page.keyboard.press('Enter');
   await expect(heading).toHaveAccessibleName(
-    sentence('What time will it be 10 hours from now here?'),
+    sentence('What time will it be here 10 hours from now?'),
   );
   await expect(page.getByText(/^tomorrow, Sunday 8:00\sam$/)).toBeVisible();
   await expect(heading.getByRole('button', { name: '10 hours' })).toBeFocused();
@@ -36,7 +36,7 @@ test('10 hours from now, then ago, by keyboard', async ({ page }) => {
   await page.keyboard.press('Enter');
   await page.getByRole('menuitemradio', { name: 'ago' }).press('Enter');
   await expect(heading).toHaveAccessibleName(
-    sentence('What time was it 10 hours ago here?'),
+    sentence('What time was it here 10 hours ago?'),
   );
   await expect(page.getByText(/^Saturday 12:00\spm$/)).toBeVisible();
 });
@@ -53,7 +53,7 @@ test('pick a common duration by tap or click', async ({ page }, testInfo) => {
   await press(page.getByRole('button', { name: '8 hours' }));
 
   await expect(heading).toHaveAccessibleName(
-    sentence('What time was it 8 hours ago here?'),
+    sentence('What time was it here 8 hours ago?'),
   );
   await expect(page.getByText(/^Saturday 2:00\spm$/)).toBeVisible();
 });

@@ -12,3 +12,4 @@ Short records of decisions with their reasons, written when they were made. Form
 | [0006](0006-visual-foundations.md) | Visual foundations: the CSS reset, the system font, the five colour tokens | Approved 2026-10-09 |
 | [0007](0007-translation-library.md) | Translation library: react-intl, with ICU messages and slots as named tags | Approved 2026-10-09 |
 | [0008](0008-headless-component-library.md) | Headless component library: Base UI, superseding 0003 point 9 | Approved 2026-10-09 |
+| [0009](0009-place-before-duration.md) | English word order: the place before the duration | Approved 2026-10-10 |

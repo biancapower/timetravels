@@ -9,13 +9,13 @@ const en = {
   'sentence.nowIn':
     'What time is it <direction>now</direction> in <place>{city}</place>?',
   'sentence.laterHere':
-    'What time will it be <duration>{length}</duration> <direction>from now</direction> <place>here</place>?',
+    'What time will it be <place>here</place> <duration>{length}</duration> <direction>from now</direction>?',
   'sentence.laterIn':
-    'What time will it be <duration>{length}</duration> <direction>from now</direction> in <place>{city}</place>?',
+    'What time will it be in <place>{city}</place> <duration>{length}</duration> <direction>from now</direction>?',
   'sentence.earlierHere':
-    'What time was it <duration>{length}</duration> <direction>ago</direction> <place>here</place>?',
+    'What time was it <place>here</place> <duration>{length}</duration> <direction>ago</direction>?',
   'sentence.earlierIn':
-    'What time was it <duration>{length}</duration> <direction>ago</direction> in <place>{city}</place>?',
+    'What time was it in <place>{city}</place> <duration>{length}</duration> <direction>ago</direction>?',
   'answer.relativeDay': '{relativeDay}, {time}',
   'duration.hours': '{hours, plural, one {# hour} other {# hours}}',
   'duration.minutes': '{minutes, plural, one {# minute} other {# minutes}}',
