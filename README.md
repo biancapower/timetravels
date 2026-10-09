@@ -32,7 +32,7 @@ Before the first `pnpm check:full`, install the browser once with `pnpm browsers
 - Vitest and Playwright
 - ESLint and Prettier
 - pnpm
-- Custom CSS with Open Props; a headless component library for the pickers
+- Custom CSS with Open Props; Base UI, a headless component library, for the pickers
 - Cloudflare Pages
 
 Time-zone rules come from the browser's own `Intl` data, or from the polyfill where Temporal isn't native. That's why the app works offline, and why zone rules update with the browser rather than with the app.
