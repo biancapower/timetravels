@@ -3,7 +3,7 @@
 /** A moment in a particular time zone. */
 export type Moment = Temporal.ZonedDateTime;
 
-/** A span of whole hours and minutes. */
+/** A span of hours and minutes, each a non-negative whole number; direction comes from Direction. */
 export interface Duration {
   hours: number;
   minutes: number;
