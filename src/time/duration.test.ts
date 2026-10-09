@@ -35,6 +35,9 @@ test.each([
   'h',
   '1h30x',
   '1..5',
+  '1000',
+  '60000m',
+  '99999999999999999999',
 ])('"%s" is not a duration', (text) => {
   expect(parseDuration(text)).toBeNull();
 });

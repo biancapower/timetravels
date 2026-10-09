@@ -89,6 +89,8 @@ export function zoneLabel(moment: Moment, options: LabelOptions = {}): string {
   return offset ? `${city} (${offset})` : city;
 }
 
+// Long enough for any sensible question; far longer spans are typing errors.
+const longestMinutes = 1000 * 60;
 const number = String.raw`(\d+(?:\.\d+)?)`;
 const hourUnit = '(?:h|hrs?|hours?)';
 const minuteUnit = '(?:m|mins?|minutes?)';
@@ -110,7 +112,7 @@ const durationPatterns: readonly [
 
 /**
  * Reads a typed duration such as "10", "1.5h", "90m", "1h30" or "1:30".
- * Returns null for anything else, and for zero.
+ * Returns null for anything else, for zero, and for 1000 hours or more.
  */
 export function parseDuration(text: string): Duration | null {
   const input = text.trim().toLowerCase();
@@ -118,7 +120,7 @@ export function parseDuration(text: string): Duration | null {
     const match = pattern.exec(input);
     if (!match) continue;
     const total = Math.round(toMinutes(match));
-    if (total <= 0) return null;
+    if (total <= 0 || total >= longestMinutes) return null;
     return { hours: Math.floor(total / 60), minutes: total % 60 };
   }
   return null;
