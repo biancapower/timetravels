@@ -63,7 +63,7 @@ jobs:
       - if: github.event_name != 'schedule'
         run: pnpm check
       - if: github.event_name == 'schedule'
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm browsers --with-deps
       - if: github.event_name == 'schedule'
         run: pnpm check:full
 

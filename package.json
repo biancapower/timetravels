@@ -46,6 +46,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "check:full": "pnpm check && pnpm test:e2e"
+    "check:full": "pnpm check && pnpm test:e2e",
+    "browsers": "playwright install chromium"
   }
 }
