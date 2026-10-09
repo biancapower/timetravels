@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { formatTime } from './index';
+import { formatTime, zoneLabel } from './index';
 
 const sundayMorning = Temporal.ZonedDateTime.from(
   '2026-10-04T09:05[Australia/Sydney]',
@@ -29,4 +29,25 @@ test('formatTime shows the time in the moment’s own zone', () => {
   );
 });
 
-test.todo('zoneLabel gives the city and the offset at that moment');
+test('zoneLabel gives the city and the offset at that moment', () => {
+  expect(zoneLabel(sundayMorning, { locale: 'en-AU' })).toBe('Sydney (GMT+11)');
+});
+
+test('zoneLabel follows the offset through the year', () => {
+  const july = Temporal.ZonedDateTime.from(
+    '2026-07-01T12:00[Australia/Sydney]',
+  );
+  expect(zoneLabel(july, { locale: 'en-AU' })).toBe('Sydney (GMT+10)');
+});
+
+test('zoneLabel spells out multi-word cities and zero offsets', () => {
+  const newYork = Temporal.ZonedDateTime.from(
+    '2026-10-04T12:00[America/New_York]',
+  );
+  const london = Temporal.ZonedDateTime.from('2026-12-01T12:00[Europe/London]');
+  expect(zoneLabel(newYork, { locale: 'en-AU' })).toBe('New York (GMT-4)');
+  // Node prints a zero offset as "GMT+0"; other Intl implementations may print "GMT".
+  expect(zoneLabel(london, { locale: 'en-AU' })).toMatch(
+    /^London \(GMT(\+0)?\)$/,
+  );
+});

@@ -66,3 +66,19 @@ export function formatTime(
     minute: '2-digit',
   });
 }
+
+/**
+ * A label for the moment's zone: the city from the zone name and the
+ * offset in force at that moment, such as "Sydney (GMT+11)".
+ */
+export function zoneLabel(moment: Moment, options: FormatOptions = {}): string {
+  const zone = moment.timeZoneId;
+  const city = (zone.split('/').at(-1) ?? zone).replaceAll('_', ' ');
+  const offset = new Intl.DateTimeFormat(options.locale, {
+    timeZone: zone,
+    timeZoneName: 'shortOffset',
+  })
+    .formatToParts(moment.epochMilliseconds)
+    .find((part) => part.type === 'timeZoneName')?.value;
+  return offset ? `${city} (${offset})` : city;
+}
