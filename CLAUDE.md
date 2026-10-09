@@ -37,7 +37,8 @@ One check entrypoint: `pnpm check` (typecheck, lint, format check, unit tests, g
 
 - One logical change per commit, in dependency order. The test: if this commit were reverted, would the codebase still be coherent?
 - Subject under 50 characters, present tense, saying why; the body carries the reasoning. No WIP commits. Never amend after pushing. Stage files by name. Never `--no-verify`.
-- Commits Claude wrote or co-wrote end with `Co-Authored-By: Claude <model> <noreply@anthropic.com>`. That trailer is the audit trail.
+- Commits Claude wrote or co-wrote end with `Co-Authored-By: Claude <model> <noreply@anthropic.com>`. That trailer is the audit trail. No session links: commits carry no `Claude-Session:` trailer, and pull request descriptions carry no claude.ai session URL, even when tooling suggests one.
+- Branch names start with the number of the issue they address, a slash, then a few words: `2/time-logic`.
 
 ## Docs
 
