@@ -15,6 +15,7 @@ test('finds a clocks-forward change inside the span', () => {
   expect(found).toHaveLength(1);
   const [change] = found;
   expect(change?.zone).toBe('Australia/Sydney');
+  expect(change?.direction).toBe('forward');
   expect(change?.minutes).toBe(60);
   expect(change?.wallTime.toString()).toBe('2026-10-04T02:00:00');
 });
@@ -25,7 +26,8 @@ test('finds a clocks-back change, and reports the wall time before it', () => {
     instant('2026-04-04T21:00:00Z'),
     ['Australia/Sydney'],
   );
-  expect(change?.minutes).toBe(-60);
+  expect(change?.direction).toBe('back');
+  expect(change?.minutes).toBe(60);
   expect(change?.wallTime.toString()).toBe('2026-04-05T03:00:00');
 });
 

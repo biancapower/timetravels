@@ -258,7 +258,8 @@ export function formatClockTime(
 export interface Transition {
   zone: string;
   instant: Temporal.Instant;
-  /** Minutes the clocks move: 60 forward, -60 back, 30 on Lord Howe. */
+  direction: 'forward' | 'back';
+  /** How many minutes the clocks move: usually 60, 30 on Lord Howe Island. */
   minutes: number;
   /** What the clocks read just before they changed, such as 2 am. */
   wallTime: Temporal.PlainDateTime;
@@ -286,7 +287,8 @@ export function transitionsBetween(
       found.push({
         zone,
         instant: next.toInstant(),
-        minutes: nanoseconds / 60e9,
+        direction: nanoseconds > 0 ? 'forward' : 'back',
+        minutes: Math.abs(nanoseconds) / 60e9,
         wallTime: next.toPlainDateTime().subtract({ nanoseconds }),
       });
       cursor = next;
