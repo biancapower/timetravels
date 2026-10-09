@@ -46,6 +46,9 @@ must_block=(
   'gh release create v1.0.0'
   'git tag v1.0.0'
   'git tag -a v1.0.0 -m "release"'
+  'git push --tags'
+  'git push origin --follow-tags'
+  'git push origin refs/tags/v1.0.0'
   # Documented over-block: "--no-verify anywhere" also catches it inside
   # an unrelated grep argument. False positive, not a security gap.
   'grep -- --no-verify README.md'
@@ -78,6 +81,8 @@ known_gaps=(
   # --force, but the raw string the hook sees never contains the
   # literal substring "--force".
   "git push --forc''e origin main"
+  # Pushing a tag by its bare name looks the same as pushing a branch.
+  'git push origin v1.0.0'
   # Base64 + eval: the dangerous command never appears as plaintext in
   # the string the hook scans.
   'eval "$(base64 -d <<< Z2l0IHB1c2ggLS1mb3JjZSBvcmlnaW4gbWFpbg==)"'

@@ -28,6 +28,7 @@ GUARD_WRANGLER_DEPLOY='\bwrangler\b[[:space:]]+(pages[[:space:]]+)?deploy\b'
 GUARD_PUBLISH='\b(pnpm|npm)\b[[:space:]]+publish\b'
 GUARD_GH_VISIBILITY='\bgh\b[[:space:]]+repo[[:space:]]+edit\b.*--visibility\b'
 GUARD_GH_RELEASE='\bgh\b[[:space:]]+release[[:space:]]+create\b'
+GUARD_TAG_PUSH='--tags|--follow-tags|refs/tags/'
 GUARD_LIST_FLAG='(^|[[:space:]])(-l|--list)([[:space:]]|$)'
 
 # guard_check CMD
@@ -44,6 +45,13 @@ guard_check() {
     && grep -qE -- '\bpush\b' <<<"$cmd" \
     && { grep -qE -- "$GUARD_FORCE_FLAG" <<<"$cmd" || grep -qE -- "$GUARD_PLUS_REFSPEC" <<<"$cmd"; }; then
     echo "blocked: force-push; a human does this"
+    return 1
+  fi
+
+  if grep -qE -- '\bgit\b' <<<"$cmd" \
+    && grep -qE -- '\bpush\b' <<<"$cmd" \
+    && grep -qE -- "$GUARD_TAG_PUSH" <<<"$cmd"; then
+    echo "blocked: pushing tags publishes a release tag; a human does this"
     return 1
   fi
 
