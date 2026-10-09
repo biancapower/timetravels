@@ -49,3 +49,20 @@ export function nowIn(zone: string, now: Temporal.Instant): Moment {
     throw error;
   }
 }
+
+export interface FormatOptions {
+  /** A BCP 47 locale; the device's own when omitted, so its 12- or 24-hour preference applies. */
+  locale?: string;
+}
+
+/** The answer line: weekday and time, in the moment's own zone. */
+export function formatTime(
+  moment: Moment,
+  options: FormatOptions = {},
+): string {
+  return moment.toLocaleString(options.locale, {
+    weekday: 'long',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
