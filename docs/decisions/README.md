@@ -10,3 +10,4 @@ Short records of decisions with their reasons, written when they were made. Form
 | [0004](0004-test-first-and-commits.md) | Test-first for the time logic; every commit green | Approved 2026-10-09 |
 | [0005](0005-dependabot-auto-merge.md) | Dependabot patch and minor updates merge themselves after the gate | Approved 2026-10-09 |
 | [0006](0006-visual-foundations.md) | Visual foundations: the CSS reset, the system font, the five colour tokens | Approved 2026-10-09 |
+| [0007](0007-translation-library.md) | Translation library: react-intl, with ICU messages and slots as named tags | Approved 2026-10-09 |
