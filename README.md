@@ -43,4 +43,4 @@ Time-zone rules come from the browser's own `Intl` data, or from the polyfill wh
 
 ## Licence
 
-MIT for the code, except `src/styles/reset.css`, which is Andy Bell's CSS reset under [Creative Commons Attribution](https://creativecommons.org/licenses/by/4.0/).
+MIT for the code, except `src/styles/reset.css`, which is Andy Bell's CSS reset under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/).
