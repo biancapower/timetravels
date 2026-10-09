@@ -6,11 +6,21 @@ A time calculator you talk to in one sentence.
 
 Tap an underlined word to change it; the answer sits underneath and updates as you go. Time-zone conversion, hours from now and ago, and warnings when a daylight-saving change is about to move the goalposts. A web app you can install on your phone, which works offline.
 
-**Status:** pre-release. Nothing to run yet; the first issues are being worked through.
+**Status:** pre-release. The app shows a placeholder; the first issues are being worked through.
 
 ## Running it
 
-Nothing to run yet.
+Needs Node 24 and Corepack, which picks the pnpm version from `package.json`.
+
+```sh
+corepack enable
+pnpm install
+pnpm dev         # serves on all interfaces, so a phone on the same network can open it
+pnpm check       # typecheck, lint, format check, unit tests
+pnpm check:full  # the above plus Playwright browser tests
+```
+
+Before the first `pnpm check:full`, install the browser once with `pnpm browsers`.
 
 ## Stack
 
