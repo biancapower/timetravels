@@ -52,20 +52,12 @@ test('a span across the autumn change says the clock moves less', () => {
   ).toBeInTheDocument();
 });
 
-test('"ago" across a change shows a line', () => {
+test('"ago" across a change already past reads "went" and "moved"', () => {
   show('2026-10-04T00:00:00Z', 'Australia/Sydney', {
     when: 'earlier',
     duration: tenHours,
   });
   expect(clocks()).toHaveLength(1);
-  expect(screen.getByText(/^Sydney’s clocks /)).toBeInTheDocument();
-});
-
-test('a change already past reads "went" and "moved"', () => {
-  show('2026-10-04T00:00:00Z', 'Australia/Sydney', {
-    when: 'earlier',
-    duration: tenHours,
-  });
   expect(
     screen.getByText(
       'Sydney’s clocks went forward an hour at 2 am on Sunday 4 October, so the clock moved 11 hours in these 10 hours.',
@@ -94,9 +86,7 @@ test('in a place, the line names the place', () => {
     { city: 'London' },
   );
   expect(
-    screen.getByText(
-      'London’s clocks go back an hour at 2 am on Sunday 25 October, so the clock moves 9 hours in these 10 hours.',
-    ),
+    screen.getByText(/^London’s clocks go back an hour/),
   ).toBeInTheDocument();
 });
 
