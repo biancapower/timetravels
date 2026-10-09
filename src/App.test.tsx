@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { App } from './App';
 import { Answer } from './sentence/Answer';
@@ -23,9 +23,15 @@ afterEach(() => {
 
 test('renders the sentence with its two slots', () => {
   render(<Sentence />);
-  expect(
-    screen.getByRole('heading', { name: 'What time is it now here?' }),
-  ).toBeInTheDocument();
+  const heading = screen.getByRole('heading', {
+    name: 'What time is it now here?',
+  });
+  expect(heading).toBeInTheDocument();
+  for (const slot of ['now', 'here']) {
+    expect(
+      within(heading).getByText(slot, { exact: true }),
+    ).toBeInTheDocument();
+  }
 });
 
 test('renders the answer for an injected now', () => {
