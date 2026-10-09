@@ -67,7 +67,7 @@
   cursor: pointer;
 }
 
-.error {
+.error:not(:empty) {
   padding-inline: var(--size-2);
   color: var(--text);
   font-size: var(--font-size-0);

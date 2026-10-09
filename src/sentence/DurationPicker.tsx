@@ -78,11 +78,12 @@ export function DurationPicker({
                 {intl.formatMessage({ id: 'durationPicker.set' })}
               </button>
             </form>
-            {invalid && (
-              <p id={errorId} className={styles.error} role="alert">
-                {intl.formatMessage({ id: 'durationPicker.invalid' })}
-              </p>
-            )}
+            {/* Always present, so screen readers announce the text when it appears. */}
+            <p id={errorId} className={styles.error} role="alert">
+              {invalid
+                ? intl.formatMessage({ id: 'durationPicker.invalid' })
+                : null}
+            </p>
             <div
               className={styles.choices}
               role="group"

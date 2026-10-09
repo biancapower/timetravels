@@ -176,3 +176,11 @@ test('focus returns to the slot after choosing from the now menu', async () => {
     expect(slot).toHaveFocus();
   });
 });
+
+test('the error area is present, and empty, before anything is typed', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  await chooseWhen('now', 'from now');
+  fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
+  await screen.findByRole('textbox', { name: 'Type a duration' });
+  expect(screen.getByRole('alert')).toBeEmptyDOMElement();
+});
