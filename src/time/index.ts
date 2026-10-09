@@ -168,3 +168,74 @@ export function formatDateTime(
     minute: '2-digit',
   });
 }
+
+/** -1 for yesterday, 0 for today, 1 for tomorrow. */
+export type AnchorDay = -1 | 0 | 1;
+
+/**
+ * "none", or "skipped" for a time the clocks jumped over, or "repeated"
+ * for a time that happened twice when the clocks went back.
+ */
+export type AnchorIssue = 'none' | 'skipped' | 'repeated';
+
+export interface Anchored {
+  moment: Moment;
+  issue: AnchorIssue;
+}
+
+/**
+ * The moment a wall-clock time names on today, tomorrow or yesterday in
+ * a zone, "today" being today there. A skipped time counts from the same
+ * distance after the jump; a repeated time uses its first occurrence.
+ */
+export function anchorAt(
+  now: Temporal.Instant,
+  zone: string,
+  time: Temporal.PlainTime,
+  day: AnchorDay,
+): Anchored {
+  const wall = nowIn(zone, now)
+    .toPlainDate()
+    .add({ days: day })
+    .toPlainDateTime(time);
+  const first = wall.toZonedDateTime(zone, { disambiguation: 'earlier' });
+  const last = wall.toZonedDateTime(zone, { disambiguation: 'later' });
+  if (!first.toPlainDateTime().equals(wall)) {
+    return {
+      moment: wall.toZonedDateTime(zone, { disambiguation: 'compatible' }),
+      issue: 'skipped',
+    };
+  }
+  if (!first.equals(last)) return { moment: first, issue: 'repeated' };
+  return { moment: first, issue: 'none' };
+}
+
+/** The current time in a zone rounded up to the next whole hour. */
+export function nextWholeHour(
+  now: Temporal.Instant,
+  zone: string,
+): Temporal.PlainTime {
+  return nowIn(zone, now)
+    .round({ smallestUnit: 'hour', roundingMode: 'ceil' })
+    .toPlainTime();
+}
+
+/** Whether a moment is before now. */
+export function isPast(moment: Moment, now: Temporal.Instant): boolean {
+  return Temporal.Instant.compare(moment.toInstant(), now) < 0;
+}
+
+/** A time of day such as "3 pm" or "3:30 pm", or "15:00" where the locale uses a 24-hour clock. */
+export function formatClockTime(
+  time: Temporal.PlainTime,
+  options: FormatOptions = {},
+): string {
+  const { hourCycle } = new Intl.DateTimeFormat(options.locale, {
+    hour: 'numeric',
+  }).resolvedOptions();
+  const twelveHour = hourCycle === 'h11' || hourCycle === 'h12';
+  return time.toLocaleString(options.locale, {
+    hour: 'numeric',
+    minute: twelveHour && time.minute === 0 ? undefined : '2-digit',
+  });
+}
