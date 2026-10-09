@@ -41,6 +41,12 @@ test('renders the answer for an injected now', () => {
   expect(screen.getByText('Sydney (GMT+11)')).toBeInTheDocument();
 });
 
+test('the answer uses a 24-hour clock where the locale prefers it', () => {
+  const now = Temporal.Instant.from('2026-10-04T06:05:00Z');
+  render(<Answer now={now} zone="Australia/Sydney" locale="en-GB" />);
+  expect(screen.getByText(/^Sunday 17:05$/)).toBeInTheDocument();
+});
+
 test('the answer updates on the minute without re-rendering the sentence', () => {
   vi.useFakeTimers({ now: new Date('2026-10-03T23:05:30Z') });
   render(<App zone="Australia/Sydney" />);
