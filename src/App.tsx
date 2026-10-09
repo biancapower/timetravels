@@ -33,8 +33,7 @@ export function App({
   const [when, setWhen] = useState<When>('now');
   const [duration, setDuration] = useState<Duration>({ hours: 1, minutes: 0 });
   const [anchor, setAnchor] = useState<AnchorSetting>(() => ({
-    time: nextWholeHour(Temporal.Now.instant(), zone),
-    day: 0,
+    ...nextWholeHour(Temporal.Now.instant(), zone),
     inPlace: false,
   }));
 

@@ -220,14 +220,18 @@ export function anchorAt(
   return { moment: first, issue: 'none' };
 }
 
-/** The current time in a zone rounded up to the next whole hour. */
+/**
+ * The current time in a zone rounded up to the next whole hour, with the
+ * day it falls on: late in the evening that is midnight tomorrow.
+ */
 export function nextWholeHour(
   now: Temporal.Instant,
   zone: string,
-): Temporal.PlainTime {
-  return nowIn(zone, now)
-    .round({ smallestUnit: 'hour', roundingMode: 'ceil' })
-    .toPlainTime();
+): { time: Temporal.PlainTime; day: AnchorDay } {
+  const current = nowIn(zone, now);
+  const rounded = current.round({ smallestUnit: 'hour', roundingMode: 'ceil' });
+  const day = daysBetween(current, rounded) === 0 ? 0 : 1;
+  return { time: rounded.toPlainTime(), day };
 }
 
 /** Whether a moment is before now. */

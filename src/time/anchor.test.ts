@@ -51,13 +51,25 @@ test('a time that happens twice when the clocks go back is flagged and the first
 });
 
 test('nextWholeHour rounds the current time up to the hour in a zone', () => {
-  expect(nextWholeHour(now, 'Australia/Sydney').toString()).toBe('10:00:00');
+  expect(nextWholeHour(now, 'Australia/Sydney')).toEqual({
+    time: time('10:00'),
+    day: 0,
+  });
   expect(
     nextWholeHour(
       Temporal.Instant.from('2026-10-09T23:00:00Z'),
       'Australia/Sydney',
-    ).toString(),
-  ).toBe('10:00:00');
+    ),
+  ).toEqual({ time: time('10:00'), day: 0 });
+});
+
+test('nextWholeHour late in the evening is midnight tomorrow, not today', () => {
+  // 23:30 on Saturday 10 October in Sydney.
+  const lateEvening = Temporal.Instant.from('2026-10-10T12:30:00Z');
+  expect(nextWholeHour(lateEvening, 'Australia/Sydney')).toEqual({
+    time: time('00:00'),
+    day: 1,
+  });
 });
 
 test('isPast compares a moment with now', () => {
