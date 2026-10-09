@@ -80,13 +80,23 @@ export function zoneLabel(moment: Moment, options: LabelOptions = {}): string {
   const zone = moment.timeZoneId;
   const city =
     options.city ?? (zone.split('/').at(-1) ?? zone).replaceAll('_', ' ');
-  const offset = new Intl.DateTimeFormat(options.locale, {
-    timeZone: zone,
-    timeZoneName: 'shortOffset',
-  })
-    .formatToParts(moment.epochMilliseconds)
-    .find((part) => part.type === 'timeZoneName')?.value;
+  const offset = formatOffset(moment, options);
   return offset ? `${city} (${offset})` : city;
+}
+
+/** The offset in force at a moment, such as "GMT+11". Empty if Intl gives none. */
+export function formatOffset(
+  moment: Moment,
+  options: FormatOptions = {},
+): string {
+  return (
+    new Intl.DateTimeFormat(options.locale, {
+      timeZone: moment.timeZoneId,
+      timeZoneName: 'shortOffset',
+    })
+      .formatToParts(moment.epochMilliseconds)
+      .find((part) => part.type === 'timeZoneName')?.value ?? ''
+  );
 }
 
 // Long enough for any sensible question; far longer spans are typing errors.
@@ -166,5 +176,80 @@ export function formatDateTime(
     year: otherYear ? 'numeric' : undefined,
     hour: 'numeric',
     minute: '2-digit',
+  });
+}
+
+/** -1 for yesterday, 0 for today, 1 for tomorrow. */
+export type AnchorDay = -1 | 0 | 1;
+
+/**
+ * "none", or "skipped" for a time the clocks jumped over, or "repeated"
+ * for a time that happened twice when the clocks went back.
+ */
+export type AnchorIssue = 'none' | 'skipped' | 'repeated';
+
+export interface Anchored {
+  moment: Moment;
+  issue: AnchorIssue;
+}
+
+/**
+ * The moment a wall-clock time names on today, tomorrow or yesterday in
+ * a zone, "today" being today there. A skipped time counts from the same
+ * distance after the jump; a repeated time uses its first occurrence.
+ */
+export function anchorAt(
+  now: Temporal.Instant,
+  zone: string,
+  time: Temporal.PlainTime,
+  day: AnchorDay,
+): Anchored {
+  const wall = nowIn(zone, now)
+    .toPlainDate()
+    .add({ days: day })
+    .toPlainDateTime(time);
+  const first = wall.toZonedDateTime(zone, { disambiguation: 'earlier' });
+  const last = wall.toZonedDateTime(zone, { disambiguation: 'later' });
+  if (!first.toPlainDateTime().equals(wall)) {
+    return {
+      moment: wall.toZonedDateTime(zone, { disambiguation: 'compatible' }),
+      issue: 'skipped',
+    };
+  }
+  if (!first.equals(last)) return { moment: first, issue: 'repeated' };
+  return { moment: first, issue: 'none' };
+}
+
+/**
+ * The current time in a zone rounded up to the next whole hour, with the
+ * day it falls on: late in the evening that is midnight tomorrow.
+ */
+export function nextWholeHour(
+  now: Temporal.Instant,
+  zone: string,
+): { time: Temporal.PlainTime; day: AnchorDay } {
+  const current = nowIn(zone, now);
+  const rounded = current.round({ smallestUnit: 'hour', roundingMode: 'ceil' });
+  const day = daysBetween(current, rounded) === 0 ? 0 : 1;
+  return { time: rounded.toPlainTime(), day };
+}
+
+/** Whether a moment is before now. */
+export function isPast(moment: Moment, now: Temporal.Instant): boolean {
+  return Temporal.Instant.compare(moment.toInstant(), now) < 0;
+}
+
+/** A time of day such as "3 pm" or "3:30 pm", or "15:00" where the locale uses a 24-hour clock. */
+export function formatClockTime(
+  time: Temporal.PlainTime,
+  options: FormatOptions = {},
+): string {
+  const { hourCycle } = new Intl.DateTimeFormat(options.locale, {
+    hour: 'numeric',
+  }).resolvedOptions();
+  const twelveHour = hourCycle === 'h11' || hourCycle === 'h12';
+  return time.toLocaleString(options.locale, {
+    hour: 'numeric',
+    minute: twelveHour && time.minute === 0 ? undefined : '2-digit',
   });
 }

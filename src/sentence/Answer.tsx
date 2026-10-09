@@ -1,47 +1,68 @@
 import { useIntl } from 'react-intl';
 import {
   dayRelation,
+  formatClockTime,
   formatDateTime,
+  formatOffset,
   formatTime,
-  nowIn,
-  shift,
   zoneLabel,
-  type Duration,
   type Moment,
 } from '../time';
 import styles from './Answer.module.css';
-import type { When } from './DirectionPicker';
+import { resolveAnswer, type Question } from './resolveAnswer';
 
 interface AnswerProps {
   now: Temporal.Instant;
-  zone: string;
-  /** "now" when omitted. */
-  when?: When;
-  duration?: Duration;
+  question: Question;
   /** The city to name in the label; taken from the zone id when omitted. */
   city?: string;
+  /** The city whose time the chosen time is, for the note on a skipped or repeated time. */
+  anchorCity?: string;
   /** The device's own locale when omitted. */
   locale?: string;
 }
 
 export function Answer({
   now,
-  zone,
-  when = 'now',
-  duration = { hours: 0, minutes: 0 },
+  question,
   city,
+  anchorCity,
   locale,
 }: AnswerProps) {
   const intl = useIntl();
-  const today = nowIn(zone, now);
-  const moment = when === 'now' ? today : shift(today, duration, when);
+  const { today, moment, anchored } = resolveAnswer(now, question);
+  const chosen = formatClockTime(question.anchor.time, { locale });
   return (
-    <p className={styles.answer}>
-      <span className={styles.time}>
-        {answerTime(today, moment, locale, intl)}
-      </span>
-      <span className={styles.zone}>{zoneLabel(moment, { locale, city })}</span>
-    </p>
+    <div className={styles.answer}>
+      <p className={styles.time}>{answerTime(today, moment, locale, intl)}</p>
+      <p className={styles.zone}>{zoneLabel(moment, { locale, city })}</p>
+      {anchored?.issue === 'skipped' && (
+        <p className={styles.note}>
+          {intl.formatMessage(
+            { id: 'answer.skipped' },
+            {
+              time: chosen,
+              city: anchorCity,
+              actual: formatClockTime(anchored.moment.toPlainTime(), {
+                locale,
+              }),
+            },
+          )}
+        </p>
+      )}
+      {anchored?.issue === 'repeated' && (
+        <p className={styles.note}>
+          {intl.formatMessage(
+            { id: 'answer.repeated' },
+            {
+              time: chosen,
+              city: anchorCity,
+              offset: formatOffset(anchored.moment, { locale }),
+            },
+          )}
+        </p>
+      )}
+    </div>
   );
 }
 

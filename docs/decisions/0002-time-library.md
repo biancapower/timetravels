@@ -10,4 +10,4 @@
 
 **Consequences.** Measure the polyfill's cost on iOS before 0.1.0. The first tests are the daylight-saving cases.
 
-**Status.** Approved by @biancapower, 2026-10-05.
+**Status.** Recommended by a research subagent; approved by @biancapower, 2026-10-05.

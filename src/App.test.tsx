@@ -6,6 +6,7 @@ import { catalogues } from './i18n/messages';
 import { Answer } from './sentence/Answer';
 import { Sentence } from './sentence/Sentence';
 import { named } from './testing/named';
+import { question } from './testing/question';
 
 const { sentenceRenders } = vi.hoisted(() => ({ sentenceRenders: vi.fn() }));
 
@@ -35,6 +36,13 @@ test('renders the sentence with its two slots', () => {
         onWhenChange={vi.fn()}
         onDurationChange={vi.fn()}
         onPlaceChange={vi.fn()}
+        anchor={{
+          time: Temporal.PlainTime.from('15:00'),
+          day: 0,
+          inPlace: false,
+        }}
+        tense="future"
+        onAnchorChange={vi.fn()}
       />
     </IntlProvider>,
   );
@@ -53,7 +61,11 @@ test('renders the answer for an injected now', () => {
   const now = Temporal.Instant.from('2026-10-03T23:05:00Z');
   render(
     <IntlProvider locale="en" messages={catalogues.en}>
-      <Answer now={now} zone="Australia/Sydney" locale="en-AU" />
+      <Answer
+        now={now}
+        question={question('Australia/Sydney')}
+        locale="en-AU"
+      />
     </IntlProvider>,
   );
   expect(screen.getByText(/^Sunday 10:05\sam$/)).toBeInTheDocument();
@@ -64,7 +76,11 @@ test('the answer uses a 24-hour clock where the locale prefers it', () => {
   const now = Temporal.Instant.from('2026-10-04T06:05:00Z');
   render(
     <IntlProvider locale="en" messages={catalogues.en}>
-      <Answer now={now} zone="Australia/Sydney" locale="en-GB" />
+      <Answer
+        now={now}
+        question={question('Australia/Sydney')}
+        locale="en-GB"
+      />
     </IntlProvider>,
   );
   expect(screen.getByText(/^Sunday 17:05$/)).toBeInTheDocument();

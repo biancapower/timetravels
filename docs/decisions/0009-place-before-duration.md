@@ -6,9 +6,9 @@
 - "What time is it in London right now?" and "What time is it here right now?"
 - "What time will it be in London 10 hours from now?" and "What time will it be here 10 hours from now?"
 - "What time was it in London 8 hours ago?" and "What time was it here 8 hours ago?"
-- Sentence 5 follows: "What time will it be in London 10 hours after 3 pm today?"
+- Sentence 5 follows: "What time will it be in London 10 hours after 3 pm my time?", where "my time" can be switched to "London time" (agreed on issue #6 after this decision).
 
-The time slot's menu reads "right now", "from now" and "ago". The README's example sentence follows the new order.
+The time slot's menu reads "right now", "from now" and "ago", and, with sentence 5, "after a time" and "before a time". The README's example sentence follows the new order.
 
 **Alternatives.** Keeping the spec's order, duration first, with "now" before the place in sentences 1 and 2.
 
@@ -16,4 +16,4 @@ The time slot's menu reads "right now", "from now" and "ago". The README's examp
 
 **Consequences.** Issues #3, #4, #5 and #6 describe the old order; the code and README follow this one. Decision 0001 lists the sentences as they were written at the time.
 
-**Status.** Approved by @biancapower, 2026-10-10.
+**Status.** Proposed by @biancapower after trying the app; approved by @biancapower, 2026-10-10.

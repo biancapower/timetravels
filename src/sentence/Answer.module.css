@@ -21,3 +21,14 @@
 .time::first-letter {
   text-transform: uppercase;
 }
+
+.answer > p {
+  margin: 0;
+}
+
+.note {
+  margin-block-start: var(--size-2);
+  color: var(--text);
+  font-size: var(--font-size-1);
+  max-width: 40ch;
+}

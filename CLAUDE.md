@@ -9,6 +9,7 @@ TimeTravels: a time calculator with a one-sentence interface. React 19, TypeScri
 - Starts the dev server unasked. When asked, bind it to `0.0.0.0` so it can be opened from a phone.
 - Opens an issue to match work already done. Work only against an issue the maintainer has written or approved.
 - Edits an issue once work on it has started. A correction or clarification goes in a comment on the issue.
+- Leaves an issue without a milestone. Every issue goes in one when it is opened (`0.1.0`, `0.2.0`, …); it can move later.
 
 Enforced by `.claude/settings.json` (a `permissions.deny` for `.env*` reads and a `PreToolUse` hook, `scripts/claude-guard.sh`, blocking any force-push, `--no-verify`, `wrangler deploy`, `pnpm publish`, `gh release create`, tag creation and visibility changes), with `scripts/test-hooks.sh` as its regression test. The guard matches patterns in the command text, not a parsed shell, so it over-blocks some harmless commands; edit files containing those patterns with the file tools rather than through the shell. A correction made twice becomes a hook or a line in this file, not a memory.
 
@@ -16,7 +17,7 @@ Enforced by `.claude/settings.json` (a `permissions.deny` for `.env*` reads and 
 
 Decisions have tiers, flagged with emoji that are used for nothing else.
 
-- 🔴 **Must confirm before doing:** architecture and module boundaries (a folder with its own rules, like `src/time/`; an ordinary feature folder under `src/` is routine), dependencies added or removed, the time library, licences, repository visibility, release tags, deployment targets, anything that changes a claim in the README. Explain the options and the trade-off plainly, get an explicit yes from the maintainer, then record it in `docs/decisions/` with "approved by @<the maintainer's GitHub handle>, <date>".
+- 🔴 **Must confirm before doing:** architecture and module boundaries (a folder with its own rules, like `src/time/`; an ordinary feature folder under `src/` is routine), dependencies added or removed, the time library, licences, repository visibility, release tags, deployment targets, anything that changes a claim in the README. Explain the options and the trade-off plainly, get an explicit yes from the maintainer, then record it in `docs/decisions/` with who proposed it and "approved by @<the maintainer's GitHub handle>, <date>". Name the proposer accurately: the maintainer, Claude, or a research subagent's recommendation; an approval line alone reads as though someone else had the idea.
 - 🟡 **Review at the PR:** notable but reversible choices inside an issue's scope. List them under a "Decisions in this PR" heading in the PR description. Any loosening of a strictness setting (TypeScript flags, lint rules, the no-retries test policy) is a 🟡 item with its reason.
 - Everything else is routine and lands in the PR like normal code.
 
@@ -29,6 +30,14 @@ For any PR with a 🔴 or 🟡 item, offer a short teach-back: the maintainer ex
 - Flake policy: Vitest `sequence.shuffle` on; Playwright `retries: 0`; a lint rule bans `setTimeout` in tests; web-first assertions, never waits. Flakiness is fixed before merge, not retried.
 - **User testing is a human step, not a Claude step.** Before any release, the maintainer uses the app on a real phone and a real desktop browser, offline and online, working through each sentence in the release. Claude's part: before the test, draft a short script from the issues' acceptance criteria (what to try, what should happen, what to look for); after it, turn every finding into an issue, verbatim where possible, labelled by severity, and never fix anything from the test without an issue. A Playwright test passing is not evidence that the interface is usable; only this step is. Findings that change the design are 🟡 items on the PR that addresses them.
 - Stubs are fine, skips are not. A planned case may be committed as `test.todo('…')`, a name with no body, so the acceptance criteria are in the suite before the code is. `test.skip` and `test.only` never reach `main`: a disabled test with a body is a bug with no issue. The check command fails on `test.only`.
+
+## Subagents
+
+Hand self-contained work to a subagent, with an explicit model, a length cap and the shape of answer wanted; keep tightly coupled building in the main session, where hand-offs cost more than they save. Run independent agents in parallel.
+
+- **Haiku** for mechanical, fully specified actions, such as opening an issue from given text.
+- **Sonnet** for reviews (including `/pre-pr`) and for writing tests against a clear specification.
+- **Opus** for research that needs judgement, such as comparing libraries.
 
 ## Commands
 

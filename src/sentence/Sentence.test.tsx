@@ -23,6 +23,13 @@ test('the sentence follows the message, so a translation can reorder the slots',
         onWhenChange={vi.fn()}
         onDurationChange={vi.fn()}
         onPlaceChange={vi.fn()}
+        anchor={{
+          time: Temporal.PlainTime.from('15:00'),
+          day: 0,
+          inPlace: false,
+        }}
+        tense="future"
+        onAnchorChange={vi.fn()}
       />
     </IntlProvider>,
   );

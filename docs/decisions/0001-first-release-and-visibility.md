@@ -13,4 +13,4 @@
 
 **Consequences.** Trademark searches (IP Australia, USPTO) and registering `timetravels.dev` happen by hand before the first release.
 
-**Status.** Approved by @biancapower, 2026-10-05.
+**Status.** Proposed jointly by @biancapower and Claude; approved by @biancapower, 2026-10-05.

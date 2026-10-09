@@ -15,4 +15,4 @@
 
 **Consequences.** Base UI publishes no screen-reader test matrix, so the project checks TalkBack and VoiceOver itself, at the latest in the accessibility pass before 0.1.0. Version 1.9.0 was published on the day of this decision, inside pnpm's minimum release age, so 1.8.0 is pinned and Dependabot proposes the next one after the cooldown.
 
-**Status.** Approved by @biancapower, 2026-10-09.
+**Status.** Recommended by a research subagent; approved by @biancapower, 2026-10-09.

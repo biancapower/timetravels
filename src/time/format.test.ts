@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { formatTime, zoneLabel } from './index';
+import { formatOffset, formatTime, zoneLabel } from './index';
 
 const sundayMorning = Temporal.ZonedDateTime.from(
   '2026-10-04T09:05[Australia/Sydney]',
@@ -59,4 +59,8 @@ test('zoneLabel uses a given city name instead of the one in the zone id', () =>
   expect(
     zoneLabel(losAngeles, { locale: 'en-AU', city: 'San Francisco' }),
   ).toBe('San Francisco (GMT-7)');
+});
+
+test('formatOffset gives the offset in force at a moment', () => {
+  expect(formatOffset(sundayMorning, { locale: 'en-AU' })).toBe('GMT+11');
 });

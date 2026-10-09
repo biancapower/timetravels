@@ -1,19 +1,17 @@
 import { useMinuteClock } from '../clock/useMinuteClock';
-import type { Duration } from '../time';
 import { Answer } from './Answer';
-import type { When } from './DirectionPicker';
+import type { Question } from './resolveAnswer';
 
 interface LiveAnswerProps {
-  zone: string;
+  question: Question;
   city?: string;
-  when: When;
-  duration: Duration;
+  anchorCity?: string;
 }
 
 /** The answer for the current time. Only this re-renders each minute. */
-export function LiveAnswer({ zone, city, when, duration }: LiveAnswerProps) {
+export function LiveAnswer({ question, city, anchorCity }: LiveAnswerProps) {
   const now = useMinuteClock();
   return (
-    <Answer now={now} zone={zone} city={city} when={when} duration={duration} />
+    <Answer now={now} question={question} city={city} anchorCity={anchorCity} />
   );
 }
