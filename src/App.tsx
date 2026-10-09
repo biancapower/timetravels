@@ -50,14 +50,9 @@ export function App({
     answerZone: place?.zone ?? zone,
     deviceZone: zone,
   };
-  // The verb of sentence 5 follows whether its answer is past; it is set
-  // when the sentence changes, not on every minute.
-  const tense = isPast(
-    resolveAnswer(Temporal.Now.instant(), question).moment,
-    Temporal.Now.instant(),
-  )
-    ? 'past'
-    : 'future';
+  // Sentence 5's verb follows whether its answer is past. It is worked out
+  // whenever the app renders, which is on any choice, not on the minute tick.
+  const tense = tenseOf(question);
 
   return (
     <IntlProvider locale={locale} messages={catalogues[locale]}>
@@ -82,4 +77,10 @@ export function App({
       </main>
     </IntlProvider>
   );
+}
+
+function tenseOf(question: Question): 'past' | 'future' {
+  if (question.when !== 'after' && question.when !== 'before') return 'future';
+  const now = Temporal.Now.instant();
+  return isPast(resolveAnswer(now, question).moment, now) ? 'past' : 'future';
 }

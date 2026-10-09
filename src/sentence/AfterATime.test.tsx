@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { App } from '../App';
@@ -130,4 +130,20 @@ test('a chosen time the clocks repeated gets a note', () => {
   renderAnswer('2026-04-04T00:00:00Z', '02:30', 1);
   const note = screen.getByText(/happened twice in Sydney/);
   expect(note).toHaveTextContent(/GMT\+11/);
+});
+
+test('the verb is set by choices, not by the clock passing the answer', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  await choose('right now', 'after a time');
+  const future = named('What time will it be here 1 hour after 10 AM?');
+  expect(
+    await screen.findByRole('heading', { name: future }),
+  ).toBeInTheDocument();
+
+  // Noon: the answer, 11 am, is now past, but nothing was chosen.
+  vi.setSystemTime(new Date('2026-10-10T01:00:00Z'));
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(screen.getByRole('heading', { name: future })).toBeInTheDocument();
 });
