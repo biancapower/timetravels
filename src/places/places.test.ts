@@ -88,3 +88,8 @@ test('a city in a three-part zone id is named with its region', () => {
   expect(cityOf('America/North_Dakota/Center')).toBe('Center, North Dakota');
   expect(cityOf('America/Indiana/Knox')).toBe('Knox, Indiana');
 });
+
+test('filtering strips accents but keeps other characters', () => {
+  const places = buildPlaces(zones, []);
+  expect(cities(filterPlaces(places, 'new^'))).toEqual([]);
+});

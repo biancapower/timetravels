@@ -40,10 +40,7 @@ export function buildPlaces(
 }
 
 function fold(text: string): string {
-  return text
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .toLowerCase();
+  return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 }
 
 /** Places whose city or zone id contains the query; cities starting with it first. */
