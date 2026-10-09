@@ -14,4 +14,4 @@
 
 **Consequences.** react-intl is licensed BSD-3-Clause, not MIT; that is accepted alongside the project's MIT licence. Every piece of interface text comes from the message catalogue, never from JSX literals. Message argument types are declared by hand rather than inferred. A later precompile step would add `@formatjs/cli` as a development dependency, which is its own decision.
 
-**Status.** Approved by @biancapower, 2026-10-09.
+**Status.** Recommended by a research subagent; approved by @biancapower, 2026-10-09.

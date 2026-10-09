@@ -21,4 +21,4 @@
 
 **Consequences.** Components take colours only from the five tokens. One file in the repository is under a licence other than MIT. Changing a token value is a change to this decision.
 
-**Status.** Approved by @biancapower, 2026-10-09.
+**Status.** Proposed jointly by @biancapower and Claude; approved by @biancapower, 2026-10-09.

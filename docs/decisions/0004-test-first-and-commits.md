@@ -10,4 +10,4 @@
 
 **Consequences.** A pull request's commits can each be checked out and run. Nothing in CI needs to tolerate a failing commit. A `todo` in the suite is a promise with a visible count, not a hidden failure; the check command fails on `test.only` so nothing narrows the run by accident.
 
-**Status.** Approved by @biancapower, 2026-10-09.
+**Status.** Proposed by @biancapower; approved by @biancapower, 2026-10-09.

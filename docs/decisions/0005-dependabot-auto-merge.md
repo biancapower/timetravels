@@ -10,4 +10,4 @@
 
 **Consequences.** Two repository settings make this safe and are set by the maintainer by hand: "Allow auto-merge" on, and a rule on `main` requiring the `gate` check. Without the required check, an auto-merge would not wait for CI. [Working with AI](../working-with-ai.md) states the exception.
 
-**Status.** Approved by @biancapower, 2026-10-09.
+**Status.** Proposed by @biancapower; approved by @biancapower, 2026-10-09.
