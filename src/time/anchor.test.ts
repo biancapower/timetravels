@@ -93,3 +93,30 @@ test('formatClockTime leaves out minutes on the hour', () => {
     '15:00',
   );
 });
+
+// Lord Howe Island moves its clocks by 30 minutes: forward from 02:00 to
+// 02:30 on Sunday 4 October 2026, and back from 02:00 to 01:30 on Sunday
+// 5 April 2026.
+test('a time in a 30-minute gap counts from 30 minutes after the jump', () => {
+  const saturday = Temporal.Instant.from('2026-10-03T01:00:00Z');
+  const skipped = anchorAt(saturday, 'Australia/Lord_Howe', time('02:15'), 1);
+  expect(skipped.issue).toBe('skipped');
+  expect(skipped.moment.toPlainTime().toString()).toBe('02:45:00');
+});
+
+test('a time in a 30-minute overlap uses its first occurrence', () => {
+  const saturday = Temporal.Instant.from('2026-04-04T01:00:00Z');
+  const repeated = anchorAt(saturday, 'Australia/Lord_Howe', time('01:45'), 1);
+  expect(repeated.issue).toBe('repeated');
+  expect(repeated.moment.toString()).toBe(
+    '2026-04-05T01:45:00+11:00[Australia/Lord_Howe]',
+  );
+});
+
+test('yesterday is the day before today in the anchor’s zone', () => {
+  const yesterday = anchorAt(now, 'Australia/Sydney', time('15:00'), -1);
+  expect(yesterday.moment.toString()).toBe(
+    '2026-10-09T15:00:00+11:00[Australia/Sydney]',
+  );
+  expect(yesterday.issue).toBe('none');
+});
