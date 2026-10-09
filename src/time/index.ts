@@ -80,13 +80,23 @@ export function zoneLabel(moment: Moment, options: LabelOptions = {}): string {
   const zone = moment.timeZoneId;
   const city =
     options.city ?? (zone.split('/').at(-1) ?? zone).replaceAll('_', ' ');
-  const offset = new Intl.DateTimeFormat(options.locale, {
-    timeZone: zone,
-    timeZoneName: 'shortOffset',
-  })
-    .formatToParts(moment.epochMilliseconds)
-    .find((part) => part.type === 'timeZoneName')?.value;
+  const offset = formatOffset(moment, options);
   return offset ? `${city} (${offset})` : city;
+}
+
+/** The offset in force at a moment, such as "GMT+11". Empty if Intl gives none. */
+export function formatOffset(
+  moment: Moment,
+  options: FormatOptions = {},
+): string {
+  return (
+    new Intl.DateTimeFormat(options.locale, {
+      timeZone: moment.timeZoneId,
+      timeZoneName: 'shortOffset',
+    })
+      .formatToParts(moment.epochMilliseconds)
+      .find((part) => part.type === 'timeZoneName')?.value ?? ''
+  );
 }
 
 // Long enough for any sensible question; far longer spans are typing errors.
