@@ -82,3 +82,27 @@ test('clockMoveAcross gives the clock movement one change makes to a span', () =
     minutes: 30,
   });
 });
+
+// Casablanca's clocks go back on 15 February 2026 and forward on 22 March 2026.
+test('two changes in one zone inside a span are each found', () => {
+  const found = transitionsBetween(
+    instant('2026-02-10T00:00:00Z'),
+    instant('2026-03-25T00:00:00Z'),
+    ['Africa/Casablanca'],
+  );
+  expect(found.map((change) => change.direction)).toEqual(['back', 'forward']);
+});
+
+test('a span ending exactly on a change includes it; one starting on it does not', () => {
+  const change = instant('2026-10-03T16:00:00Z'); // 02:00 → 03:00 Sydney
+  expect(
+    transitionsBetween(instant('2026-10-03T11:00:00Z'), change, [
+      'Australia/Sydney',
+    ]),
+  ).toHaveLength(1);
+  expect(
+    transitionsBetween(change, instant('2026-10-03T21:00:00Z'), [
+      'Australia/Sydney',
+    ]),
+  ).toHaveLength(0);
+});
