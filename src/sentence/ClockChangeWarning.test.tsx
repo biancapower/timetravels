@@ -86,7 +86,9 @@ test('in a place, the line names the place', () => {
     { city: 'London' },
   );
   expect(
-    screen.getByText(/^London’s clocks go back an hour/),
+    screen.getByText(
+      'London’s clocks go back an hour at 2 am on Sunday 25 October, so the clock moves 9 hours in these 10 hours.',
+    ),
   ).toBeInTheDocument();
 });
 
@@ -108,7 +110,9 @@ test('a change only in the chosen time’s place names that place', () => {
   );
   expect(clocks()).toHaveLength(1);
   expect(
-    screen.getByText(/^London’s clocks go back an hour/),
+    screen.getByText(
+      'London’s clocks go back an hour at 2 am on Sunday 25 October, so the clock moves 9 hours in these 10 hours.',
+    ),
   ).toBeInTheDocument();
 });
 
