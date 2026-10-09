@@ -31,6 +31,14 @@ For any PR with a 🔴 or 🟡 item, offer a short teach-back: the maintainer ex
 - **User testing is a human step, not a Claude step.** Before any release, the maintainer uses the app on a real phone and a real desktop browser, offline and online, working through each sentence in the release. Claude's part: before the test, draft a short script from the issues' acceptance criteria (what to try, what should happen, what to look for); after it, turn every finding into an issue, verbatim where possible, labelled by severity, and never fix anything from the test without an issue. A Playwright test passing is not evidence that the interface is usable; only this step is. Findings that change the design are 🟡 items on the PR that addresses them.
 - Stubs are fine, skips are not. A planned case may be committed as `test.todo('…')`, a name with no body, so the acceptance criteria are in the suite before the code is. `test.skip` and `test.only` never reach `main`: a disabled test with a body is a bug with no issue. The check command fails on `test.only`.
 
+## Subagents
+
+Hand self-contained work to a subagent, with an explicit model, a length cap and the shape of answer wanted; keep tightly coupled building in the main session, where hand-offs cost more than they save. Run independent agents in parallel.
+
+- **Haiku** for mechanical, fully specified actions, such as opening an issue from given text.
+- **Sonnet** for reviews (including `/pre-pr`) and for writing tests against a clear specification.
+- **Opus** for research that needs judgement, such as comparing libraries.
+
 ## Commands
 
 One check entrypoint: `pnpm check` (typecheck, lint, format check, unit tests, guard hook test) and `pnpm check:full` (adds Playwright). Never call `vitest`, `playwright`, `eslint` or `tsc` directly in CI or docs. Verification means running it; "it compiles" is not verification. Before every PR, run `/pre-pr`: a fresh-context review of `git diff origin/main...HEAD` that reports BLOCKING / SHOULD FIX / SUGGESTION / NOTE findings and edits nothing; triage, then checks.
