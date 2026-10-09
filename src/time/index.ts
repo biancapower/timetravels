@@ -67,15 +67,15 @@ export function formatTime(
   });
 }
 
-/**
- * A label for the moment's zone: the city from the zone name and the
- * offset in force at that moment, such as "Sydney (GMT+11)".
- */
 export interface LabelOptions extends FormatOptions {
   /** The city to name; taken from the zone id when omitted. */
   city?: string;
 }
 
+/**
+ * A label for the moment's zone: the city from the zone name and the
+ * offset in force at that moment, such as "Sydney (GMT+11)".
+ */
 export function zoneLabel(moment: Moment, options: LabelOptions = {}): string {
   const zone = moment.timeZoneId;
   const city =
