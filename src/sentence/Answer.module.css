@@ -1,0 +1,18 @@
+.answer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-1);
+  margin-block-start: var(--size-5);
+}
+
+.time {
+  font-size: var(--font-size-fluid-3);
+  font-weight: var(--font-weight-7);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--font-lineheight-00);
+}
+
+.zone {
+  color: var(--muted);
+  font-size: var(--font-size-2);
+}
