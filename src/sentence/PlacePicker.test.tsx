@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, test } from 'vitest';
 import { App } from '../App';
 
@@ -59,4 +59,19 @@ test('a search with no matches says so', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
   fireEvent.change(openPicker('here'), { target: { value: 'atlantis' } });
   expect(await screen.findByText('No matching places')).toBeInTheDocument();
+});
+
+test('the slot is a button that opens a labelled dialog holding a listbox', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  const slot = screen.getByRole('button', { name: 'here' });
+  expect(slot).toHaveAttribute('aria-haspopup', 'dialog');
+  expect(slot).toHaveAttribute('aria-expanded', 'false');
+
+  openPicker('here');
+  expect(slot).toHaveAttribute('aria-expanded', 'true');
+  const dialog = await screen.findByRole('dialog', { name: 'Choose a place' });
+  expect(
+    within(dialog).getByRole('combobox', { name: 'Search for a city' }),
+  ).toBeInTheDocument();
+  expect(within(dialog).getByRole('listbox')).toBeInTheDocument();
 });
