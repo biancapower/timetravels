@@ -39,10 +39,10 @@ test('renders the sentence with its two slots', () => {
     </IntlProvider>,
   );
   const heading = screen.getByRole('heading', {
-    name: named('What time is it now here?'),
+    name: named('What time is it here right now?'),
   });
   expect(heading).toBeInTheDocument();
-  for (const slot of ['now', 'here']) {
+  for (const slot of ['here', 'right now']) {
     expect(
       within(heading).getByText(slot, { exact: true }),
     ).toBeInTheDocument();

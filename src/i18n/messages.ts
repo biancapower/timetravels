@@ -5,9 +5,9 @@ const en = {
   'app.loadFailed':
     'TimeTravels could not load. Check your connection and reload the page.',
   'sentence.nowHere':
-    'What time is it <direction>now</direction> <place>here</place>?',
+    'What time is it <place>here</place> <direction>right now</direction>?',
   'sentence.nowIn':
-    'What time is it <direction>now</direction> in <place>{city}</place>?',
+    'What time is it in <place>{city}</place> <direction>right now</direction>?',
   'sentence.laterHere':
     'What time will it be <place>here</place> <duration>{length}</duration> <direction>from now</direction>?',
   'sentence.laterIn':
@@ -22,7 +22,7 @@ const en = {
   'duration.hoursMinutes':
     '{hours, plural, one {# hour} other {# hours}} {minutes, plural, one {# minute} other {# minutes}}',
   'directionPicker.label': 'Choose when',
-  'directionPicker.now': 'now',
+  'directionPicker.now': 'right now',
   'directionPicker.later': 'from now',
   'directionPicker.earlier': 'ago',
   'durationPicker.label': 'Choose how long',

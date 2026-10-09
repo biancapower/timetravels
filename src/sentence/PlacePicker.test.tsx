@@ -20,7 +20,7 @@ test('picking a city puts it in the sentence and the answer', async () => {
 
   expect(
     await screen.findByRole('heading', {
-      name: named('What time is it now in London?'),
+      name: named('What time is it in London right now?'),
     }),
   ).toBeInTheDocument();
   expect(screen.getByText(/^London \(GMT/)).toBeInTheDocument();
@@ -35,7 +35,7 @@ test('the chosen place is remembered on this device', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
   expect(
     screen.getByRole('heading', {
-      name: named('What time is it now in Tokyo?'),
+      name: named('What time is it in Tokyo right now?'),
     }),
   ).toBeInTheDocument();
 });
@@ -51,7 +51,7 @@ test('choosing Here goes back to the device’s own place and forgets the city',
 
   expect(
     await screen.findByRole('heading', {
-      name: named('What time is it now here?'),
+      name: named('What time is it here right now?'),
     }),
   ).toBeInTheDocument();
   expect(screen.getByText(/^Sydney \(GMT/)).toBeInTheDocument();

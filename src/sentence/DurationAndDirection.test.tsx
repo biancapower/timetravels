@@ -27,7 +27,7 @@ async function chooseWhen(current: string, choice: string) {
 
 test('choosing "from now" rewrites the sentence and adds a duration', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('now', 'from now');
+  await chooseWhen('right now', 'from now');
   expect(
     await screen.findByRole('heading', {
       name: named('What time will it be here 1 hour from now?'),
@@ -37,7 +37,7 @@ test('choosing "from now" rewrites the sentence and adds a duration', async () =
 
 test('choosing "ago" changes the verb to the past', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('now', 'ago');
+  await chooseWhen('right now', 'ago');
   expect(
     await screen.findByRole('heading', {
       name: named('What time was it here 1 hour ago?'),
@@ -45,20 +45,20 @@ test('choosing "ago" changes the verb to the past', async () => {
   ).toBeInTheDocument();
 });
 
-test('choosing "now" again removes the duration', async () => {
+test('choosing "right now" again removes the duration', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('now', 'ago');
-  await chooseWhen('ago', 'now');
+  await chooseWhen('right now', 'ago');
+  await chooseWhen('ago', 'right now');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time is it now here?'),
+      name: named('What time is it here right now?'),
     }),
   ).toBeInTheDocument();
 });
 
 test('a typed duration sets the slot', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('now', 'from now');
+  await chooseWhen('right now', 'from now');
   fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
   const input = await screen.findByRole('textbox', { name: 'Type a duration' });
   fireEvent.change(input, { target: { value: '1h30' } });
@@ -72,7 +72,7 @@ test('a typed duration sets the slot', async () => {
 
 test('a duration that cannot be read says so and leaves the slot alone', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('now', 'from now');
+  await chooseWhen('right now', 'from now');
   fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
   const input = await screen.findByRole('textbox', { name: 'Type a duration' });
   fireEvent.change(input, { target: { value: 'soon' } });
@@ -88,7 +88,7 @@ test('a duration that cannot be read says so and leaves the slot alone', async (
 
 test('a common duration can be picked with one tap', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('now', 'ago');
+  await chooseWhen('right now', 'ago');
   fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
   fireEvent.click(await screen.findByRole('button', { name: '8 hours' }));
   expect(
@@ -168,7 +168,7 @@ test('an answer further away gives the date', () => {
 
 test('focus returns to the slot after choosing from the now menu', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('now', 'from now');
+  await chooseWhen('right now', 'from now');
   const slot = await within(heading()).findByRole('button', {
     name: 'from now',
   });
@@ -179,7 +179,7 @@ test('focus returns to the slot after choosing from the now menu', async () => {
 
 test('the error area is present, and empty, before anything is typed', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('now', 'from now');
+  await chooseWhen('right now', 'from now');
   fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
   await screen.findByRole('textbox', { name: 'Type a duration' });
   expect(screen.getByRole('alert')).toBeEmptyDOMElement();
@@ -191,7 +191,7 @@ test('with a place, it comes before the duration, and focus stays on the slot', 
     JSON.stringify({ city: 'London', zone: 'Europe/London' }),
   );
   render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('now', 'ago');
+  await chooseWhen('right now', 'ago');
   expect(
     await screen.findByRole('heading', {
       name: named('What time was it in London 1 hour ago?'),

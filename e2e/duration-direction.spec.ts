@@ -14,7 +14,7 @@ test('10 hours from now, then ago, by keyboard', async ({ page }) => {
   await page.goto('/');
   const heading = page.getByRole('heading', { level: 1 });
 
-  await heading.getByRole('button', { name: 'now' }).focus();
+  await heading.getByRole('button', { name: 'right now' }).focus();
   await page.keyboard.press('Enter');
   await page.getByRole('menuitemradio', { name: 'from now' }).press('Enter');
   await expect(heading.getByRole('button', { name: 'from now' })).toBeFocused();
@@ -47,7 +47,7 @@ test('pick a common duration by tap or click', async ({ page }, testInfo) => {
 
   await page.goto('/');
   const heading = page.getByRole('heading', { level: 1 });
-  await press(heading.getByRole('button', { name: 'now' }));
+  await press(heading.getByRole('button', { name: 'right now' }));
   await press(page.getByRole('menuitemradio', { name: 'ago' }));
   await press(heading.getByRole('button', { name: '1 hour' }));
   await press(page.getByRole('button', { name: '8 hours' }));
@@ -61,7 +61,7 @@ test('pick a common duration by tap or click', async ({ page }, testInfo) => {
 test('a duration that cannot be read is reported', async ({ page }) => {
   await page.goto('/');
   const heading = page.getByRole('heading', { level: 1 });
-  await heading.getByRole('button', { name: 'now' }).click();
+  await heading.getByRole('button', { name: 'right now' }).click();
   await page.getByRole('menuitemradio', { name: 'from now' }).click();
   await heading.getByRole('button', { name: '1 hour' }).click();
   await page.getByRole('textbox', { name: 'Type a duration' }).fill('soon');
