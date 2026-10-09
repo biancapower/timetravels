@@ -123,3 +123,26 @@ export function parseDuration(text: string): Duration | null {
   }
   return null;
 }
+
+/**
+ * Calendar days from the reference to the moment, judged in the
+ * moment's own zone: 1 is tomorrow there, -1 yesterday.
+ */
+export function daysBetween(reference: Moment, moment: Moment): number {
+  const today = reference.withTimeZone(moment.timeZoneId).toPlainDate();
+  return today.until(moment.toPlainDate(), { largestUnit: 'days' }).days;
+}
+
+/** Weekday, date and time, for answers more than a day away. */
+export function formatDateTime(
+  moment: Moment,
+  options: FormatOptions = {},
+): string {
+  return moment.toLocaleString(options.locale, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
