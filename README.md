@@ -16,7 +16,7 @@ Needs Node 24 and Corepack, which picks the pnpm version from `package.json`.
 corepack enable
 pnpm install
 pnpm dev         # serves on all interfaces, so a phone on the same network can open it
-pnpm check       # typecheck, lint, format check, unit tests
+pnpm check       # typecheck, lint, format check, unit tests, guard hook test
 pnpm check:full  # the above plus Playwright browser tests
 ```
 

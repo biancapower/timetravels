@@ -31,7 +31,7 @@ For any PR with a 🔴 or 🟡 item, offer a short teach-back: the maintainer ex
 
 ## Commands
 
-One check entrypoint: `pnpm check` (typecheck, lint, format check, unit tests) and `pnpm check:full` (adds Playwright). Never call `vitest`, `playwright`, `eslint` or `tsc` directly in CI or docs. Verification means running it; "it compiles" is not verification. Before every PR, run `/pre-pr`: a fresh-context review of `git diff origin/main...HEAD` that reports BLOCKING / SHOULD FIX / SUGGESTION / NOTE findings and edits nothing; triage, then checks.
+One check entrypoint: `pnpm check` (typecheck, lint, format check, unit tests, guard hook test) and `pnpm check:full` (adds Playwright). Never call `vitest`, `playwright`, `eslint` or `tsc` directly in CI or docs. Verification means running it; "it compiles" is not verification. Before every PR, run `/pre-pr`: a fresh-context review of `git diff origin/main...HEAD` that reports BLOCKING / SHOULD FIX / SUGGESTION / NOTE findings and edits nothing; triage, then checks.
 
 ## Commits
 
