@@ -25,6 +25,8 @@ const en = {
   'sentence.beforeIn':
     '{tense, select, past {What time was it} other {What time will it be}} in <place>{city}</place> <duration>{length}</duration> <direction>before</direction> <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
   'answer.relativeDay': '{relativeDay}, {time}',
+  'answer.transition':
+    '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}, so the clock {tense, select, past {moved} other {moves}} {clock} in these {span}.',
   'answer.skipped':
     'There was no {time} in {city} that day: the clocks went forward. This counts from {actual}.',
   'answer.repeated':

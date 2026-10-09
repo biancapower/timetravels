@@ -1,13 +1,17 @@
 import { useIntl } from 'react-intl';
+import { cityOf } from '../places/places';
 import {
+  clockDifference,
   dayRelation,
   formatClockTime,
   formatDateTime,
   formatOffset,
   formatTime,
+  transitionsBetween,
   zoneLabel,
   type Moment,
 } from '../time';
+import { formatDuration } from './formatDuration';
 import styles from './Answer.module.css';
 import { resolveAnswer, type Question } from './resolveAnswer';
 
@@ -30,12 +34,56 @@ export function Answer({
   locale,
 }: AnswerProps) {
   const intl = useIntl();
-  const { today, moment, anchored } = resolveAnswer(now, question);
+  const { today, moment, anchored, span } = resolveAnswer(now, question);
+  const cityFor = (zone: string) =>
+    (zone === question.answerZone ? city : undefined) ??
+    (anchored && zone === anchored.moment.timeZoneId
+      ? anchorCity
+      : undefined) ??
+    cityOf(zone) ??
+    zone;
+  const changes = span
+    ? transitionsBetween(span.start.toInstant(), moment.toInstant(), span.zones)
+    : [];
   const chosen = formatClockTime(question.anchor.time, { locale });
   return (
     <div className={styles.answer}>
       <p className={styles.time}>{answerTime(today, moment, locale, intl)}</p>
       <p className={styles.zone}>{zoneLabel(moment, { locale, city })}</p>
+      {changes.map((change) => (
+        <p
+          key={`${change.zone}:${change.instant.toString()}`}
+          className={styles.note}
+        >
+          {intl.formatMessage(
+            { id: 'answer.transition' },
+            {
+              city: cityFor(change.zone),
+              tense:
+                Temporal.Instant.compare(change.instant, now) < 0
+                  ? 'past'
+                  : 'future',
+              direction: change.direction,
+              amount: change.minutes,
+              time: formatClockTime(change.wallTime.toPlainTime(), { locale }),
+              date: change.wallTime.toPlainDate().toLocaleString(locale, {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+              }),
+              clock: formatDuration(
+                intl,
+                clockDifference(
+                  span?.start.toInstant() ?? now,
+                  moment.toInstant(),
+                  change.zone,
+                ),
+              ),
+              span: formatDuration(intl, question.duration),
+            },
+          )}
+        </p>
+      ))}
       {anchored?.issue === 'skipped' && (
         <p className={styles.note}>
           {intl.formatMessage(
