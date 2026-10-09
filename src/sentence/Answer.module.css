@@ -16,3 +16,8 @@
   color: var(--muted);
   font-size: var(--font-size-2);
 }
+
+/* "tomorrow, Sunday 4:49 am" starts the line, so capitalise it. */
+.time::first-letter {
+  text-transform: uppercase;
+}

@@ -2,11 +2,11 @@
 
 A time calculator you talk to in one sentence.
 
-> What time will it be **10 hours** **from now** in **London**?
+> What time will it be in **London** **10 hours** **from now**?
 
 Tap an underlined word to change it; the answer sits underneath and updates as you go. Time-zone conversion, hours from now and ago, and warnings when a daylight-saving change is about to move the goalposts. A web app you can install on your phone, which works offline.
 
-**Status:** pre-release. The app answers "What time is it now here?" and "What time is it now in [a place]?"; the rest of release 0.1.0 is being worked through.
+**Status:** pre-release. The app answers what time it is now, or a number of hours from now or ago, here or in another place; the rest of release 0.1.0 is being worked through.
 
 ## Running it
 

@@ -4,8 +4,33 @@ const en = {
   'app.title': 'TimeTravels',
   'app.loadFailed':
     'TimeTravels could not load. Check your connection and reload the page.',
-  'sentence.nowHere': 'What time is it <now>now</now> <place>here</place>?',
-  'sentence.nowIn': 'What time is it <now>now</now> in <place>{city}</place>?',
+  'sentence.nowHere':
+    'What time is it <place>here</place> <direction>right now</direction>?',
+  'sentence.nowIn':
+    'What time is it in <place>{city}</place> <direction>right now</direction>?',
+  'sentence.laterHere':
+    'What time will it be <place>here</place> <duration>{length}</duration> <direction>from now</direction>?',
+  'sentence.laterIn':
+    'What time will it be in <place>{city}</place> <duration>{length}</duration> <direction>from now</direction>?',
+  'sentence.earlierHere':
+    'What time was it <place>here</place> <duration>{length}</duration> <direction>ago</direction>?',
+  'sentence.earlierIn':
+    'What time was it in <place>{city}</place> <duration>{length}</duration> <direction>ago</direction>?',
+  'answer.relativeDay': '{relativeDay}, {time}',
+  'duration.hours': '{hours, plural, one {# hour} other {# hours}}',
+  'duration.minutes': '{minutes, plural, one {# minute} other {# minutes}}',
+  'duration.hoursMinutes':
+    '{hours, plural, one {# hour} other {# hours}} {minutes, plural, one {# minute} other {# minutes}}',
+  'directionPicker.label': 'Choose when',
+  'directionPicker.now': 'right now',
+  'directionPicker.later': 'from now',
+  'directionPicker.earlier': 'ago',
+  'durationPicker.label': 'Choose how long',
+  'durationPicker.input': 'Type a duration',
+  'durationPicker.placeholder': 'For example 90m or 1h30',
+  'durationPicker.set': 'Set',
+  'durationPicker.invalid': 'Couldn’t read that duration',
+  'durationPicker.quick': 'Common durations',
   'placePicker.label': 'Choose a place',
   'placePicker.search': 'Search for a city',
   'placePicker.here': 'Here',

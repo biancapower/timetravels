@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 test.use({ timezoneId: 'Australia/Sydney' });
 
 const sentenceIn = (city: string) =>
-  new RegExp(`^What time is it now in ${city} ?\\?$`);
+  new RegExp(`^What time is it in ${city} right now ?\\?$`);
 
 function slot(page: Page, name: string) {
   return page.getByRole('heading').getByRole('button', { name });
@@ -66,7 +66,7 @@ test('pick a city by tap or click, and it is remembered', async ({
   await slot(page, 'Tokyo').click();
   await press('Here');
   await expect(
-    page.getByRole('heading', { name: /^What time is it now here ?\?$/ }),
+    page.getByRole('heading', { name: /^What time is it here right now ?\?$/ }),
   ).toBeVisible();
   await expect(page.getByText(/^Sydney \(GMT/)).toBeVisible();
 });

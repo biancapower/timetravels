@@ -88,3 +88,83 @@ export function zoneLabel(moment: Moment, options: LabelOptions = {}): string {
     .find((part) => part.type === 'timeZoneName')?.value;
   return offset ? `${city} (${offset})` : city;
 }
+
+// Long enough for any sensible question; far longer spans are typing errors.
+const longestMinutes = 1000 * 60;
+const number = String.raw`(\d+(?:\.\d+)?)`;
+const hourUnit = '(?:h|hrs?|hours?)';
+const minuteUnit = '(?:m|mins?|minutes?)';
+const durationPatterns: readonly [
+  RegExp,
+  (match: RegExpExecArray) => number,
+][] = [
+  // "10", "1.5": a bare number is hours.
+  [new RegExp(`^${number}$`), (m) => Number(m[1]) * 60],
+  [new RegExp(`^${number}\\s*${hourUnit}$`), (m) => Number(m[1]) * 60],
+  [new RegExp(`^${number}\\s*${minuteUnit}$`), (m) => Number(m[1])],
+  // "1h30", "1h 30m", "1:30": whole hours, then minutes under 60.
+  [
+    new RegExp(String.raw`^(\d+)\s*${hourUnit}\s*([0-5]?\d)\s*${minuteUnit}?$`),
+    (m) => Number(m[1]) * 60 + Number(m[2]),
+  ],
+  [/^(\d+):([0-5]\d)$/, (m) => Number(m[1]) * 60 + Number(m[2])],
+];
+
+/**
+ * Reads a typed duration such as "10", "1.5h", "90m", "1h30" or "1:30".
+ * Returns null for anything else, for zero, and for 1000 hours or more.
+ */
+export function parseDuration(text: string): Duration | null {
+  const input = text.trim().toLowerCase();
+  for (const [pattern, toMinutes] of durationPatterns) {
+    const match = pattern.exec(input);
+    if (!match) continue;
+    const total = Math.round(toMinutes(match));
+    if (total <= 0 || total >= longestMinutes) return null;
+    return { hours: Math.floor(total / 60), minutes: total % 60 };
+  }
+  return null;
+}
+
+/**
+ * Calendar days from the reference to the moment, judged in the
+ * moment's own zone: 1 is tomorrow there, -1 yesterday.
+ */
+export function daysBetween(reference: Moment, moment: Moment): number {
+  const today = reference.withTimeZone(moment.timeZoneId).toPlainDate();
+  return today.until(moment.toPlainDate(), { largestUnit: 'days' }).days;
+}
+
+export type DayRelation = 'today' | 'tomorrow' | 'yesterday' | 'further';
+
+/** How the answer's day relates to today, judged in the answer's own zone. */
+export function dayRelation(reference: Moment, moment: Moment): DayRelation {
+  const days = daysBetween(reference, moment);
+  if (days === 0) return 'today';
+  if (days === 1) return 'tomorrow';
+  if (days === -1) return 'yesterday';
+  return 'further';
+}
+
+export interface DateTimeOptions extends FormatOptions {
+  /** Today; the year is shown when the moment falls in another year. */
+  reference?: Moment;
+}
+
+/** Weekday, date and time, for answers more than a day away. */
+export function formatDateTime(
+  moment: Moment,
+  options: DateTimeOptions = {},
+): string {
+  const otherYear =
+    options.reference !== undefined &&
+    options.reference.withTimeZone(moment.timeZoneId).year !== moment.year;
+  return moment.toLocaleString(options.locale, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: otherYear ? 'numeric' : undefined,
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
