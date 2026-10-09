@@ -48,3 +48,17 @@ test('the answer updates on the minute without re-rendering the sentence', () =>
   expect(screen.getByText(/10:06/)).toBeInTheDocument();
   expect(sentenceRenders).toHaveBeenCalledTimes(1);
 });
+
+test('the answer catches up as soon as the page is visible again', () => {
+  vi.useFakeTimers({ now: new Date('2026-10-03T23:05:30Z') });
+  render(<App zone="Australia/Sydney" />);
+  expect(screen.getByText(/10:05/)).toBeInTheDocument();
+
+  // A sleeping device moves the clock on without firing timers.
+  vi.setSystemTime(new Date('2026-10-03T23:20:10Z'));
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+
+  expect(screen.getByText(/10:20/)).toBeInTheDocument();
+});
