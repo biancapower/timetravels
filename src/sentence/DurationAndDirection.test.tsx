@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { afterEach, expect, test } from 'vitest';
 import { App } from '../App';
@@ -158,4 +164,15 @@ test('an answer further away gives the date', () => {
   expect(
     screen.getByText(/^Monday 12 October at 10:00\spm$/),
   ).toBeInTheDocument();
+});
+
+test('focus returns to the slot after choosing from the now menu', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  await chooseWhen('now', 'from now');
+  const slot = await within(heading()).findByRole('button', {
+    name: 'from now',
+  });
+  await waitFor(() => {
+    expect(slot).toHaveFocus();
+  });
 });

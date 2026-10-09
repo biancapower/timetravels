@@ -17,6 +17,7 @@ test('10 hours from now, then ago, by keyboard', async ({ page }) => {
   await heading.getByRole('button', { name: 'now' }).focus();
   await page.keyboard.press('Enter');
   await page.getByRole('menuitemradio', { name: 'from now' }).press('Enter');
+  await expect(heading.getByRole('button', { name: 'from now' })).toBeFocused();
   await expect(heading).toHaveAccessibleName(
     sentence('What time will it be 1 hour from now here?'),
   );
