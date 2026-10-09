@@ -4,7 +4,12 @@ const en = {
   'app.title': 'TimeTravels',
   'app.loadFailed':
     'TimeTravels could not load. Check your connection and reload the page.',
-  'sentence.nowHere': 'What time is it <now>now</now> <here>here</here>?',
+  'sentence.nowHere': 'What time is it <now>now</now> <place>here</place>?',
+  'sentence.nowIn': 'What time is it <now>now</now> in <place>{city}</place>?',
+  'placePicker.label': 'Choose a place',
+  'placePicker.search': 'Search for a city',
+  'placePicker.here': 'Here',
+  'placePicker.empty': 'No matching places',
 } as const;
 
 export type MessageId = keyof typeof en;

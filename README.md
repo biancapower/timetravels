@@ -6,7 +6,7 @@ A time calculator you talk to in one sentence.
 
 Tap an underlined word to change it; the answer sits underneath and updates as you go. Time-zone conversion, hours from now and ago, and warnings when a daylight-saving change is about to move the goalposts. A web app you can install on your phone, which works offline.
 
-**Status:** pre-release. The app answers the first sentence, "What time is it now here?"; the rest of release 0.1.0 is being worked through.
+**Status:** pre-release. The app answers "What time is it now here?" and "What time is it now in [a place]?"; the rest of release 0.1.0 is being worked through.
 
 ## Running it
 
@@ -32,7 +32,7 @@ Before the first `pnpm check:full`, install the browser once with `pnpm browsers
 - Vitest and Playwright
 - ESLint and Prettier
 - pnpm
-- Custom CSS with Open Props; a headless component library for the pickers
+- Custom CSS with Open Props; Base UI, a headless component library, for the pickers
 - Cloudflare Pages
 
 Time-zone rules come from the browser's own `Intl` data, or from the polyfill where Temporal isn't native. That's why the app works offline, and why zone rules update with the browser rather than with the app.

@@ -51,3 +51,12 @@ test('zoneLabel spells out multi-word cities and zero offsets', () => {
     /^London \(GMT(\+0)?\)$/,
   );
 });
+
+test('zoneLabel uses a given city name instead of the one in the zone id', () => {
+  const losAngeles = Temporal.ZonedDateTime.from(
+    '2026-10-04T12:00[America/Los_Angeles]',
+  );
+  expect(
+    zoneLabel(losAngeles, { locale: 'en-AU', city: 'San Francisco' }),
+  ).toBe('San Francisco (GMT-7)');
+});

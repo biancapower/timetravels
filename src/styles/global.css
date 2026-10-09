@@ -2,6 +2,8 @@
 @import 'open-props/sizes';
 @import 'open-props/gray';
 @import 'open-props/indigo';
+@import 'open-props/borders';
+@import 'open-props/shadows';
 
 /* The five semantic colour tokens. Components take colours only from these. */
 :root {
