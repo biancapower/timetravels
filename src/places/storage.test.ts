@@ -46,3 +46,12 @@ test('storage that throws, as in some private windows, is ignored', () => {
   }).not.toThrow();
   expect(loadPlace(places)).toBeNull();
 });
+
+test('a saved place whose city has since been renamed is found by its zone', () => {
+  localStorage.setItem(
+    'timetravels.place',
+    JSON.stringify({ city: 'Calcutta', zone: 'Asia/Calcutta' }),
+  );
+  const kolkata: Place = { city: 'Kolkata', zone: 'Asia/Calcutta' };
+  expect(loadPlace([kolkata])).toEqual(kolkata);
+});

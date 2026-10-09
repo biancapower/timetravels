@@ -3,14 +3,19 @@ import type { Place } from './places';
 // A per-device convenience only: losing it just means starting from "here".
 const key = 'timetravels.place';
 
-/** The saved place, if it is still one of the places offered. */
+/**
+ * The saved place, if it is still one of the places offered. A place
+ * whose city name has changed since it was saved is found by its zone.
+ */
 export function loadPlace(places: readonly Place[]): Place | null {
   try {
     const stored: unknown = JSON.parse(localStorage.getItem(key) ?? 'null');
     if (typeof stored !== 'object' || stored === null) return null;
     const { city, zone } = stored as Partial<Place>;
     return (
-      places.find((place) => place.city === city && place.zone === zone) ?? null
+      places.find((place) => place.city === city && place.zone === zone) ??
+      places.find((place) => place.zone === zone) ??
+      null
     );
   } catch {
     return null;
