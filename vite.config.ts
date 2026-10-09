@@ -14,7 +14,7 @@ export default defineConfig({
           name: 'time',
           environment: 'node',
           include: ['src/time/**/*.test.ts'],
-          // Installs Temporal only where the runtime lacks it, as the app will.
+          // Installs Temporal only where the runtime lacks it, as the app is meant to.
           setupFiles: ['temporal-polyfill/global'],
         },
       },
