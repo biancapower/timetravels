@@ -9,3 +9,7 @@ test('pickLocale falls back to English when no preferred language has messages',
 test('pickLocale matches a regional preference to its language', () => {
   expect(pickLocale(['en-AU'])).toBe('en');
 });
+
+test('pickLocale skips malformed language tags instead of throwing', () => {
+  expect(pickLocale(['en_US', '', 'x'])).toBe('en');
+});

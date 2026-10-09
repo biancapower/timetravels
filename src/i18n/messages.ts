@@ -22,7 +22,12 @@ function hasCatalogue(language: string): language is Locale {
 /** The first preferred language with messages, or English. */
 export function pickLocale(preferred: readonly string[]): Locale {
   for (const tag of preferred) {
-    const language = new Intl.Locale(tag).language;
+    let language: string;
+    try {
+      language = new Intl.Locale(tag).language;
+    } catch {
+      continue; // A malformed tag, such as "en_US", names no language.
+    }
     if (hasCatalogue(language)) return language;
   }
   return fallback;
