@@ -6,6 +6,10 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    ignore:
+      # The major version tracks the Node version in .node-version.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     groups:
       # React and its types must move in step.
       react:
