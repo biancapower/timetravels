@@ -5,7 +5,9 @@ test('the page shows the sentence and a time', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: 'What time is it now here?' }),
   ).toBeVisible();
-  await expect(page.getByText(/\b\d{1,2}:\d{2}(\s?[ap]m)?\b/i)).toBeVisible();
+  await expect(
+    page.getByText(/^\p{L}+,? \d{1,2}:\d{2}(\s?[ap]m)?$/iu),
+  ).toBeVisible();
 });
 
 for (const width of [360, 1280]) {
