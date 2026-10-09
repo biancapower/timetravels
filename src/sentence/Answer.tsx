@@ -53,7 +53,8 @@ function answerTime(
 ): string {
   const relation = dayRelation(today, moment);
   if (relation === 'today') return formatTime(moment, { locale });
-  if (relation === 'further') return formatDateTime(moment, { locale });
+  if (relation === 'further')
+    return formatDateTime(moment, { locale, reference: today });
   return intl.formatMessage(
     { id: 'answer.relativeDay' },
     {

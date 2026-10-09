@@ -73,3 +73,19 @@ test('dayRelation names today, tomorrow and yesterday, and nothing further', () 
     dayRelation(saturdayNight, at('2026-10-12T08:00', 'Australia/Sydney')),
   ).toBe('further');
 });
+
+test('formatDateTime adds the year when it differs from the reference', () => {
+  const newYearsEve = at('2026-12-31T20:00', 'Australia/Sydney');
+  const later = at('2027-01-02T10:49', 'Australia/Sydney');
+  expect(
+    plain(formatDateTime(later, { locale: 'en-AU', reference: newYearsEve })),
+  ).toBe('Saturday 2 January 2027 at 10:49 am');
+  expect(
+    plain(
+      formatDateTime(at('2026-12-31T23:00', 'Australia/Sydney'), {
+        locale: 'en-AU',
+        reference: at('2026-12-29T09:00', 'Australia/Sydney'),
+      }),
+    ),
+  ).toBe('Thursday 31 December at 11:00 pm');
+});

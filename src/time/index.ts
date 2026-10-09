@@ -146,15 +146,24 @@ export function dayRelation(reference: Moment, moment: Moment): DayRelation {
   return 'further';
 }
 
+export interface DateTimeOptions extends FormatOptions {
+  /** Today; the year is shown when the moment falls in another year. */
+  reference?: Moment;
+}
+
 /** Weekday, date and time, for answers more than a day away. */
 export function formatDateTime(
   moment: Moment,
-  options: FormatOptions = {},
+  options: DateTimeOptions = {},
 ): string {
+  const otherYear =
+    options.reference !== undefined &&
+    options.reference.withTimeZone(moment.timeZoneId).year !== moment.year;
   return moment.toLocaleString(options.locale, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
+    year: otherYear ? 'numeric' : undefined,
     hour: 'numeric',
     minute: '2-digit',
   });
