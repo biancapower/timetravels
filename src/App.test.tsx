@@ -11,9 +11,9 @@ const { sentenceRenders } = vi.hoisted(() => ({ sentenceRenders: vi.fn() }));
 vi.mock('./sentence/Sentence', async (importOriginal) => {
   const original = await importOriginal<typeof import('./sentence/Sentence')>();
   return {
-    Sentence: () => {
+    Sentence: (props: Parameters<typeof original.Sentence>[0]) => {
       sentenceRenders();
-      return original.Sentence();
+      return original.Sentence(props);
     },
   };
 });
@@ -26,11 +26,11 @@ afterEach(() => {
 test('renders the sentence with its two slots', () => {
   render(
     <IntlProvider locale="en" messages={catalogues.en}>
-      <Sentence />
+      <Sentence place={null} places={[]} onPlaceChange={vi.fn()} />
     </IntlProvider>,
   );
   const heading = screen.getByRole('heading', {
-    name: 'What time is it now here?',
+    name: /^What time is it now here ?\?$/,
   });
   expect(heading).toBeInTheDocument();
   for (const slot of ['now', 'here']) {

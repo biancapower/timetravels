@@ -1,19 +1,20 @@
 import { render, screen, within } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { catalogues, type Messages } from '../i18n/messages';
 import { Sentence } from './Sentence';
 
 // A test-only locale that puts the slots in the other order.
 const reordered: Messages = {
   ...catalogues.en,
-  'sentence.nowHere': '<here>Here</here> and <now>now</now>: what time is it?',
+  'sentence.nowHere':
+    '<place>Here</place> and <now>now</now>: what time is it?',
 };
 
 test('the sentence follows the message, so a translation can reorder the slots', () => {
   render(
     <IntlProvider locale="en" messages={reordered}>
-      <Sentence />
+      <Sentence place={null} places={[]} onPlaceChange={vi.fn()} />
     </IntlProvider>,
   );
   const heading = screen.getByRole('heading', {
