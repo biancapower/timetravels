@@ -9,7 +9,7 @@ TimeTravels: a time calculator with a one-sentence interface. React 19, TypeScri
 - Starts the dev server unasked. When asked, bind it to `0.0.0.0` so it can be opened from a phone.
 - Opens an issue to match work already done. Work only against an issue the maintainer has written or approved.
 
-Enforced by `.claude/settings.json` (a `permissions.deny` for `.env*` reads and a `PreToolUse` hook blocking force-push to `main`, `--no-verify`, `wrangler deploy` and `pnpm publish`), with `scripts/test-hooks.sh` as its regression test. Both land with the scaffold (issue #1). A correction made twice becomes a hook or a line in this file, not a memory.
+Enforced by `.claude/settings.json` (a `permissions.deny` for `.env*` reads and a `PreToolUse` hook, `scripts/claude-guard.sh`, blocking any force-push, `--no-verify`, `wrangler deploy`, `pnpm publish`, `gh release create`, tag creation and visibility changes), with `scripts/test-hooks.sh` as its regression test. The guard matches patterns in the command text, not a parsed shell, so it over-blocks some harmless commands; edit files containing those patterns with the file tools rather than through the shell. A correction made twice becomes a hook or a line in this file, not a memory.
 
 ## Decisions
 
@@ -31,7 +31,7 @@ For any PR with a 🔴 or 🟡 item, offer a short teach-back: the maintainer ex
 
 ## Commands
 
-One check entrypoint: `pnpm check` (typecheck, lint, format check, unit tests) and `pnpm check:full` (adds Playwright). Never call `vitest`, `playwright`, `eslint` or `tsc` directly in CI or docs. Verification means running it; "it compiles" is not verification. Before every PR, run `/pre-pr`: a fresh-context review of `git diff origin/main...HEAD` that reports BLOCKING / SHOULD FIX / SUGGESTION / NOTE findings and edits nothing; triage, then checks.
+One check entrypoint: `pnpm check` (typecheck, lint, format check, unit tests, guard hook test) and `pnpm check:full` (adds Playwright). Never call `vitest`, `playwright`, `eslint` or `tsc` directly in CI or docs. Verification means running it; "it compiles" is not verification. Before every PR, run `/pre-pr`: a fresh-context review of `git diff origin/main...HEAD` that reports BLOCKING / SHOULD FIX / SUGGESTION / NOTE findings and edits nothing; triage, then checks.
 
 ## Commits
 
@@ -43,5 +43,5 @@ One check entrypoint: `pnpm check` (typecheck, lint, format check, unit tests) a
 
 - Docs describe the current state. No roadmap narration, no "to be written", no issue numbers in code comments.
 - `README.md` holds the docs index. `docs/decisions/` holds one record per decision: context, decision, alternatives, reasons, consequences, status, with the index in its README.
-- Stack gotchas, filled in as each one bites: Node 24; ESM only (`"type": "module"`); React 19; Vite.
+- Stack gotchas, filled in as each one bites: Node 24; ESM only (`"type": "module"`); React 19; Vite; pnpm 12 refuses packages published within about a day, so pin a version older than that rather than adding an exclusion; typescript-eslint supports TypeScript below 6.1, so TypeScript stays on 6.x until it supports 7.
 - Emoji appear only as the two decision flags. Nowhere else in code, docs or commits.
