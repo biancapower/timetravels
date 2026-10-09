@@ -75,3 +75,18 @@ test('the slot is a button that opens a labelled dialog holding a listbox', asyn
   ).toBeInTheDocument();
   expect(within(dialog).getByRole('listbox')).toBeInTheDocument();
 });
+
+test('Here is offered first, and only until a search is typed', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  const search = openPicker('here');
+  const options = await screen.findAllByRole('option');
+  expect(options[0]).toHaveTextContent('Here');
+
+  fireEvent.change(search, { target: { value: 'syd' } });
+  expect(
+    await screen.findByRole('option', { name: 'Sydney' }),
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByRole('option', { name: 'Here' }),
+  ).not.toBeInTheDocument();
+});
