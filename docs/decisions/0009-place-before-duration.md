@@ -1,6 +1,6 @@
 # 0009. English word order: the place first, and "right now"
 
-**Context.** The spec and the issues for sentences 3 to 5 put the duration before the place: "What time will it be 10 hours from now in London?". Trying the app, the maintainer found that order less natural than putting the place first.
+**Context.** The spec and the issues put the time before the place: "What time is it now in London?" and "What time will it be 10 hours from now in London?". Trying the app, the maintainer found that order less natural than putting the place first.
 
 **Decision.** In English, the place comes first in every sentence, before the time slots, and the default time slot reads "right now":
 - "What time is it in London right now?" and "What time is it here right now?"
