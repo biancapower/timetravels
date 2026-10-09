@@ -21,7 +21,8 @@ export default defineConfig({
         test: {
           name: 'components',
           environment: 'jsdom',
-          include: ['src/**/*.test.tsx'],
+          include: ['src/**/*.test.{ts,tsx}'],
+          exclude: ['src/time/**'],
           setupFiles: ['src/test-setup.ts'],
         },
       },
