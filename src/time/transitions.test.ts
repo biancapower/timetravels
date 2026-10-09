@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { clockDifference, transitionsBetween } from './index';
+import { clockMoveAcross, transitionsBetween } from './index';
 
 const instant = (text: string) => Temporal.Instant.from(text);
 
@@ -70,21 +70,15 @@ test('a zone without daylight saving never has a change', () => {
   ).toEqual([]);
 });
 
-test('clockDifference is how far the wall clock moves, not the elapsed time', () => {
-  // 10 hours across Sydney's clocks-forward change: the clock moves 11.
-  expect(
-    clockDifference(
-      instant('2026-10-03T11:00:00Z'),
-      instant('2026-10-03T21:00:00Z'),
-      'Australia/Sydney',
-    ),
-  ).toEqual({ hours: 11, minutes: 0 });
-  // The same span, given backwards.
-  expect(
-    clockDifference(
-      instant('2026-10-03T21:00:00Z'),
-      instant('2026-10-03T11:00:00Z'),
-      'Australia/Sydney',
-    ),
-  ).toEqual({ hours: 11, minutes: 0 });
+test('clockMoveAcross gives the clock movement one change makes to a span', () => {
+  const forward = { direction: 'forward', minutes: 60 } as const;
+  const back = { direction: 'back', minutes: 60 } as const;
+  const lordHowe = { direction: 'forward', minutes: 30 } as const;
+  const tenHours = { hours: 10, minutes: 0 };
+  expect(clockMoveAcross(tenHours, forward)).toEqual({ hours: 11, minutes: 0 });
+  expect(clockMoveAcross(tenHours, back)).toEqual({ hours: 9, minutes: 0 });
+  expect(clockMoveAcross(tenHours, lordHowe)).toEqual({
+    hours: 10,
+    minutes: 30,
+  });
 });

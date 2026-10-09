@@ -1,7 +1,7 @@
 import { useIntl } from 'react-intl';
 import { cityOf } from '../places/places';
 import {
-  clockDifference,
+  clockMoveAcross,
   dayRelation,
   formatClockTime,
   formatDateTime,
@@ -73,11 +73,7 @@ export function Answer({
               }),
               clock: formatDuration(
                 intl,
-                clockDifference(
-                  span?.start.toInstant() ?? now,
-                  moment.toInstant(),
-                  change.zone,
-                ),
+                clockMoveAcross(question.duration, change),
               ),
               span: formatDuration(intl, question.duration),
             },

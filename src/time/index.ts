@@ -297,16 +297,15 @@ export function transitionsBetween(
   return found;
 }
 
-/** How far the wall clock in a zone moves across a span, which a clock change makes differ from the span. */
-export function clockDifference(
-  start: Temporal.Instant,
-  end: Temporal.Instant,
-  zone: string,
+/**
+ * How far the wall clock moves across a span because of one clock change:
+ * 10 hours across a change forward an hour is 11 hours on the clock.
+ */
+export function clockMoveAcross(
+  span: Duration,
+  change: Pick<Transition, 'direction' | 'minutes'>,
 ): Duration {
-  const wall = (instant: Temporal.Instant) =>
-    instant.toZonedDateTimeISO(zone).toPlainDateTime();
-  const minutes = Math.abs(
-    wall(start).until(wall(end), { largestUnit: 'minutes' }).minutes,
-  );
+  const sign = change.direction === 'forward' ? 1 : -1;
+  const minutes = span.hours * 60 + span.minutes + sign * change.minutes;
   return { hours: Math.floor(minutes / 60), minutes: minutes % 60 };
 }
