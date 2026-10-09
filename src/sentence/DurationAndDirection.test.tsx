@@ -10,6 +10,7 @@ import { afterEach, expect, test } from 'vitest';
 import { App } from '../App';
 import { catalogues } from '../i18n/messages';
 import { named } from '../testing/named';
+import { question } from '../testing/question';
 import { Answer } from './Answer';
 
 afterEach(() => {
@@ -112,9 +113,10 @@ const saturdayNight = Temporal.Instant.from('2026-10-10T11:00:00Z');
 test('an answer on the same day shows the weekday and time', () => {
   renderAnswer({
     now: saturdayNight,
-    zone: 'Australia/Sydney',
-    when: 'earlier',
-    duration: { hours: 2, minutes: 0 },
+    question: question('Australia/Sydney', {
+      when: 'earlier',
+      duration: { hours: 2, minutes: 0 },
+    }),
     locale: 'en-AU',
   });
   expect(screen.getByText(/^Saturday 8:00\sp\.?m\.?$/)).toBeInTheDocument();
@@ -123,9 +125,10 @@ test('an answer on the same day shows the weekday and time', () => {
 test('an answer tomorrow says tomorrow', () => {
   renderAnswer({
     now: saturdayNight,
-    zone: 'Australia/Sydney',
-    when: 'later',
-    duration: { hours: 10, minutes: 0 },
+    question: question('Australia/Sydney', {
+      when: 'later',
+      duration: { hours: 10, minutes: 0 },
+    }),
     locale: 'en-AU',
   });
   expect(screen.getByText(/^tomorrow, Sunday 8:00\sam$/)).toBeInTheDocument();
@@ -134,9 +137,10 @@ test('an answer tomorrow says tomorrow', () => {
 test('an answer yesterday says yesterday', () => {
   renderAnswer({
     now: Temporal.Instant.from('2026-10-09T14:00:00Z'), // 01:00 Saturday in Sydney
-    zone: 'Australia/Sydney',
-    when: 'earlier',
-    duration: { hours: 3, minutes: 0 },
+    question: question('Australia/Sydney', {
+      when: 'earlier',
+      duration: { hours: 3, minutes: 0 },
+    }),
     locale: 'en-AU',
   });
   expect(screen.getByText(/^yesterday, Friday 10:00\spm$/)).toBeInTheDocument();
@@ -145,9 +149,10 @@ test('an answer yesterday says yesterday', () => {
 test('24 hours later is still tomorrow', () => {
   renderAnswer({
     now: saturdayNight,
-    zone: 'Australia/Sydney',
-    when: 'later',
-    duration: { hours: 24, minutes: 0 },
+    question: question('Australia/Sydney', {
+      when: 'later',
+      duration: { hours: 24, minutes: 0 },
+    }),
     locale: 'en-AU',
   });
   expect(screen.getByText(/^tomorrow, Sunday 10:00\spm$/)).toBeInTheDocument();
@@ -156,9 +161,10 @@ test('24 hours later is still tomorrow', () => {
 test('an answer further away gives the date', () => {
   renderAnswer({
     now: saturdayNight,
-    zone: 'Australia/Sydney',
-    when: 'later',
-    duration: { hours: 48, minutes: 0 },
+    question: question('Australia/Sydney', {
+      when: 'later',
+      duration: { hours: 48, minutes: 0 },
+    }),
     locale: 'en-AU',
   });
   expect(

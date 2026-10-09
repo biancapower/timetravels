@@ -16,7 +16,33 @@ const en = {
     'What time was it <place>here</place> <duration>{length}</duration> <direction>ago</direction>?',
   'sentence.earlierIn':
     'What time was it in <place>{city}</place> <duration>{length}</duration> <direction>ago</direction>?',
+  'sentence.afterHere':
+    '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <duration>{length}</duration> <direction>after</direction> <anchor>{anchorText}</anchor>?',
+  'sentence.afterIn':
+    '{tense, select, past {What time was it} other {What time will it be}} in <place>{city}</place> <duration>{length}</duration> <direction>after</direction> <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
+  'sentence.beforeHere':
+    '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <duration>{length}</duration> <direction>before</direction> <anchor>{anchorText}</anchor>?',
+  'sentence.beforeIn':
+    '{tense, select, past {What time was it} other {What time will it be}} in <place>{city}</place> <duration>{length}</duration> <direction>before</direction> <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
   'answer.relativeDay': '{relativeDay}, {time}',
+  'answer.skipped':
+    'There was no {time} in {city} that day: the clocks went forward. This counts from {actual}.',
+  'answer.repeated':
+    '{time} happened twice in {city} that day, when the clocks went back. This counts from the first, at {offset}.',
+  'anchor.today': '{time}',
+  'anchor.tomorrow': '{time} tomorrow',
+  'anchor.yesterday': '{time} yesterday',
+  'anchorPlace.mine': 'my time',
+  'anchorPlace.theirs': '{city} time',
+  'anchorPlacePicker.label': 'Whose time',
+  'anchorPicker.label': 'Choose a time',
+  'anchorPicker.time': 'Time',
+  'anchorPicker.day': 'Day',
+  'anchorPicker.yesterday': 'Yesterday',
+  'anchorPicker.today': 'Today',
+  'anchorPicker.tomorrow': 'Tomorrow',
+  'anchorPicker.set': 'Set',
+  'anchorPicker.invalid': 'Choose a time',
   'duration.hours': '{hours, plural, one {# hour} other {# hours}}',
   'duration.minutes': '{minutes, plural, one {# minute} other {# minutes}}',
   'duration.hoursMinutes':
@@ -25,6 +51,8 @@ const en = {
   'directionPicker.now': 'right now',
   'directionPicker.later': 'from now',
   'directionPicker.earlier': 'ago',
+  'directionPicker.after': 'after a time',
+  'directionPicker.before': 'before a time',
   'durationPicker.label': 'Choose how long',
   'durationPicker.input': 'Type a duration',
   'durationPicker.placeholder': 'For example 90m or 1h30',
