@@ -61,7 +61,7 @@ test('a span from Sydney across a change in Sydney gives the right London time',
   );
 });
 
-test('a span from Sydney across a change in London gives the right London time', () => {
+test('a Sydney span read in London just after London falls back gives the London time', () => {
   const result = shift(
     at('2026-10-25T08:00', 'Australia/Sydney'),
     tenHours,
@@ -70,6 +70,15 @@ test('a span from Sydney across a change in London gives the right London time',
   expect(wallTime(result.withTimeZone('Europe/London'))).toBe(
     '2026-10-25T07:00:00',
   );
+});
+
+test('10 hours later from 22:00 the evening before London falls back is 07:00 London time', () => {
+  const result = shift(
+    at('2026-10-24T22:00', 'Europe/London'),
+    tenHours,
+    'later',
+  );
+  expect(wallTime(result)).toBe('2026-10-25T07:00:00');
 });
 
 test('minutes count as well as hours', () => {
