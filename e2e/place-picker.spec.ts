@@ -70,3 +70,25 @@ test('pick a city by tap or click, and it is remembered', async ({
   ).toBeVisible();
   await expect(page.getByText(/^Sydney \(GMT/)).toBeVisible();
 });
+
+test('arrow keys move through several matches', async ({ page }) => {
+  await page.goto('/');
+  await slot(page, 'here').focus();
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('new');
+  const options = page.getByRole('option');
+  await expect(options.nth(1)).toBeVisible();
+
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await expect(options.nth(1)).toHaveAttribute('data-highlighted', '');
+  await page.keyboard.press('ArrowUp');
+  await expect(options.nth(0)).toHaveAttribute('data-highlighted', '');
+
+  const first = (await options.nth(0).textContent()) ?? '';
+  await page.keyboard.press('Enter');
+  await expect(
+    page.getByRole('heading', { name: sentenceIn(first) }),
+  ).toBeVisible();
+  await expect(slot(page, first)).toBeFocused();
+});
