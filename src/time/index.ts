@@ -88,3 +88,38 @@ export function zoneLabel(moment: Moment, options: LabelOptions = {}): string {
     .find((part) => part.type === 'timeZoneName')?.value;
   return offset ? `${city} (${offset})` : city;
 }
+
+const number = String.raw`(\d+(?:\.\d+)?)`;
+const hourUnit = '(?:h|hrs?|hours?)';
+const minuteUnit = '(?:m|mins?|minutes?)';
+const durationPatterns: readonly [
+  RegExp,
+  (match: RegExpExecArray) => number,
+][] = [
+  // "10", "1.5": a bare number is hours.
+  [new RegExp(`^${number}$`), (m) => Number(m[1]) * 60],
+  [new RegExp(`^${number}\\s*${hourUnit}$`), (m) => Number(m[1]) * 60],
+  [new RegExp(`^${number}\\s*${minuteUnit}$`), (m) => Number(m[1])],
+  // "1h30", "1h 30m", "1:30": whole hours, then minutes under 60.
+  [
+    new RegExp(String.raw`^(\d+)\s*${hourUnit}\s*([0-5]?\d)\s*${minuteUnit}?$`),
+    (m) => Number(m[1]) * 60 + Number(m[2]),
+  ],
+  [/^(\d+):([0-5]\d)$/, (m) => Number(m[1]) * 60 + Number(m[2])],
+];
+
+/**
+ * Reads a typed duration such as "10", "1.5h", "90m", "1h30" or "1:30".
+ * Returns null for anything else, and for zero.
+ */
+export function parseDuration(text: string): Duration | null {
+  const input = text.trim().toLowerCase();
+  for (const [pattern, toMinutes] of durationPatterns) {
+    const match = pattern.exec(input);
+    if (!match) continue;
+    const total = Math.round(toMinutes(match));
+    if (total <= 0) return null;
+    return { hours: Math.floor(total / 60), minutes: total % 60 };
+  }
+  return null;
+}
