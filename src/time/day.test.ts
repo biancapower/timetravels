@@ -40,3 +40,21 @@ test('formatDateTime gives the weekday, date and time', () => {
     'Tuesday 13 October at 4:49 am',
   );
 });
+
+test('daysBetween counts across a daylight-saving change by calendar day', () => {
+  // Sydney's clocks go forward at 02:00 on Sunday 4 October 2026, so that day has 23 hours.
+  const saturdayLate = at('2026-10-03T23:30', 'Australia/Sydney');
+  expect(
+    daysBetween(saturdayLate, at('2026-10-04T23:30', 'Australia/Sydney')),
+  ).toBe(1);
+  expect(
+    daysBetween(saturdayLate, at('2026-10-05T00:10', 'Australia/Sydney')),
+  ).toBe(2);
+});
+
+test('daysBetween counts a 25-hour day as one day', () => {
+  // Sydney's clocks go back at 03:00 on Sunday 5 April 2026, so that day has 25 hours.
+  const sundayEarly = at('2026-04-05T00:30', 'Australia/Sydney');
+  expect(daysBetween(sundayEarly, sundayEarly.add({ hours: 24 }))).toBe(0);
+  expect(daysBetween(sundayEarly, sundayEarly.add({ hours: 25 }))).toBe(1);
+});
