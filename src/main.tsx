@@ -11,7 +11,8 @@ import { catalogues, pickLocale } from './i18n/messages';
 const root = document.getElementById('root');
 if (!root) throw new Error('Missing #root element');
 
-const messages = catalogues[pickLocale(navigator.languages)];
+const locale = pickLocale(navigator.languages);
+const messages = catalogues[locale];
 document.title = messages['app.title'];
 
 // Download the Temporal polyfill only where the browser lacks Temporal.
@@ -26,6 +27,6 @@ if (!('Temporal' in globalThis)) {
 
 createRoot(root).render(
   <StrictMode>
-    <App />
+    <App locale={locale} />
   </StrictMode>,
 );
