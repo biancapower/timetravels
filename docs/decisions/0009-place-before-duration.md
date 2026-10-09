@@ -16,4 +16,4 @@ The time slot's menu reads "right now", "from now" and "ago". The README's examp
 
 **Consequences.** Issues #3, #4, #5 and #6 describe the old order; the code and README follow this one. Decision 0001 lists the sentences as they were written at the time.
 
-**Status.** Approved by @biancapower, 2026-10-10.
+**Status.** Proposed by @biancapower after trying the app; approved by @biancapower, 2026-10-10.
