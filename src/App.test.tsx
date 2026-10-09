@@ -1,6 +1,8 @@
 import { act, render, screen, within } from '@testing-library/react';
+import { IntlProvider } from 'react-intl';
 import { afterEach, expect, test, vi } from 'vitest';
 import { App } from './App';
+import { catalogues } from './i18n/messages';
 import { Answer } from './sentence/Answer';
 import { Sentence } from './sentence/Sentence';
 
@@ -22,7 +24,11 @@ afterEach(() => {
 });
 
 test('renders the sentence with its two slots', () => {
-  render(<Sentence />);
+  render(
+    <IntlProvider locale="en" messages={catalogues.en}>
+      <Sentence />
+    </IntlProvider>,
+  );
   const heading = screen.getByRole('heading', {
     name: 'What time is it now here?',
   });

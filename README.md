@@ -28,6 +28,7 @@ Before the first `pnpm check:full`, install the browser once with `pnpm browsers
 - TypeScript
 - Vite
 - Temporal API, with a polyfill where it's missing
+- react-intl, with every sentence an ICU message so translations can reorder the slots
 - Vitest and Playwright
 - ESLint and Prettier
 - pnpm
