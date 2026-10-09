@@ -1,6 +1,6 @@
 import { useIntl } from 'react-intl';
 import {
-  daysBetween,
+  dayRelation,
   formatDateTime,
   formatTime,
   nowIn,
@@ -51,15 +51,15 @@ function answerTime(
   locale: string | undefined,
   intl: ReturnType<typeof useIntl>,
 ): string {
-  const days = daysBetween(today, moment);
-  if (days === 0) return formatTime(moment, { locale });
-  if (Math.abs(days) > 1) return formatDateTime(moment, { locale });
+  const relation = dayRelation(today, moment);
+  if (relation === 'today') return formatTime(moment, { locale });
+  if (relation === 'further') return formatDateTime(moment, { locale });
   return intl.formatMessage(
     { id: 'answer.relativeDay' },
     {
       relativeDay: new Intl.RelativeTimeFormat(locale, {
         numeric: 'auto',
-      }).format(days, 'day'),
+      }).format(relation === 'tomorrow' ? 1 : -1, 'day'),
       time: formatTime(moment, { locale }),
     },
   );

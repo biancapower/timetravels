@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { daysBetween, formatDateTime } from './index';
+import { dayRelation, daysBetween, formatDateTime } from './index';
 
 function at(dateTime: string, zone: string) {
   return Temporal.ZonedDateTime.from(`${dateTime}[${zone}]`);
@@ -57,4 +57,19 @@ test('daysBetween counts a 25-hour day as one day', () => {
   const sundayEarly = at('2026-04-05T00:30', 'Australia/Sydney');
   expect(daysBetween(sundayEarly, sundayEarly.add({ hours: 24 }))).toBe(0);
   expect(daysBetween(sundayEarly, sundayEarly.add({ hours: 25 }))).toBe(1);
+});
+
+test('dayRelation names today, tomorrow and yesterday, and nothing further', () => {
+  expect(
+    dayRelation(saturdayNight, at('2026-10-10T23:00', 'Australia/Sydney')),
+  ).toBe('today');
+  expect(
+    dayRelation(saturdayNight, at('2026-10-11T08:00', 'Australia/Sydney')),
+  ).toBe('tomorrow');
+  expect(
+    dayRelation(saturdayNight, at('2026-10-09T08:00', 'Australia/Sydney')),
+  ).toBe('yesterday');
+  expect(
+    dayRelation(saturdayNight, at('2026-10-12T08:00', 'Australia/Sydney')),
+  ).toBe('further');
 });

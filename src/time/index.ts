@@ -135,6 +135,17 @@ export function daysBetween(reference: Moment, moment: Moment): number {
   return today.until(moment.toPlainDate(), { largestUnit: 'days' }).days;
 }
 
+export type DayRelation = 'today' | 'tomorrow' | 'yesterday' | 'further';
+
+/** How the answer's day relates to today, judged in the answer's own zone. */
+export function dayRelation(reference: Moment, moment: Moment): DayRelation {
+  const days = daysBetween(reference, moment);
+  if (days === 0) return 'today';
+  if (days === 1) return 'tomorrow';
+  if (days === -1) return 'yesterday';
+  return 'further';
+}
+
 /** Weekday, date and time, for answers more than a day away. */
 export function formatDateTime(
   moment: Moment,
