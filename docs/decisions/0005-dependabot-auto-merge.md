@@ -6,7 +6,7 @@
 
 **Alternatives.** No auto-merge, so the maintainer merges every Dependabot pull request by hand. This keeps the "every pull request is merged by the maintainer" rule without exception, at the cost of a small weekly chore.
 
-**Reasons.** Patch and minor updates of pinned dependencies are low risk once the full check passes, and a 7-day cooldown keeps a freshly published bad release out. Merging them automatically keeps dependencies current without a weekly chore, and leaves the maintainer's review for the changes that need judgement.
+**Reasons.** Patch and minor updates of pinned dependencies are low risk once `pnpm check` passes in CI; browser tests run only in the weekly scheduled run, and a 7-day cooldown keeps a freshly published bad release out. Merging them automatically keeps dependencies current without a weekly chore, and leaves the maintainer's review for the changes that need judgement.
 
 **Consequences.** Two repository settings make this safe and are set by the maintainer by hand: "Allow auto-merge" on, and a rule on `main` requiring the `gate` check. Without the required check, an auto-merge would not wait for CI. [Working with AI](../working-with-ai.md) states the exception.
 
