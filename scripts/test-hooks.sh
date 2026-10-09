@@ -104,10 +104,39 @@ check_list "must_block" block "${must_block[@]}"
 check_list "must_allow" allow "${must_allow[@]}"
 check_list "known_gaps" allow "${known_gaps[@]}"
 
-total=$(( ${#must_block[@]} + ${#must_allow[@]} + ${#known_gaps[@]} ))
+# --- hook entrypoint: the JSON payload Claude Code sends, end to end ---
+run_hook() {
+  local cmd="$1" path="$2" status=0
+  jq -cn --arg c "$cmd" '{tool_name: "Bash", tool_input: {command: $c}}' \
+    | PATH="$path" "$SCRIPT_DIR/claude-guard.sh" >/dev/null 2>&1 || status=$?
+  echo "$status"
+}
+
+check_hook() {
+  local label="$1" expect="$2" cmd="$3" path="$4" got
+  got="$(run_hook "$cmd" "$path")"
+  if [ "$got" != "$expect" ]; then
+    echo "FAIL [hook:$label] expected exit $expect, got $got: $cmd"
+    fail=$((fail + 1))
+  fi
+}
+
+# A PATH holding the tools the guard needs, except jq.
+no_jq_bin="$(mktemp -d)"
+trap 'rm -rf "$no_jq_bin"' EXIT
+for tool in bash cat grep; do
+  ln -s "$(command -v "$tool")" "$no_jq_bin/$tool"
+done
+
+check_hook "escaped quotes" 2 'bash -c "git push --force origin main"' "$PATH"
+check_hook "routine" 0 'git status' "$PATH"
+check_hook "no jq fails closed" 2 'git status' "$no_jq_bin"
+hook_cases=3
+
+total=$(( ${#must_block[@]} + ${#must_allow[@]} + ${#known_gaps[@]} + hook_cases ))
 
 if [ "$fail" -eq 0 ]; then
-  echo "test-hooks: PASS - ${total} cases (${#must_block[@]} block, ${#must_allow[@]} allow, ${#known_gaps[@]} known-gap)"
+  echo "test-hooks: PASS - ${total} cases (${#must_block[@]} block, ${#must_allow[@]} allow, ${#known_gaps[@]} known-gap, ${hook_cases} hook)"
   exit 0
 else
   echo "test-hooks: FAIL - ${fail}/${total} cases wrong"

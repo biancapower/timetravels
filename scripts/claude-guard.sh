@@ -88,16 +88,12 @@ guard_check() {
 if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
   payload="$(cat)"
 
-  if command -v jq >/dev/null 2>&1; then
-    command_str="$(jq -r '.tool_input.command // ""' <<<"$payload")"
-  else
-    # Fallback: pull the value of "command" out of the JSON by hand.
-    # [^"]* stops at the first unescaped quote, so this does not handle
-    # a command string containing an escaped double quote -- jq does;
-    # install it for full coverage.
-    command_str="$(sed -n 's/.*"command"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' <<<"$payload" | head -1)"
-    command_str="${command_str//\\\"/\"}"
+  # Without jq the command cannot be read reliably, so fail closed.
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "blocked: the guard needs jq to read the command; install jq" >&2
+    exit 2
   fi
+  command_str="$(jq -r '.tool_input.command // ""' <<<"$payload")"
 
   if [ -z "$command_str" ]; then
     exit 0
