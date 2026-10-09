@@ -15,7 +15,8 @@ const currentNames: Record<string, string> = {
   'America/Godthab': 'Nuuk',
 };
 
-function cityOf(zone: string): string | undefined {
+/** The city a zone is named after, or undefined for zones such as UTC. */
+export function cityOf(zone: string): string | undefined {
   if (!zone.includes('/') || zone.startsWith('Etc/')) return undefined;
   const renamed = currentNames[zone];
   if (renamed) return renamed;

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { buildPlaces, filterPlaces, type Place } from './places';
+import { buildPlaces, cityOf, filterPlaces, type Place } from './places';
 
 const zones = [
   'Australia/Sydney',
@@ -76,4 +76,10 @@ test('cities that start with the query come before other matches', () => {
 test('an empty query keeps every place', () => {
   const places = buildPlaces(zones, []);
   expect(filterPlaces(places, '  ')).toEqual(places);
+});
+
+test('cityOf names the city of a zone, with current spellings', () => {
+  expect(cityOf('Asia/Calcutta')).toBe('Kolkata');
+  expect(cityOf('America/New_York')).toBe('New York');
+  expect(cityOf('UTC')).toBeUndefined();
 });
