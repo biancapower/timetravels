@@ -54,13 +54,13 @@ export default defineConfig([
         'error',
         {
           selector:
-            'MemberExpression[object.name=/^(test|it|describe)$/][property.name=/^(skip|only)$/]',
+            'MemberExpression[object.name=/^(test|it|describe)$/][property.name=/^(skip|skipIf|fixme|only)$/]',
           message:
             'Skipped or focused tests never reach main; use test.todo for a planned case.',
         },
         {
           selector:
-            'MemberExpression[object.property.name="describe"][property.name=/^(skip|only)$/]',
+            'MemberExpression[object.property.name="describe"][property.name=/^(skip|skipIf|fixme|only)$/]',
           message:
             'Skipped or focused tests never reach main; use test.todo for a planned case.',
         },
