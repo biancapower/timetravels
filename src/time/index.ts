@@ -253,3 +253,58 @@ export function formatClockTime(
     minute: twelveHour && time.minute === 0 ? undefined : '2-digit',
   });
 }
+
+/** A clock change in a zone. */
+export interface Transition {
+  zone: string;
+  instant: Temporal.Instant;
+  /** Minutes the clocks move: 60 forward, -60 back, 30 on Lord Howe. */
+  minutes: number;
+  /** What the clocks read just before they changed, such as 2 am. */
+  wallTime: Temporal.PlainDateTime;
+}
+
+/**
+ * Every clock change inside a span, in each zone given, from the time-zone
+ * database. The span can be given in either order.
+ */
+export function transitionsBetween(
+  start: Temporal.Instant,
+  end: Temporal.Instant,
+  zones: readonly string[],
+): Transition[] {
+  const [from, to] =
+    Temporal.Instant.compare(start, end) <= 0 ? [start, end] : [end, start];
+  const found: Transition[] = [];
+  for (const zone of new Set(zones)) {
+    let cursor = from.toZonedDateTimeISO(zone);
+    for (;;) {
+      const next = cursor.getTimeZoneTransition('next');
+      if (!next || Temporal.Instant.compare(next.toInstant(), to) > 0) break;
+      const before = next.subtract({ nanoseconds: 1 }).offsetNanoseconds;
+      const nanoseconds = next.offsetNanoseconds - before;
+      found.push({
+        zone,
+        instant: next.toInstant(),
+        minutes: nanoseconds / 60e9,
+        wallTime: next.toPlainDateTime().subtract({ nanoseconds }),
+      });
+      cursor = next;
+    }
+  }
+  return found;
+}
+
+/** How far the wall clock in a zone moves across a span, which a clock change makes differ from the span. */
+export function clockDifference(
+  start: Temporal.Instant,
+  end: Temporal.Instant,
+  zone: string,
+): Duration {
+  const wall = (instant: Temporal.Instant) =>
+    instant.toZonedDateTimeISO(zone).toPlainDateTime();
+  const minutes = Math.abs(
+    wall(start).until(wall(end), { largestUnit: 'minutes' }).minutes,
+  );
+  return { hours: Math.floor(minutes / 60), minutes: minutes % 60 };
+}
