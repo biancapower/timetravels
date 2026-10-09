@@ -5,6 +5,7 @@ import { App } from './App';
 import { catalogues } from './i18n/messages';
 import { Answer } from './sentence/Answer';
 import { Sentence } from './sentence/Sentence';
+import { named } from './testing/named';
 
 const { sentenceRenders } = vi.hoisted(() => ({ sentenceRenders: vi.fn() }));
 
@@ -26,11 +27,19 @@ afterEach(() => {
 test('renders the sentence with its two slots', () => {
   render(
     <IntlProvider locale="en" messages={catalogues.en}>
-      <Sentence place={null} places={[]} onPlaceChange={vi.fn()} />
+      <Sentence
+        when="now"
+        duration={{ hours: 1, minutes: 0 }}
+        place={null}
+        places={[]}
+        onWhenChange={vi.fn()}
+        onDurationChange={vi.fn()}
+        onPlaceChange={vi.fn()}
+      />
     </IntlProvider>,
   );
   const heading = screen.getByRole('heading', {
-    name: /^What time is it now here ?\?$/,
+    name: named('What time is it now here?'),
   });
   expect(heading).toBeInTheDocument();
   for (const slot of ['now', 'here']) {
@@ -42,14 +51,22 @@ test('renders the sentence with its two slots', () => {
 
 test('renders the answer for an injected now', () => {
   const now = Temporal.Instant.from('2026-10-03T23:05:00Z');
-  render(<Answer now={now} zone="Australia/Sydney" locale="en-AU" />);
+  render(
+    <IntlProvider locale="en" messages={catalogues.en}>
+      <Answer now={now} zone="Australia/Sydney" locale="en-AU" />
+    </IntlProvider>,
+  );
   expect(screen.getByText(/^Sunday 10:05\sam$/)).toBeInTheDocument();
   expect(screen.getByText('Sydney (GMT+11)')).toBeInTheDocument();
 });
 
 test('the answer uses a 24-hour clock where the locale prefers it', () => {
   const now = Temporal.Instant.from('2026-10-04T06:05:00Z');
-  render(<Answer now={now} zone="Australia/Sydney" locale="en-GB" />);
+  render(
+    <IntlProvider locale="en" messages={catalogues.en}>
+      <Answer now={now} zone="Australia/Sydney" locale="en-GB" />
+    </IntlProvider>,
+  );
   expect(screen.getByText(/^Sunday 17:05$/)).toBeInTheDocument();
 });
 

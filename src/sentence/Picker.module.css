@@ -1,0 +1,80 @@
+.popup {
+  min-width: 10rem;
+  max-width: calc(100vw - 2 * var(--size-4));
+  padding: var(--size-1);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-3);
+}
+
+.item,
+.choice {
+  display: block;
+  width: 100%;
+  padding: var(--size-2) var(--size-3);
+  border: 0;
+  border-radius: var(--radius-1);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.item[data-highlighted],
+.choice:hover,
+.choice:focus-visible {
+  background: var(--accent);
+  color: var(--surface);
+  outline: none;
+}
+
+.item[data-checked] {
+  font-weight: var(--font-weight-6);
+}
+
+.form {
+  display: flex;
+  gap: var(--size-2);
+  padding: var(--size-2);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--size-2);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: inherit;
+  font-size: max(1rem, var(--font-size-1));
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.set {
+  padding: var(--size-2) var(--size-3);
+  border: 0;
+  border-radius: var(--radius-1);
+  background: var(--accent);
+  color: var(--surface);
+  font: inherit;
+  cursor: pointer;
+}
+
+.error {
+  padding-inline: var(--size-2);
+  color: var(--text);
+  font-size: var(--font-size-0);
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  padding: var(--size-1);
+}
