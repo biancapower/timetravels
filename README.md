@@ -22,6 +22,8 @@ pnpm check:full  # the above plus Playwright browser tests
 
 Before the first `pnpm check:full`, install the browser once with `pnpm browsers`.
 
+The dev server does not run the service worker. To try installing the app or using it offline, build it and serve the build with `pnpm build` then `pnpm preview`. After changing the icon's SVG in `public/icons/`, regenerate its PNG sizes with `node scripts/render-icons.js`.
+
 ## Stack
 
 - React 19
@@ -29,6 +31,7 @@ Before the first `pnpm check:full`, install the browser once with `pnpm browsers
 - Vite
 - Temporal API, with a polyfill where it's missing
 - react-intl, with every sentence an ICU message so translations can reorder the slots
+- vite-plugin-pwa with Workbox, for installing the app and using it offline
 - Vitest and Playwright
 - ESLint and Prettier
 - pnpm
