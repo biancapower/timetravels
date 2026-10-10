@@ -40,6 +40,9 @@ must_block=(
   'git commit --no-verify -m wip'
   'wrangler deploy'
   'wrangler pages deploy ./dist'
+  'npx wrangler preview'
+  'pnpm exec wrangler versions upload'
+  'wrangler versions deploy'
   'pnpm publish'
   'npm publish --tag beta'
   'gh repo edit owner/repo --visibility public'
@@ -69,6 +72,7 @@ must_allow=(
   'pnpm run build'
   'npm install'
   'wrangler --version'
+  'pnpm exec wrangler versions upload --dry-run --outdir /tmp/out'
   'gh repo view owner/repo'
   'gh pr create --title x --body y'
   "git commit -m 'fix: something'"

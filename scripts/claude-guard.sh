@@ -25,6 +25,7 @@ GUARD_NO_VERIFY='--no-verify'
 GUARD_FORCE_FLAG='--force|(^|[[:space:]])-[a-zA-Z]*f[a-zA-Z]*([[:space:]]|$)'
 GUARD_PLUS_REFSPEC='(^|[[:space:]])\+[^[:space:]]'
 GUARD_WRANGLER_DEPLOY='\bwrangler\b[[:space:]]+(pages[[:space:]]+)?deploy\b'
+GUARD_WRANGLER_PUBLISH='\bwrangler\b[[:space:]]+(preview|versions[[:space:]]+(upload|deploy))\b'
 GUARD_PUBLISH='\b(pnpm|npm)\b[[:space:]]+publish\b'
 GUARD_GH_VISIBILITY='\bgh\b[[:space:]]+repo[[:space:]]+edit\b.*--visibility\b'
 GUARD_GH_RELEASE='\bgh\b[[:space:]]+release[[:space:]]+create\b'
@@ -62,6 +63,12 @@ guard_check() {
 
   if grep -qE -- "$GUARD_WRANGLER_DEPLOY" <<<"$cmd"; then
     echo "blocked: wrangler deploy; a human deploys"
+    return 1
+  fi
+
+  # Previews and uploaded versions are published too; a dry run is not.
+  if grep -qE -- "$GUARD_WRANGLER_PUBLISH" <<<"$cmd" && ! grep -qF -- '--dry-run' <<<"$cmd"; then
+    echo "blocked: wrangler preview or version upload publishes; a human deploys"
     return 1
   fi
 
