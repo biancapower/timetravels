@@ -55,3 +55,8 @@ test('"Later" hides the notice without updating', () => {
   expect(screen.queryByText(message)).not.toBeInTheDocument();
   expect(sw.updateServiceWorker).not.toHaveBeenCalled();
 });
+
+test('the announcement region is present before any update arrives', () => {
+  renderNotice();
+  expect(screen.getByRole('status')).toBeEmptyDOMElement();
+});

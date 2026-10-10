@@ -12,30 +12,35 @@ export function UpdateNotice() {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW();
-  if (!needRefresh) return null;
+  // The status region is always present, so screen readers announce the
+  // notice when it appears inside it.
   return (
-    <aside className={styles.notice} aria-live="polite">
-      <p>{intl.formatMessage({ id: 'update.available' })}</p>
-      <div className={styles.actions}>
-        <button
-          type="button"
-          className={styles.primary}
-          onClick={() => {
-            void updateServiceWorker();
-          }}
-        >
-          {intl.formatMessage({ id: 'update.reload' })}
-        </button>
-        <button
-          type="button"
-          className={styles.secondary}
-          onClick={() => {
-            setNeedRefresh(false);
-          }}
-        >
-          {intl.formatMessage({ id: 'update.later' })}
-        </button>
-      </div>
-    </aside>
+    <div role="status">
+      {needRefresh && (
+        <aside className={styles.notice}>
+          <p>{intl.formatMessage({ id: 'update.available' })}</p>
+          <div className={styles.actions}>
+            <button
+              type="button"
+              className={styles.primary}
+              onClick={() => {
+                void updateServiceWorker();
+              }}
+            >
+              {intl.formatMessage({ id: 'update.reload' })}
+            </button>
+            <button
+              type="button"
+              className={styles.secondary}
+              onClick={() => {
+                setNeedRefresh(false);
+              }}
+            >
+              {intl.formatMessage({ id: 'update.later' })}
+            </button>
+          </div>
+        </aside>
+      )}
+    </div>
   );
 }
