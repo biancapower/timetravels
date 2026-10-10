@@ -1,0 +1,13 @@
+# 0010. Production lives at timetravels.dev
+
+**Context.** Cloudflare is the host (decision 0003; Workers rather than Pages, decision 0011). Issue #9 left open which hostname is public and when `timetravels.dev` is attached, pending the trade mark searches decision 0001 called for.
+
+**Decision.** From release 0.1.0, production is served at `https://timetravels.dev`, attached to the Cloudflare project as a custom domain. Every push to `main` deploys it. Pull requests get preview deployments on Cloudflare's own `*.workers.dev` addresses, which are not advertised.
+
+**Alternatives.** Launching on a Cloudflare `*.dev` address and attaching the domain later.
+
+**Reasons.** The domain is registered on the maintainer's Cloudflare account and the trade mark searches are clear, so there is no reason to launch on a temporary address and move people later. A stable address also matters for an installable app: an installed copy belongs to the address it was installed from.
+
+**Consequences.** The README gives `https://timetravels.dev` as the app's address. Cloudflare builds the repository itself through its GitHub integration, with Node 24 taken from `.node-version` and also set as the Cloudflare project's `NODE_VERSION` build variable, and the pnpm version set as its `PNPM_VERSION`. Nothing checks that `PNPM_VERSION` matches `packageManager` in `package.json`, so when one changes, the other is changed by hand. The Cloudflare side, connecting the project and adding the domain, is done by the maintainer; Claude never holds the credentials or deploys.
+
+**Status.** Proposed by @biancapower; approved by @biancapower, 2026-10-10.

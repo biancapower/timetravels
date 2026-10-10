@@ -6,6 +6,8 @@ A time calculator you talk to in one sentence.
 
 Tap an underlined word to change it; the answer sits underneath and updates as you go. Time-zone conversion, hours from now and ago, and warnings when a daylight-saving change is about to move the goalposts. A web app you can install on your phone, which works offline.
 
+**Use it:** [timetravels.dev](https://timetravels.dev), in any browser, or add it to your home screen to install it.
+
 **Status:** pre-release. The app answers what time it is now, a number of hours from now or ago, or a number of hours after or before a chosen time, here or in another place; the rest of release 0.1.0 is being worked through.
 
 ## Running it
@@ -36,7 +38,7 @@ The dev server does not run the service worker. To try installing the app or usi
 - ESLint and Prettier
 - pnpm
 - Custom CSS with Open Props; Base UI, a headless component library, for the pickers
-- Cloudflare Pages
+- Cloudflare Workers, serving the build as static assets
 
 Time-zone rules come from the browser's own `Intl` data, or from the polyfill where Temporal isn't native. That's why the app works offline, and why zone rules update with the browser rather than with the app.
 

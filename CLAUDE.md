@@ -11,7 +11,7 @@ TimeTravels: a time calculator with a one-sentence interface. React 19, TypeScri
 - Edits an issue once work on it has started. A correction or clarification goes in a comment on the issue.
 - Leaves an issue without a milestone. Every issue goes in one when it is opened (`0.1.0`, `0.2.0`, …); it can move later.
 
-Enforced by `.claude/settings.json` (a `permissions.deny` for `.env*` reads and a `PreToolUse` hook, `scripts/claude-guard.sh`, blocking any force-push, `--no-verify`, `wrangler deploy`, `pnpm publish`, `gh release create`, tag creation and visibility changes), with `scripts/test-hooks.sh` as its regression test. The guard matches patterns in the command text, not a parsed shell, so it over-blocks some harmless commands; edit files containing those patterns with the file tools rather than through the shell. A correction made twice becomes a hook or a line in this file, not a memory.
+Enforced by `.claude/settings.json` (a `permissions.deny` for `.env*` reads and a `PreToolUse` hook, `scripts/claude-guard.sh`, blocking any force-push, `--no-verify`, `wrangler deploy` and Wrangler's other publishing commands (previews and version uploads, except dry runs), `pnpm publish`, `gh release create`, tag creation and visibility changes), with `scripts/test-hooks.sh` as its regression test. The guard matches patterns in the command text, not a parsed shell, so it over-blocks some harmless commands; edit files containing those patterns with the file tools rather than through the shell. A correction made twice becomes a hook or a line in this file, not a memory.
 
 ## Decisions
 

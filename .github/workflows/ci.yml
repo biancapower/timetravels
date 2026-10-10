@@ -62,6 +62,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - if: github.event_name != 'schedule'
         run: pnpm check
+      # The production build is what Cloudflare deploys, so a change that
+      # breaks it fails here, before it can merge.
+      - run: pnpm build
       - if: github.event_name == 'schedule'
         run: pnpm browsers --with-deps
       - if: github.event_name == 'schedule'
