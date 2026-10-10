@@ -61,7 +61,7 @@ test('every slot opens with Enter and closes with Escape, returning focus', asyn
   await page.keyboard.press('Enter');
   await page.getByRole('menuitemradio', { name: 'from now' }).press('Enter');
 
-  for (const name of ['here', '1 hour', 'from now']) {
+  const openAndClose = async (name: string | RegExp) => {
     const slot = heading.getByRole('button', { name });
     await slot.focus();
     await page.keyboard.press('Enter');
@@ -69,5 +69,30 @@ test('every slot opens with Enter and closes with Escape, returning focus', asyn
     await page.keyboard.press('Escape');
     await expect(slot).toHaveAttribute('aria-expanded', 'false');
     await expect(slot).toBeFocused();
+  };
+
+  for (const name of ['here', '1 hour', 'from now']) await openAndClose(name);
+
+  // Sentence 5, with a place picked, has two more slots.
+  await page.evaluate(() => {
+    localStorage.setItem(
+      'timetravels.place',
+      JSON.stringify({ city: 'London', zone: 'Europe/London' }),
+    );
+  });
+  await page.reload();
+  await heading.getByRole('button', { name: 'right now' }).focus();
+  await page.keyboard.press('Enter');
+  await page
+    .getByRole('menuitemradio', { name: 'after a time' })
+    .press('Enter');
+  for (const name of [
+    'London',
+    '1 hour',
+    'after',
+    /^\d{1,2}(:\d{2})?\s?[ap]m$/,
+    'my time',
+  ]) {
+    await openAndClose(name);
   }
 });
