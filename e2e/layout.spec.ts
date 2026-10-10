@@ -68,3 +68,17 @@ test('the longest weekday fits the answer at 360 px', async ({ page }) => {
   );
   expect(overflow).toBe(0);
 });
+
+test('the slot whose picker is open is filled with the accent', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  const slot = page
+    .getByRole('heading', { level: 1 })
+    .getByRole('button', { name: 'right now' });
+  await expect(slot).not.toHaveCSS('background-color', 'rgb(59, 91, 219)');
+  await slot.click();
+  await expect(slot).toHaveAttribute('aria-expanded', 'true');
+  await expect(slot).toHaveCSS('background-color', 'rgb(59, 91, 219)');
+});

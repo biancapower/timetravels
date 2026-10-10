@@ -23,10 +23,12 @@ button.slot {
   cursor: pointer;
 }
 
-/* Focus fills the slot with the accent instead of drawing a ring, which on
-   wrapped lines ran into the words above and below. The inline padding is
-   taken back by the margin so the sentence doesn't shift. */
-button.slot:focus-visible {
+/* Focus, and the slot whose picker is open, fill the slot with the accent
+   instead of drawing a ring, which on wrapped lines ran into the words above
+   and below. The inline padding is taken back by the margin so the sentence
+   doesn't shift. */
+button.slot:focus-visible,
+button.slot[aria-expanded='true'] {
   outline: none;
   padding-inline: 0.12em;
   margin-inline: -0.12em;
