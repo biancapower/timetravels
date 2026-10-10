@@ -14,11 +14,8 @@
   text-decoration-skip-ink: none;
 }
 
-/* Room below the text for the wavy underline, so the focus ring goes round it,
-   taken back by the margin so the lines don't spread. */
 button.slot {
-  padding: 0 0 0.35em;
-  margin-block-end: -0.35em;
+  padding: 0;
   border: 0;
   background: none;
   font: inherit;
@@ -26,8 +23,15 @@ button.slot {
   cursor: pointer;
 }
 
+/* Focus fills the slot with the accent instead of drawing a ring, which on
+   wrapped lines ran into the words above and below. The inline padding is
+   taken back by the margin so the sentence doesn't shift. */
 button.slot:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 0.15em;
-  border-radius: var(--radius-1);
+  outline: none;
+  padding-inline: 0.12em;
+  margin-inline: -0.12em;
+  background: var(--accent);
+  color: var(--ground);
+  text-decoration-color: transparent;
+  border-radius: var(--radius-2);
 }
