@@ -13,4 +13,4 @@ Decided one point at a time on 2026-10-05, each after weighing the alternatives.
 9. **Component library: a headless one** (React Aria or Radix, chosen at the first picker issue) for picker behaviour only; styling stays in the project's CSS.
 10. **CI: one GitHub Actions workflow** running `pnpm check`; path filters so docs-only changes skip tests; a single required gate job; 15-minute timeouts; a weekly scheduled run; Cloudflare preview deploys per PR.
 
-**Status.** Proposed jointly by @biancapower and Claude; approved by @biancapower, 2026-10-05. Point 9 superseded by [0008](0008-headless-component-library.md) on 2026-10-09.
+**Status.** Proposed jointly by @biancapower and Claude; approved by @biancapower, 2026-10-05. Point 9 superseded by [0008](0008-headless-component-library.md) on 2026-10-09. Hosting on Cloudflare Pages (points 3 and 10) superseded by [0011](0011-cloudflare-workers.md) on 2026-10-10: Cloudflare Workers static assets.

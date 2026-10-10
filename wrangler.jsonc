@@ -1,0 +1,14 @@
+// Cloudflare Workers serves the production build in dist/ as static assets,
+// with no Worker script. Cloudflare's own build runs Wrangler with this file:
+// main deploys to timetravels.dev, and other branches get preview URLs.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "timetravels",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./dist" },
+  "routes": [{ "pattern": "timetravels.dev", "custom_domain": true }],
+  "workers_dev": false,
+  // A custom domain turns preview URLs off unless they are asked for.
+  "preview_urls": true,
+  "previews": {},
+}
