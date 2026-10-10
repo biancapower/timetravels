@@ -15,3 +15,4 @@ Short records of decisions with their reasons, written when they were made. Form
 | [0009](0009-place-before-duration.md) | English word order: the place first, and "right now" | Approved 2026-10-10 |
 | [0010](0010-production-domain.md) | Production lives at timetravels.dev | Approved 2026-10-10 |
 | [0011](0011-cloudflare-workers.md) | Host on Cloudflare Workers static assets, with Wrangler; supersedes 0003's Pages | Approved 2026-10-10 |
+| [0012](0012-web-analytics.md) | Cloudflare Web Analytics on timetravels.dev | Approved 2026-10-10 |
