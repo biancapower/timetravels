@@ -6,7 +6,7 @@ A time calculator you talk to in one sentence.
 
 Tap an underlined word to change it; the answer sits underneath and updates as you go. Time-zone conversion, hours from now and ago, and warnings when a daylight-saving change is about to move the goalposts. A web app you can install on your phone, which works offline.
 
-**Use it:** [timetravels.dev](https://timetravels.dev), in any browser, or add it to your home screen to install it.
+**Use it:** [timetravels.dev](https://timetravels.dev), in any browser, or add it to your home screen to install it. The live site uses Cloudflare Web Analytics to count page views and measure page speed; Cloudflare says it does not collect or use visitors' personal data ([decision 0012](docs/decisions/0012-web-analytics.md)).
 
 **Status:** pre-release. The app answers what time it is now, a number of hours from now or ago, or a number of hours after or before a chosen time, here or in another place; the rest of release 0.1.0 is being worked through.
 
