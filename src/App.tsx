@@ -14,6 +14,7 @@ import {
 } from './sentence/resolveAnswer';
 import { Sentence } from './sentence/Sentence';
 import { isPast, nextWholeHour, type Duration } from './time';
+import { UpdateNotice } from './UpdateNotice';
 
 interface AppProps {
   /** The device's own zone when omitted. */
@@ -75,6 +76,7 @@ export function App({
           anchorCity={question.anchor.inPlace ? place?.city : cityOf(zone)}
         />
       </main>
+      <UpdateNotice />
     </IntlProvider>
   );
 }
