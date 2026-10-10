@@ -8,6 +8,6 @@
 
 **Reasons.** The domain is registered on the maintainer's Cloudflare account and the trade mark searches are clear, so there is no reason to launch on a temporary address and move people later. A stable address also matters for an installable app: an installed copy belongs to the address it was installed from.
 
-**Consequences.** The README gives `https://timetravels.dev` as the app's address. Cloudflare builds the repository itself through its GitHub integration, with the pnpm version set in the Pages project's `PNPM_VERSION` setting; when `packageManager` in `package.json` changes, that setting changes with it. The Cloudflare side, connecting the project and adding the domain, is done by the maintainer; Claude never holds the credentials or deploys.
+**Consequences.** The README gives `https://timetravels.dev` as the app's address. Cloudflare builds the repository itself through its GitHub integration, with Node 24 taken from `.node-version` and also set as the Pages project's `NODE_VERSION`, and the pnpm version set as its `PNPM_VERSION`. Nothing checks that `PNPM_VERSION` matches `packageManager` in `package.json`, so when one changes, the other is changed by hand. The Cloudflare side, connecting the project and adding the domain, is done by the maintainer; Claude never holds the credentials or deploys.
 
 **Status.** Proposed by @biancapower; approved by @biancapower, 2026-10-10.
