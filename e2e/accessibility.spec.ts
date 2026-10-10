@@ -51,9 +51,12 @@ for (const colorScheme of ['light', 'dark'] as const) {
     test('the place picker, open', async ({ page }) => {
       await page.goto('/');
       await slot(page, 'here').click();
-      await expect(
-        page.getByRole('combobox', { name: 'Search for a city' }),
-      ).toBeVisible();
+      const search = page.getByRole('combobox', { name: 'Search for a city' });
+      await expect(search).toBeVisible();
+      await expectNoViolations(page);
+      await search.fill('lo');
+      await page.keyboard.press('ArrowDown');
+      await expect(page.getByRole('option').first()).toBeVisible();
       await expectNoViolations(page);
     });
 
@@ -87,7 +90,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await expectNoViolations(page);
     });
 
-    test('sentence 5 with a place, and the time picker open', async ({
+    test('sentence 5 with a place: whose time, and the time picker with an error', async ({
       page,
     }) => {
       await page.goto('/');
@@ -102,10 +105,20 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await page.getByRole('menuitemradio', { name: 'after a time' }).click();
       await expect(slot(page, 'my time')).toBeVisible();
       await expectNoViolations(page);
-      await slot(page, /^\d{1,2}(:\d{2})?\s?[ap]m$/).click();
+      await slot(page, 'my time').click();
       await expect(
-        page.getByRole('dialog', { name: 'Choose a time' }),
+        page.getByRole('menuitemradio', { name: 'London time' }),
       ).toBeVisible();
+      await expectNoViolations(page);
+      await page.keyboard.press('Escape');
+
+      await slot(page, /^\d{1,2}(:\d{2})?\s?[ap]m$/).click();
+      const dialog = page.getByRole('dialog', { name: 'Choose a time' });
+      await expect(dialog).toBeVisible();
+      await expectNoViolations(page);
+      await dialog.getByLabel('Time').fill('');
+      await dialog.getByRole('button', { name: 'Set' }).click();
+      await expect(dialog.getByRole('alert')).not.toBeEmpty();
       await expectNoViolations(page);
     });
   });
