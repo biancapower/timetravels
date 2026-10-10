@@ -16,12 +16,13 @@
 }
 
 .time {
-  font-size: clamp(3.75rem, min(1rem + 11vw, 13vh), 8.5rem);
+  font-size: clamp(3.25rem, min(1rem + 11vw, 13vh), 8.5rem);
   font-weight: var(--font-weight-8);
   font-variant-numeric: tabular-nums;
   line-height: 0.95;
   letter-spacing: -0.035em;
   text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 .zone {
