@@ -1,5 +1,14 @@
+/* At least a screen tall, so the answer can sit at the foot. 100vh first for
+   browsers without dvh, which tracks a phone's collapsing address bar. */
 .page {
-  max-width: var(--size-content-3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--size-8);
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 64rem;
   margin-inline: auto;
-  padding: var(--size-8) var(--size-4);
+  padding: clamp(var(--size-7), 9vh, var(--size-11))
+    clamp(var(--size-5), 6vw, var(--size-10));
 }

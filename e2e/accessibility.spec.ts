@@ -15,8 +15,10 @@ async function expectNoViolations(page: Page) {
     .analyze();
   expect(results.violations).toEqual([]);
   // axe marks contrast it cannot measure as incomplete rather than failed.
-  // Text covered by an open popup ("bgOverlap") is checked in the states
-  // where nothing covers it; any other reason is unproven, so it fails.
+  // Text under an open popup or its invisible backdrop ("bgOverlap", or
+  // "elmPartiallyObscured" for the open slot, which has its own fill) is
+  // checked in the states where nothing covers it; any other reason is
+  // unproven, so it fails.
   const unmeasured = results.incomplete
     .filter((rule) => rule.id === 'color-contrast')
     .flatMap((rule) => rule.nodes)
@@ -30,7 +32,8 @@ function isCovered(data: unknown) {
     typeof data === 'object' &&
     data !== null &&
     'messageKey' in data &&
-    data.messageKey === 'bgOverlap'
+    (data.messageKey === 'bgOverlap' ||
+      data.messageKey === 'elmPartiallyObscured')
   );
 }
 
@@ -45,6 +48,14 @@ for (const colorScheme of ['light', 'dark'] as const) {
     test('the sentence and answer', async ({ page }) => {
       await page.goto('/');
       await expect(slot(page, 'here')).toBeVisible();
+      await expectNoViolations(page);
+    });
+
+    test('a focused slot, filled with the accent', async ({ page }) => {
+      await page.goto('/');
+      await slot(page, 'here').focus();
+      await page.keyboard.press('Tab');
+      await expect(slot(page, 'right now')).toBeFocused();
       await expectNoViolations(page);
     });
 

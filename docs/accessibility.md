@@ -27,7 +27,7 @@ Errors in the duration and time pickers appear in an alert region that is always
 | Element | Light | Dark |
 |---|---|---|
 | Slot text and underline on the ground | 5.4 | 8.4 |
-| Focus ring | 5.4 | 8.4 |
+| Focus highlight, and the slot text on it | 5.4 | 8.4 |
 | Popup, input and note borders | 8.2 | 8.5 |
 | Note accent bar | 5.7 | 7.7 |
 | Highlighted list item, and Set and Update buttons | 5.7 | 7.7 |
