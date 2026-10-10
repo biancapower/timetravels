@@ -4,6 +4,8 @@ import { Answer } from './Answer';
 import type { Question } from './resolveAnswer';
 import styles from './LiveAnswer.module.css';
 
+const announcedFor = 5_000;
+
 interface LiveAnswerProps {
   question: Question;
   city?: string;
@@ -26,7 +28,14 @@ export function LiveAnswer({ question, city, anchorCity }: LiveAnswerProps) {
     if (announcedChoices.current === choices) return;
     announcedChoices.current = choices;
     const lines = answer.current?.querySelectorAll('p') ?? [];
-    setAnnouncement(Array.from(lines, (line) => line.textContent).join('. '));
+    setAnnouncement(Array.from(lines, (line) => line.textContent).join(' '));
+    // Clear it once read, so no stale copy stays for screen readers to find.
+    const clear = setTimeout(() => {
+      setAnnouncement('');
+    }, announcedFor);
+    return () => {
+      clearTimeout(clear);
+    };
   }, [choices]);
 
   return (
@@ -41,9 +50,9 @@ export function LiveAnswer({ question, city, anchorCity }: LiveAnswerProps) {
       </div>
       <p
         className={styles.visuallyHidden}
+        role="status"
         aria-live="polite"
         aria-atomic="true"
-        data-testid="answer-announcement"
       >
         {announcement}
       </p>
