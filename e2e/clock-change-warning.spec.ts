@@ -23,6 +23,7 @@ test('10 hours from now across the spring change shows the warning', async ({
   await expect(
     page.getByText(
       'Sydney’s clocks go forward an hour at 2 am on Sunday 4 October, so the clock moves 11 hours in these 10 hours.',
+      { exact: true },
     ),
   ).toBeVisible();
 });
