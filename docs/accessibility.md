@@ -18,9 +18,9 @@ Errors in the duration and time pickers appear in an alert region that is always
 
 ## Checks and results
 
-**Automated rules.** Every screen is checked with axe (`@axe-core/playwright`) against WCAG 2.2 AA in light and dark themes, on a phone and a desktop: the sentence, each picker open, the duration error, the clock-change note, and sentence 5's time picker. No violations were found, and none needed fixing. Lighthouse's accessibility score on the live site is 100. These are in `e2e/accessibility.spec.ts` and run in `pnpm check:full`.
+**Automated rules.** Every screen is checked with axe (`@axe-core/playwright`) against WCAG 2.2 AA in light and dark themes, on a phone and a desktop: the sentence, each picker open (including the place list with results and the "Whose time" menu), the duration and time pickers' errors, the clock-change note, and sentence 5. Contrast that axe cannot measure fails the check too, except text covered by an open popup, which is checked where nothing covers it. No violations were found, and none needed fixing. These are in `e2e/accessibility.spec.ts` and run in `pnpm check:full`. Lighthouse 13.5.0 gave the live site an accessibility score of 100 on 2026-10-10.
 
-**Keyboard.** Tab reaches every slot in reading order; Enter opens a slot, Escape closes it, and focus returns to the slot. These are in `e2e/keyboard.spec.ts`.
+**Keyboard.** Tab reaches every slot in reading order; Enter opens each slot, Escape closes it, and focus returns to the slot, in every sentence. These are in `e2e/keyboard.spec.ts`.
 
 **Contrast.** The text contrast is in [decision 0006](decisions/0006-visual-foundations.md). For the rest, against WCAG's 3:1 for interface parts and 4.5:1 for text:
 
@@ -34,9 +34,14 @@ Errors in the duration and time pickers appear in an alert region that is always
 
 **Motion.** The app has no animations or transitions, so there is nothing for `prefers-reduced-motion` to reduce. Any added later must respect it.
 
-## Fixes made along the way
+## Fixes made for this release
 
-- **The answer is announced when a choice changes it**, from a hidden polite live region, but not on the minute tick, which would interrupt a screen reader every minute.
+Made in this pass:
+
+- **The answer is announced when a choice changes it**, from a hidden status region, but not on the minute tick, which would interrupt a screen reader every minute. The announcement clears five seconds later, so no stale copy stays on the page.
+
+Made earlier, while building the sentences:
+
 - **Focus stays on the time slot** after choosing "from now", "ago" or a chosen time, even though the slot moves within the sentence.
 - **Error messages and the update notice** sit in regions that are always present, so screen readers announce them reliably.
 - **The place slot announces as a button** with its value, as the place picker's issue asked, rather than as a combobox.
