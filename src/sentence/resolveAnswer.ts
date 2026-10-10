@@ -32,6 +32,8 @@ export interface Resolved {
   moment: Moment;
   /** The chosen time, for sentence 5 only. */
   anchored?: Anchored;
+  /** Where the span starts and the places it involves, when there is a span. */
+  span?: { start: Moment; zones: string[] };
 }
 
 /** Puts the sentence's slots together using src/time; no arithmetic of its own. */
@@ -43,18 +45,23 @@ export function resolveAnswer(
   const today = nowIn(answerZone, now);
   if (when === 'now') return { today, moment: today };
   if (when === 'later' || when === 'earlier') {
-    return { today, moment: shift(today, duration, when) };
+    return {
+      today,
+      moment: shift(today, duration, when),
+      span: { start: today, zones: [answerZone] },
+    };
   }
-  const anchored = anchorAt(
-    now,
-    anchor.inPlace ? answerZone : deviceZone,
-    anchor.time,
-    anchor.day,
-  );
+  const anchorZone = anchor.inPlace ? answerZone : deviceZone;
+  const anchored = anchorAt(now, anchorZone, anchor.time, anchor.day);
   const moment = shift(
     anchored.moment,
     duration,
     when === 'after' ? 'later' : 'earlier',
   );
-  return { today, moment: moment.withTimeZone(answerZone), anchored };
+  return {
+    today,
+    moment: moment.withTimeZone(answerZone),
+    anchored,
+    span: { start: anchored.moment, zones: [answerZone, anchorZone] },
+  };
 }

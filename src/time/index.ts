@@ -253,3 +253,59 @@ export function formatClockTime(
     minute: twelveHour && time.minute === 0 ? undefined : '2-digit',
   });
 }
+
+/** A clock change in a zone. */
+export interface Transition {
+  zone: string;
+  instant: Temporal.Instant;
+  direction: 'forward' | 'back';
+  /** How many minutes the clocks move: usually 60, 30 on Lord Howe Island. */
+  minutes: number;
+  /** What the clocks read just before they changed, such as 2 am. */
+  wallTime: Temporal.PlainDateTime;
+}
+
+/**
+ * Every clock change inside a span, in each zone given, from the time-zone
+ * database. The span can be given in either order.
+ */
+export function transitionsBetween(
+  start: Temporal.Instant,
+  end: Temporal.Instant,
+  zones: readonly string[],
+): Transition[] {
+  const [from, to] =
+    Temporal.Instant.compare(start, end) <= 0 ? [start, end] : [end, start];
+  const found: Transition[] = [];
+  for (const zone of new Set(zones)) {
+    let cursor = from.toZonedDateTimeISO(zone);
+    for (;;) {
+      const next = cursor.getTimeZoneTransition('next');
+      if (!next || Temporal.Instant.compare(next.toInstant(), to) > 0) break;
+      const before = next.subtract({ nanoseconds: 1 }).offsetNanoseconds;
+      const nanoseconds = next.offsetNanoseconds - before;
+      found.push({
+        zone,
+        instant: next.toInstant(),
+        direction: nanoseconds > 0 ? 'forward' : 'back',
+        minutes: Math.abs(nanoseconds) / 60e9,
+        wallTime: next.toPlainDateTime().subtract({ nanoseconds }),
+      });
+      cursor = next;
+    }
+  }
+  return found;
+}
+
+/**
+ * How far the wall clock moves across a span because of one clock change:
+ * 10 hours across a change forward an hour is 11 hours on the clock.
+ */
+export function clockMoveAcross(
+  span: Duration,
+  change: Pick<Transition, 'direction' | 'minutes'>,
+): Duration {
+  const sign = change.direction === 'forward' ? 1 : -1;
+  const minutes = span.hours * 60 + span.minutes + sign * change.minutes;
+  return { hours: Math.floor(minutes / 60), minutes: minutes % 60 };
+}
