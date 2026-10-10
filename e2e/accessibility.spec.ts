@@ -65,7 +65,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await page.getByRole('menuitemradio', { name: 'from now' }).click();
       await slot(page, '1 hour').click();
       await page.getByRole('button', { name: '10 hours' }).click();
-      await expect(page.getByText(/clocks go forward/)).toBeVisible();
+      await expect(page.getByText(/^Sydney’s clocks go forward/)).toBeVisible();
       await expectNoViolations(page);
     });
 
