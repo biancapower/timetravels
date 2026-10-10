@@ -14,6 +14,24 @@ async function expectNoViolations(page: Page) {
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();
   expect(results.violations).toEqual([]);
+  // axe marks contrast it cannot measure as incomplete rather than failed.
+  // Text covered by an open popup ("bgOverlap") is checked in the states
+  // where nothing covers it; any other reason is unproven, so it fails.
+  const unmeasured = results.incomplete
+    .filter((rule) => rule.id === 'color-contrast')
+    .flatMap((rule) => rule.nodes)
+    .filter((node) => !node.any.some((check) => isCovered(check.data)))
+    .map((node) => node.target.join(' '));
+  expect(unmeasured).toEqual([]);
+}
+
+function isCovered(data: unknown) {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'messageKey' in data &&
+    data.messageKey === 'bgOverlap'
+  );
 }
 
 function slot(page: Page, name: string | RegExp) {
