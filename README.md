@@ -46,6 +46,7 @@ Time-zone rules come from the browser's own `Intl` data, or from the polyfill wh
 
 1. [Decisions](docs/decisions/): why the project is shaped the way it is, one short record per decision
 2. [Working with AI](docs/working-with-ai.md): how Claude is used on this repository and what the commit history shows
+3. [Accessibility](docs/accessibility.md): how the sentence works with screen readers and keyboards, what was checked, and what a person still checks before release
 
 ## Licence
 
