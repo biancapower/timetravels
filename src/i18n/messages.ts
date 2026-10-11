@@ -100,6 +100,8 @@ const en = {
   'help.choicesTitle': 'What you can change',
   'help.place':
     '<b>The place</b>, “here” at first: search for a city to ask about its time. Your choice is remembered on this device.',
+  'help.named':
+    '<b>Your own places</b>, in the same list: set up “Home”, or use “Name a place” to give a place a name of your own, such as “Mark’s place”, so the question reads “at Mark’s place”. Use Edit beside one to rename it, move it or remove it.',
   'help.direction':
     '<b>When</b>, “right now” at first: choose “from now” or “ago” to count a length of time from now, or “after a time” or “before a time” to count from a time you choose.',
   'help.duration':
@@ -134,7 +136,7 @@ const en = {
     'Every screen is checked against WCAG 2.2 AA in light and dark themes, and every choice works from the keyboard. <link>How it was checked</link>.',
   'about.privacyTitle': 'Privacy',
   'about.privacyStorage':
-    'There are no accounts. The place you choose is saved in your browser on this device, and is never sent anywhere. Your browser also keeps a copy of the app itself, so it works offline.',
+    'There are no accounts. The place you choose, your home and the places you name are saved in your browser on this device, and are never sent anywhere. Your browser also keeps a copy of the app itself, so it works offline.',
   'about.privacyAnalytics':
     'The site uses Cloudflare Web Analytics to count page views and measure page speed. It sets no cookies, and Cloudflare says it does not collect or use visitors’ personal data.',
   'about.creditsTitle': 'Credits',

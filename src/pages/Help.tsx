@@ -5,6 +5,7 @@ import { Page } from './Page';
 
 const choices: MessageId[] = [
   'help.place',
+  'help.named',
   'help.direction',
   'help.duration',
   'help.anchor',
