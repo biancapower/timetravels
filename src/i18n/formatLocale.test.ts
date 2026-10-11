@@ -13,3 +13,7 @@ test('the browser’s default is kept when it is the same language and region', 
 test('with no preferred language, the browser’s default is used', () => {
   expect(formatLocale([], 'en-GB')).toBe('en-GB');
 });
+
+test('a malformed tag is skipped, not fatal', () => {
+  expect(formatLocale(['en_US', 'en-AU'], 'en-US')).toBe('en-AU');
+});
