@@ -16,8 +16,9 @@ async function expectNoViolations(page: Page) {
   expect(results.violations).toEqual([]);
   // axe marks contrast it cannot measure as incomplete rather than failed.
   // Text under an open popup or its invisible backdrop ("bgOverlap", or
-  // "elmPartiallyObscured" for the open slot, which has its own fill) is
-  // checked in the states where nothing covers it; any other reason is
+  // "elmPartiallyObscured" for the open slot, which has its own fill), and
+  // text in a popup that lies over the page's text ("elmPartiallyObscuring"),
+  // is checked in the states where nothing overlaps it; any other reason is
   // unproven, so it fails.
   const unmeasured = results.incomplete
     .filter((rule) => rule.id === 'color-contrast')
@@ -33,7 +34,8 @@ function isCovered(data: unknown) {
     data !== null &&
     'messageKey' in data &&
     (data.messageKey === 'bgOverlap' ||
-      data.messageKey === 'elmPartiallyObscured')
+      data.messageKey === 'elmPartiallyObscured' ||
+      data.messageKey === 'elmPartiallyObscuring')
   );
 }
 
@@ -81,6 +83,41 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await search.fill('lo');
       await page.keyboard.press('ArrowDown');
       await expect(page.getByRole('option').first()).toBeVisible();
+      await expectNoViolations(page);
+    });
+
+    test('named places in the picker, and their form with an error', async ({
+      page,
+    }) => {
+      await page.addInitScript(() => {
+        localStorage.setItem(
+          'timetravels.savedPlaces',
+          JSON.stringify({
+            home: { city: 'Sydney', zone: 'Australia/Sydney' },
+            named: [
+              {
+                name: 'Mark’s place',
+                place: { city: 'London', zone: 'Europe/London' },
+              },
+            ],
+          }),
+        );
+      });
+      await page.goto('/');
+      await slot(page, 'here').click();
+      await expect(
+        page.getByRole('option', { name: 'Edit Mark’s place' }),
+      ).toBeVisible();
+      await expectNoViolations(page);
+
+      await page.getByRole('option', { name: 'Edit Mark’s place' }).click();
+      const form = page.getByRole('dialog', { name: 'Change Mark’s place' });
+      // The preview is short enough here to sit clear of the answer's text.
+      await expect(form).toContainText('It will read');
+      await expectNoViolations(page);
+      await form.getByRole('textbox', { name: 'Name' }).fill('Home');
+      await form.getByRole('button', { name: 'Save' }).click();
+      await expect(form.getByRole('alert')).not.toBeEmpty();
       await expectNoViolations(page);
     });
 
