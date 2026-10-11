@@ -8,8 +8,12 @@ interface HelpButtonProps {
 export function HelpButton({ onOpen }: HelpButtonProps) {
   const intl = useIntl();
   return (
+    // Safari's default Tab order skips buttons without a tabindex. The
+    // picker library's slot buttons set one, so this does too, or Tab would
+    // reach the slots and then skip it.
     <button
       type="button"
+      tabIndex={0}
       className={styles.help}
       aria-label={intl.formatMessage({ id: 'nav.help' })}
       onClick={(event) => {

@@ -31,8 +31,10 @@ export function UpdateNotice() {
         <aside className={styles.notice}>
           <p>{intl.formatMessage({ id: 'update.available' })}</p>
           <div className={styles.actions}>
+            {/* tabIndex puts it in Safari's default Tab order, like the slots. */}
             <button
               type="button"
+              tabIndex={0}
               className={styles.primary}
               onClick={() => {
                 void updateServiceWorker();
@@ -42,6 +44,7 @@ export function UpdateNotice() {
             </button>
             <button
               type="button"
+              tabIndex={0}
               className={styles.secondary}
               onClick={() => {
                 setNeedRefresh(false);

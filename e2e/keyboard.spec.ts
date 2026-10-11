@@ -96,3 +96,16 @@ test('every slot opens with Enter and closes with Escape, returning focus', asyn
     await openAndClose(name);
   }
 });
+
+test('Tab goes from the last slot to the help button', async ({ page }) => {
+  await page.goto('/');
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'right now' }).focus();
+  await page.keyboard.press('Tab');
+  const help = page.getByRole('button', { name: 'Help' });
+  await expect(help).toBeFocused();
+  // Safari's default Tab order skips buttons without a tabindex; the slots
+  // have one from the picker library. Chromium can't show the bug, so this
+  // pins the attribute.
+  await expect(help).toHaveAttribute('tabindex', '0');
+});

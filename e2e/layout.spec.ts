@@ -82,3 +82,36 @@ test('the slot whose picker is open is filled with the accent', async ({
   await expect(slot).toHaveAttribute('aria-expanded', 'true');
   await expect(slot).toHaveCSS('background-color', 'rgb(59, 91, 219)');
 });
+
+test('choosing a place by tapping leaves the slot unhighlighted', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'here' }).click();
+  await page.keyboard.type('lon');
+  await page
+    .getByRole('option', { name: /^London/ })
+    .first()
+    .click();
+  const slot = heading.getByRole('button', { name: 'London' });
+  await expect(slot).toBeFocused();
+  await expect(slot).not.toHaveCSS('background-color', 'rgb(59, 91, 219)');
+});
+
+test('choosing a place by keyboard keeps the focus highlight', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'here' }).focus();
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('lon');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  const slot = heading.getByRole('button', { name: 'London' });
+  await expect(slot).toBeFocused();
+  await expect(slot).toHaveCSS('background-color', 'rgb(59, 91, 219)');
+});

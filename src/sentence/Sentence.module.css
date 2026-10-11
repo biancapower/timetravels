@@ -37,3 +37,24 @@ button.slot[aria-expanded='true'] {
   text-decoration-color: transparent;
   border-radius: var(--radius-2);
 }
+
+/* A slot given focus back after a tap, not a key, shows no highlight. */
+:global(html[data-input='pointer'])
+  button.slot:focus-visible:not([aria-expanded='true']) {
+  padding-inline: 0;
+  margin-inline: 0;
+  background: none;
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+/* No break between the last slot and the closing punctuation. The slot's
+   own words may still wrap, so a long one can't overflow a narrow screen. */
+.end {
+  white-space: nowrap;
+}
+
+.end > * {
+  white-space: normal;
+  text-align: start;
+}

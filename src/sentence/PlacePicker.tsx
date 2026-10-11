@@ -35,8 +35,12 @@ export function PlacePicker({
   const choices = useMemo<Choice[]>(() => ['here', ...places], [places]);
   const shown = useMemo<Choice[]>(() => {
     const matches = filterPlaces(places, query);
-    return query.trim() ? matches : ['here', ...matches];
-  }, [places, query]);
+    const typed = query.trim().toLocaleLowerCase(intl.locale);
+    const offersHere = hereLabel
+      .toLocaleLowerCase(intl.locale)
+      .startsWith(typed);
+    return offersHere ? ['here', ...matches] : matches;
+  }, [places, query, hereLabel, intl.locale]);
 
   return (
     <Combobox.Root<Choice>

@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { isValidElement, useState, type ReactNode } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import type { Place } from '../places/places';
 import { formatClockTime, type AnchorDay, type Duration } from '../time';
@@ -121,7 +121,29 @@ export function Sentence({
           anchorPlaceText,
           tense,
         }}
-      />
+      >
+        {(nodes) => <>{keepEndTogether(nodes)}</>}
+      </FormattedMessage>
     </h1>
   );
+}
+
+/**
+ * Groups the last slot with the punctuation after it, such as the closing
+ * "?", so the punctuation can't wrap onto a line of its own. Safari breaks
+ * between a button and the text after it; Chrome doesn't. It applies when a
+ * message ends with a slot followed by text, as every sentence does now; a
+ * message ending any other way is left as it is.
+ */
+function keepEndTogether(nodes: ReactNode[]): ReactNode[] {
+  const end = nodes.at(-1);
+  const slot = nodes.at(-2);
+  if (typeof end !== 'string' || !isValidElement(slot)) return nodes;
+  return [
+    ...nodes.slice(0, -2),
+    <span key="end" className={styles.end}>
+      {slot}
+      {end}
+    </span>,
+  ];
 }
