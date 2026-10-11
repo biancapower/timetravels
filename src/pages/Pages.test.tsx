@@ -30,9 +30,10 @@ test('Escape closes the guide', async () => {
   expect(await screen.findByRole('button', { name: 'Help' })).toHaveFocus();
 });
 
-test('Privacy in the footer opens About at its Privacy section', () => {
+test('Privacy at the end of Help opens About at its Privacy section', () => {
   render(<App zone="Australia/Sydney" locale="en" />);
-  fireEvent.click(screen.getByRole('link', { name: 'Privacy' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Help' }));
+  fireEvent.click(screen.getByRole('link', { name: 'privacy' }));
   expect(
     screen.getByRole('heading', { name: 'About TimeTravels' }),
   ).toBeInTheDocument();

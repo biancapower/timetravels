@@ -22,11 +22,12 @@ test('open help, read it, and close it back to the sentence as it was', async ({
   await expect(heading.getByRole('button', { name: 'from now' })).toBeVisible();
 });
 
-test('About from the footer, then Back, returns to the sentence', async ({
+test('About from Help, then Back twice, returns to the sentence', async ({
   page,
 }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: 'About' }).click();
+  await page.getByRole('button', { name: 'Help' }).click();
+  await page.getByRole('link', { name: 'About TimeTravels' }).click();
   await expect(page).toHaveURL(/#about$/);
   await expect(
     page.getByRole('heading', { name: 'About TimeTravels' }),
@@ -34,13 +35,17 @@ test('About from the footer, then Back, returns to the sentence', async ({
   await expect(page.getByText(/^Version \d+\.\d+\.\d+$/)).toBeVisible();
 
   await page.goBack();
-  await expect(page.getByRole('link', { name: 'About' })).toBeFocused();
+  await expect(
+    page.getByRole('heading', { name: 'How TimeTravels works' }),
+  ).toBeFocused();
+  await page.goBack();
+  await expect(page.getByRole('button', { name: 'Help' })).toBeFocused();
   await expect(
     page.getByRole('heading', { name: /^What time is it here/ }),
   ).toBeVisible();
 });
 
-test('Escape closes Help, and Privacy in the footer opens About at Privacy', async ({
+test('Escape closes Help, and Privacy in Help opens About at Privacy', async ({
   page,
 }) => {
   await page.goto('/');
@@ -50,10 +55,12 @@ test('Escape closes Help, and Privacy in the footer opens About at Privacy', asy
   await expect(page.getByRole('button', { name: 'Help' })).toBeFocused();
   await expect(page).toHaveTitle('TimeTravels');
 
-  await page.getByRole('link', { name: 'Privacy' }).click();
+  await page.getByRole('button', { name: 'Help' }).click();
+  await page.getByRole('link', { name: 'privacy' }).click();
   await expect(page.getByRole('heading', { name: 'Privacy' })).toBeFocused();
   await page.getByRole('button', { name: 'Close' }).click();
-  await expect(page.getByRole('link', { name: 'Privacy' })).toBeFocused();
+  await page.getByRole('button', { name: 'Close' }).click();
+  await expect(page.getByRole('button', { name: 'Help' })).toBeFocused();
 });
 
 test('a link to #privacy opens About at its Privacy section', async ({

@@ -1,5 +1,4 @@
-/* At least a screen tall, so the answer can sit at the foot with the footer
-   under it. 100vh first for browsers without dvh, which tracks a phone's
+/* At least a screen tall, so the answer can sit at the foot. 100vh first for browsers without dvh, which tracks a phone's
    collapsing address bar. */
 .screen {
   position: relative;
@@ -23,5 +22,5 @@
   max-width: 64rem;
   margin-inline: auto;
   padding: clamp(var(--size-7), 9vh, var(--size-11))
-    clamp(var(--size-5), 6vw, var(--size-10)) var(--size-5);
+    clamp(var(--size-5), 6vw, var(--size-10));
 }

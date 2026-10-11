@@ -22,7 +22,7 @@ Errors in the duration and time pickers appear in an alert region that is always
 
 **Keyboard.** Tab reaches every slot in reading order; Enter opens each slot, Escape closes it, and focus returns to the slot, in every sentence. These are in `e2e/keyboard.spec.ts`.
 
-**Help and About.** The Help button and the footer links come after the sentence in reading order. Each page opens with focus on its title, or on the Privacy heading from the footer's Privacy link, and changes the page title. Close, Escape and the browser's Back button all return to the sentence as it was, with focus on whatever opened the page. These are in `e2e/pages.spec.ts` and `src/pages/Pages.test.tsx`.
+**Help and About.** The Help button comes after the sentence in reading order. Help ends with links to About and to its Privacy section. Each page opens with focus on its title, or on the Privacy heading from the Privacy link, and changes the page title. Close, Escape and the browser's Back button each go back one page, and back on the sentence, it is as it was, with focus on the Help button. These are in `e2e/pages.spec.ts` and `src/pages/Pages.test.tsx`.
 
 **Contrast.** The text contrast is in [decision 0006](decisions/0006-visual-foundations.md). For the rest, against WCAG's 3:1 for interface parts and 4.5:1 for text:
 

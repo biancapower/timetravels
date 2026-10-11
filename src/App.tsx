@@ -3,7 +3,6 @@ import { IntlProvider } from 'react-intl';
 import styles from './App.module.css';
 import { catalogues, pickLocale, type Locale } from './i18n/messages';
 import { About } from './pages/About';
-import { Footer } from './pages/Footer';
 import { Help } from './pages/Help';
 import { HelpButton } from './pages/HelpButton';
 import { useRoute } from './pages/useRoute';
@@ -44,7 +43,8 @@ export function App({
   }));
 
   const { route, open, close } = useRoute();
-  // The control that opened Help or About, to return focus to on closing.
+  // The control on the sentence screen that opened Help, to return focus to
+  // on closing. Moving from Help to About doesn't change it.
   const opener = useRef<HTMLElement | null>(null);
   const openPage = (hash: string, from: HTMLElement) => {
     opener.current = from;
@@ -98,9 +98,8 @@ export function App({
         </main>
         {/* After the sentence in reading order, though it sits in the top corner. */}
         <HelpButton onOpen={openPage} />
-        <Footer onOpen={openPage} />
       </div>
-      {route.view === 'help' && <Help onClose={close} />}
+      {route.view === 'help' && <Help onOpen={open} onClose={close} />}
       {route.view === 'about' && (
         <About section={route.section} onClose={close} />
       )}

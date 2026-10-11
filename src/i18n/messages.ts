@@ -69,11 +69,8 @@ const en = {
   'placePicker.here': 'Here',
   'placePicker.empty': 'No matching places',
   'nav.help': 'Help',
-  'nav.about': 'About',
-  'nav.privacy': 'Privacy',
   'nav.close': 'Close',
   'nav.pageTitle': '{page} · TimeTravels',
-  'footer.copyright': '© 2026 <link>the author</link>',
   'help.title': 'How TimeTravels works',
   'help.intro':
     'Your question is written as an everyday sentence, the way you’d say it out loud. The underlined words are the parts you can change: tap one, pick something else, and the answer updates straight away.',
@@ -99,6 +96,8 @@ const en = {
     'If the clocks change during the time you ask about, a note under the answer says so.',
   'help.offline':
     'TimeTravels works offline once it has loaded, and you can add it to your home screen.',
+  'help.more':
+    '<about>About TimeTravels</about>, including <privacy>privacy</privacy> and credits.',
   'about.title': 'About TimeTravels',
   'about.what':
     'TimeTravels is a time calculator you ask in plain words, the way you’d ask a person.',
