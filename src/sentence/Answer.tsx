@@ -149,8 +149,9 @@ export function Answer({
                   date: longDate(change.wallTime.toPlainDate()),
                   whose:
                     change.zone === question.answerZone ? 'answer' : 'other',
-                  // Forward makes the clock read later counting on, and
-                  // earlier counting back; back does the opposite.
+                  // A change forward puts the answer later than counting on
+                  // the clock gives, and earlier than counting back; a change
+                  // back does the opposite.
                   shift:
                     (change.direction === 'forward') === !countsBack
                       ? 'later'
