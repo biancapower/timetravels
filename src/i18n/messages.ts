@@ -7,24 +7,25 @@ const en = {
   'sentence.nowHere':
     'What time is it <place>here</place> <direction>right now</direction>?',
   'sentence.nowIn':
-    'What time is it in <place>{city}</place> <direction>right now</direction>?',
+    'What time is it {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <direction>right now</direction>?',
   'sentence.laterHere':
     'What time will it be <place>here</place> <duration>{length}</duration> <direction>from now</direction>?',
   'sentence.laterIn':
-    'What time will it be in <place>{city}</place> <duration>{length}</duration> <direction>from now</direction>?',
+    'What time will it be {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>from now</direction>?',
   'sentence.earlierHere':
     'What time was it <place>here</place> <duration>{length}</duration> <direction>ago</direction>?',
   'sentence.earlierIn':
-    'What time was it in <place>{city}</place> <duration>{length}</duration> <direction>ago</direction>?',
+    'What time was it {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>ago</direction>?',
   'sentence.afterHere':
     '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <duration>{length}</duration> <direction>after</direction> <anchor>{anchorText}</anchor>?',
   'sentence.afterIn':
-    '{tense, select, past {What time was it} other {What time will it be}} in <place>{city}</place> <duration>{length}</duration> <direction>after</direction> <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
+    '{tense, select, past {What time was it} other {What time will it be}} {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>after</direction> <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
   'sentence.beforeHere':
     '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <duration>{length}</duration> <direction>before</direction> <anchor>{anchorText}</anchor>?',
   'sentence.beforeIn':
-    '{tense, select, past {What time was it} other {What time will it be}} in <place>{city}</place> <duration>{length}</duration> <direction>before</direction> <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
+    '{tense, select, past {What time was it} other {What time will it be}} {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>before</direction> <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
   'answer.relativeDay': '{relativeDay}, {time}',
+  'answer.named': '{name} ({city}, {offset})',
   'answer.transition':
     '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}, so the clock {tense, select, past {moved} other {moves}} {clock} in these {span}.',
   'answer.skipped':
@@ -67,7 +68,28 @@ const en = {
   'placePicker.label': 'Choose a place',
   'placePicker.search': 'Search for a city',
   'placePicker.here': 'Here',
+  'placePicker.home': 'Home',
   'placePicker.empty': 'No matching places',
+  'placePicker.homeUnset': 'not set up',
+  'placePicker.add': 'Name a place',
+  'placePicker.edit': 'Edit {name}',
+  'placePicker.editShort': 'Edit',
+  'namedPlace.addTitle': 'Name a place',
+  'namedPlace.editTitle': 'Change {name}',
+  'namedPlace.homeTitle': 'Where is home?',
+  'namedPlace.name': 'Name',
+  'namedPlace.place': 'Place',
+  'namedPlace.placeMissing': 'Choose a place for it.',
+  'namedPlace.preview': 'It will read',
+  'namedPlace.save': 'Save',
+  'namedPlace.remove': 'Remove',
+  'namedPlace.clearHome': 'Clear home',
+  'namedPlace.cancel': 'Cancel',
+  'namedPlace.nameEmpty': 'Give the place a name.',
+  'namedPlace.nameLong': 'Keep the name to {max} characters or fewer.',
+  'namedPlace.nameReserved':
+    '“{name}” is already one of the choices. Try another name.',
+  'namedPlace.nameTaken': 'You already have a place called “{name}”.',
   'nav.help': 'Help',
   'nav.close': 'Close',
   'nav.pageTitle': '{page} · TimeTravels',
@@ -77,6 +99,8 @@ const en = {
   'help.choicesTitle': 'What you can change',
   'help.place':
     '<b>The place</b>, “here” at first: search for a city to ask about its time. Your choice is remembered on this device.',
+  'help.named':
+    '<b>Your own places</b>, in the same list: set up “Home”, or use “Name a place” to give a place a name of your own, such as “Mark’s place”, so the question reads “at Mark’s place”. Use Edit beside one to rename it, move it or remove it.',
   'help.direction':
     '<b>When</b>, “right now” at first: choose “from now” or “ago” to count a length of time from now, or “after a time” or “before a time” to count from a time you choose.',
   'help.duration':
@@ -111,7 +135,7 @@ const en = {
     'Every screen is checked against WCAG 2.2 AA in light and dark themes, and every choice works from the keyboard. <link>How it was checked</link>.',
   'about.privacyTitle': 'Privacy',
   'about.privacyStorage':
-    'There are no accounts. The place you choose is saved in your browser on this device, and is never sent anywhere. Your browser also keeps a copy of the app itself, so it works offline.',
+    'There are no accounts. The place you choose, your home and the places you name are saved in your browser on this device, and are never sent anywhere. Your browser also keeps a copy of the app itself, so it works offline.',
   'about.privacyAnalytics':
     'The site uses Cloudflare Web Analytics to count page views and measure page speed. It sets no cookies, and Cloudflare says it does not collect or use visitors’ personal data.',
   'about.creditsTitle': 'Credits',

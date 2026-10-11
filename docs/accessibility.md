@@ -8,19 +8,20 @@ The question is the page's main heading. Each slot is a button inside it, named 
 
 | Slot | Opens | Pattern |
 |---|---|---|
-| The place ("here", "London") | "Choose a place" dialog with a search combobox and a listbox | WAI-ARIA combobox |
+| The place ("here", "London", "home", "Mark's place") | "Choose a place" dialog with a search combobox and a listbox: Here, Home, the named places, "Name a place", then the cities. Each saved place is followed by its own "Edit" option, named "Edit Mark's place", since an option can't hold a button | WAI-ARIA combobox |
+| "Name a place", "Edit" beside a saved place, or Home before it is set up | A dialog titled "Name a place", "Change Mark's place" or "Where is home?", opened against the place slot once the list has closed: a name field (not for home), a place field that shows the chosen city and searches as you type over it, the sentence as it will read, and Save, Remove and Cancel | Dialog with a form |
 | The time ("right now", "from now", "ago", "after", "before") | "Choose when" menu of radio items | Menu with radio items |
 | The duration ("1 hour") | "Choose how long" dialog with a text field and common durations | Dialog with a form |
 | The chosen time ("3 pm") | "Choose a time" dialog with a time field and a day choice | Dialog with a form |
 | Whose time ("my time", "London time") | "Whose time" menu of radio items | Menu with radio items |
 
-Errors in the duration and time pickers appear in an alert region that is always present, so they are announced when they appear.
+Errors in the duration and time pickers and the named-place form appear in an alert region that is always present, so they are announced when they appear.
 
 ## Checks and results
 
-**Automated rules.** Every screen is checked with axe (`@axe-core/playwright`) against WCAG 2.2 AA in light and dark themes, on a phone and a desktop: the sentence, each picker open (including the place list with results and the "Whose time" menu), the duration and time pickers' errors, the clock-change note, sentence 5, a focused slot, and the Help and About pages. Contrast that axe cannot measure fails the check too, except text covered by an open popup, which is checked where nothing covers it. No violations were found, and none needed fixing. These are in `e2e/accessibility.spec.ts` and run in `pnpm check:full`. Lighthouse 13.5.0 gave the live site an accessibility score of 100 on 2026-10-10.
+**Automated rules.** Every screen is checked with axe (`@axe-core/playwright`) against WCAG 2.2 AA in light and dark themes, on a phone and a desktop: the sentence, each picker open (including the place list with results and with saved places, and the "Whose time" menu), the duration and time pickers' errors, the named-place form with and without an error, the clock-change note, sentence 5, a focused slot, and the Help and About pages. Contrast that axe cannot measure fails the check too, except text covered by an open popup, which is checked where nothing covers it. The named-place form lies over the answer's text, so it is checked with the page behind it hidden, and every word of it is measured. No violations were found, and none needed fixing. These are in `e2e/accessibility.spec.ts` and run in `pnpm check:full`. Lighthouse 13.5.0 gave the live site an accessibility score of 100 on 2026-10-10.
 
-**Keyboard.** Tab reaches every slot in reading order; Enter opens each slot, Escape closes it, and focus returns to the slot, in every sentence. These are in `e2e/keyboard.spec.ts`. Every button sets `tabindex="0"`, because Safari's default Tab order (with "Press Tab to highlight each item" off) skips buttons without one; the picker library's slot buttons already set it, so without it Tab reached the slots but not the Help button.
+**Keyboard.** Tab reaches every slot in reading order; Enter opens each slot, Escape closes it, and focus returns to the slot, in every sentence. These are in `e2e/keyboard.spec.ts`. The named-place form opens from the list by keyboard with focus in its name field for a new place, or on the form itself for home or an edit, so a phone's keyboard stays down until a field is chosen; and Escape returns focus to the place slot without saving; tabbing or tapping away saves a change, or keeps the form open with the reason it cannot be saved yet (`e2e/named-places.spec.ts`). Every button sets `tabindex="0"`, because Safari's default Tab order (with "Press Tab to highlight each item" off) skips buttons without one; the picker library's slot buttons already set it, so without it Tab reached the slots but not the Help button.
 
 **Help and About.** The Help button comes after the sentence in reading order. Help ends with links to About and to its Privacy section. Each page opens with focus on its title, or on the Privacy heading from the Privacy link, and changes the page title. Close, Escape and the browser's Back button each go back one page, and back on the sentence, it is as it was, with focus on the Help button. These are in `e2e/pages.spec.ts` and `src/pages/Pages.test.tsx`.
 
@@ -32,7 +33,7 @@ Errors in the duration and time pickers appear in an alert region that is always
 | Focus highlight, and the slot text on it | 5.4 | 8.4 |
 | Popup, input and note borders | 8.2 | 8.5 |
 | Note accent bar | 5.7 | 7.7 |
-| Highlighted list item, and Set and Update buttons | 5.7 | 7.7 |
+| Highlighted list item, and Set, Update and Save buttons | 5.7 | 7.7 |
 
 **Motion.** The app has no animations or transitions, so there is nothing for `prefers-reduced-motion` to reduce. Any added later must respect it.
 
@@ -47,6 +48,7 @@ Made earlier, while building the sentences:
 - **Focus stays on the time slot** after choosing "from now", "ago" or a chosen time, even though the slot moves within the sentence.
 - **Error messages and the update notice** sit in regions that are always present, so screen readers announce them reliably.
 - **The place slot announces as a button** with its value, as the place picker's issue asked, rather than as a combobox.
+- **Edit is its own option** beside each saved place, not a button inside it, and Enter in the named-place form's city search picks a city rather than submitting the form.
 
 ## Still to be checked by a person
 

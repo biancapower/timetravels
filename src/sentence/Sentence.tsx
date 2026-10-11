@@ -1,5 +1,6 @@
 import { isValidElement, useState, type ReactNode } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import type { SavedPlaces, Where } from '../places/named';
 import type { Place } from '../places/places';
 import { formatClockTime, type AnchorDay, type Duration } from '../time';
 import { AnchorPicker } from './AnchorPicker';
@@ -14,14 +15,18 @@ import styles from './Sentence.module.css';
 interface SentenceProps {
   when: When;
   duration: Duration;
-  place: Place | null;
+  where: Where | null;
   places: readonly Place[];
+  saved: SavedPlaces;
+  /** Where home starts when it is set up. */
+  homeDefault?: Place;
   anchor: AnchorSetting;
   /** Whether the answer is in the past, which sets the verb of sentence 5. */
   tense: 'past' | 'future';
   onWhenChange: (when: When) => void;
   onDurationChange: (duration: Duration) => void;
-  onPlaceChange: (place: Place | null) => void;
+  onPlaceChange: (where: Where | null) => void;
+  onSavedChange: (saved: SavedPlaces, where: Where | null) => void;
   onAnchorChange: (anchor: AnchorSetting) => void;
 }
 
@@ -35,13 +40,16 @@ const anchorDayMessage = {
 export function Sentence({
   when,
   duration,
-  place,
+  where,
   places,
+  saved,
+  homeDefault,
   anchor,
   tense,
   onWhenChange,
   onDurationChange,
   onPlaceChange,
+  onSavedChange,
   onAnchorChange,
 }: SentenceProps) {
   const intl = useIntl();
@@ -58,13 +66,16 @@ export function Sentence({
     { time: formatClockTime(anchor.time, { locale: intl.locale }) },
   );
   const anchorPlaceText = anchor.inPlace
-    ? intl.formatMessage({ id: 'anchorPlace.theirs' }, { city: place?.city })
+    ? intl.formatMessage(
+        { id: 'anchorPlace.theirs' },
+        { city: where?.place.city },
+      )
     : intl.formatMessage({ id: 'anchorPlace.mine' });
 
   return (
     <h1 className={styles.sentence}>
       <FormattedMessage
-        id={`sentence.${when}${place ? 'In' : 'Here'}`}
+        id={`sentence.${when}${where ? 'In' : 'Here'}`}
         values={{
           direction: (chunks: ReactNode[]) => (
             <DirectionPicker
@@ -83,9 +94,12 @@ export function Sentence({
           ),
           place: (chunks: ReactNode[]) => (
             <PlacePicker
-              place={place}
+              where={where}
               places={places}
+              saved={saved}
+              homeDefault={homeDefault}
               onChange={onPlaceChange}
+              onSavedChange={onSavedChange}
               className={styles.slot}
             >
               {chunks}
@@ -106,7 +120,7 @@ export function Sentence({
           anchorPlace: (chunks: ReactNode[]) => (
             <AnchorPlacePicker
               inPlace={anchor.inPlace}
-              city={place?.city ?? ''}
+              city={where?.place.city ?? ''}
               onChange={(inPlace) => {
                 onAnchorChange({ ...anchor, inPlace });
               }}
@@ -116,7 +130,9 @@ export function Sentence({
             </AnchorPlacePicker>
           ),
           length: formatDuration(intl, duration),
-          city: place?.city,
+          kind: where?.kind,
+          city: where?.place.city,
+          name: where?.kind === 'named' ? where.name : undefined,
           anchorText,
           anchorPlaceText,
           tense,

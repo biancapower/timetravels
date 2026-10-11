@@ -3,6 +3,7 @@ import { IntlProvider } from 'react-intl';
 import { afterEach, expect, test, vi } from 'vitest';
 import { App } from '../App';
 import { catalogues } from '../i18n/messages';
+import { noSavedPlaces } from '../places/named';
 import { question } from '../testing/question';
 import { Answer } from './Answer';
 import { Sentence } from './Sentence';
@@ -35,8 +36,10 @@ test('the sentence’s chosen time follows the interface’s locale', () => {
       <Sentence
         when="after"
         duration={{ hours: 1, minutes: 0 }}
-        place={null}
+        where={null}
         places={[]}
+        saved={noSavedPlaces}
+        onSavedChange={vi.fn()}
         onWhenChange={vi.fn()}
         onDurationChange={vi.fn()}
         onPlaceChange={vi.fn()}

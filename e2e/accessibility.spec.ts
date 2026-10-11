@@ -84,6 +84,44 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await expectNoViolations(page);
     });
 
+    test('named places in the picker, and their form with an error', async ({
+      page,
+    }) => {
+      await page.addInitScript(() => {
+        localStorage.setItem(
+          'timetravels.savedPlaces',
+          JSON.stringify({
+            home: { city: 'Sydney', zone: 'Australia/Sydney' },
+            named: [
+              {
+                name: 'Mark’s place',
+                place: { city: 'London', zone: 'Europe/London' },
+              },
+            ],
+          }),
+        );
+      });
+      await page.goto('/');
+      await slot(page, 'here').click();
+      await expect(
+        page.getByRole('option', { name: 'Edit Mark’s place' }),
+      ).toBeVisible();
+      await expectNoViolations(page);
+
+      await page.getByRole('option', { name: 'Edit Mark’s place' }).click();
+      const form = page.getByRole('dialog', { name: 'Change Mark’s place' });
+      // The form lies over the answer's text, where axe can't measure the
+      // form's own text. Hiding the page behind it lets every word be measured
+      // against the form's background.
+      await page.addStyleTag({ content: 'main { visibility: hidden; }' });
+      await expect(form).toContainText('It will read');
+      await expectNoViolations(page);
+      await form.getByRole('textbox', { name: 'Name' }).fill('Home');
+      await form.getByRole('button', { name: 'Save' }).click();
+      await expect(form.getByRole('alert')).not.toBeEmpty();
+      await expectNoViolations(page);
+    });
+
     test('the time menu, open', async ({ page }) => {
       await page.goto('/');
       await slot(page, 'right now').click();
