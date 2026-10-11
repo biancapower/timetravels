@@ -194,3 +194,15 @@ test('a change only in the answer’s place doesn’t count the hours', () => {
   ).toBeInTheDocument();
   expect(screen.queryByText(/keep the clock time/)).not.toBeInTheDocument();
 });
+
+test('months after a skipped chosen time don’t claim the same time of day', () => {
+  // 2:30 am tomorrow never happens in Sydney, so the months count from
+  // 3:30 am, not the time that was chosen.
+  show(saturdayEvening, 'Australia/Sydney', {
+    when: 'after',
+    duration: { months: 7, hours: 0, minutes: 0 },
+    anchor: { time: Temporal.PlainTime.from('02:30'), day: 1, inPlace: false },
+  });
+  expect(screen.getByText(/go back an hour at 3 am/)).toBeInTheDocument();
+  expect(screen.queryByText(/keep the clock time/)).not.toBeInTheDocument();
+});

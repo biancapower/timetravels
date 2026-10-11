@@ -79,12 +79,14 @@ export function Answer({
       ? question.when
       : 'none';
   // Across a longer calendar span, it's worth saying that the clock time is
-  // kept, when it is: the days were counted on the answer's own clock, no
-  // hours were added after them, and the landing wasn't moved.
+  // kept, when it is: the days were counted on the answer's own clock, from
+  // the time chosen, no hours were added after them, and the landing wasn't
+  // moved.
   const kept =
     calendar &&
     span &&
-    reach === 'none' &&
+    !isShort(question.duration) &&
+    anchored?.issue !== 'skipped' &&
     landing?.issue === 'none' &&
     !question.duration.hours &&
     !question.duration.minutes &&
