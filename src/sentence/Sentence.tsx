@@ -55,7 +55,7 @@ export function Sentence({
   };
   const anchorText = intl.formatMessage(
     { id: anchorDayMessage[anchor.day] },
-    { time: formatClockTime(anchor.time) },
+    { time: formatClockTime(anchor.time, { locale: intl.locale }) },
   );
   const anchorPlaceText = anchor.inPlace
     ? intl.formatMessage({ id: 'anchorPlace.theirs' }, { city: place?.city })
