@@ -68,6 +68,56 @@ const en = {
   'placePicker.search': 'Search for a city',
   'placePicker.here': 'Here',
   'placePicker.empty': 'No matching places',
+  'nav.help': 'Help',
+  'nav.about': 'About',
+  'nav.privacy': 'Privacy',
+  'nav.close': 'Close',
+  'footer.copyright': '© 2026 <link>the author</link>',
+  'help.title': 'How TimeTravels works',
+  'help.intro':
+    'Ask a question in one sentence. The underlined words are choices: tap one to change it, and the answer updates straight away.',
+  'help.choicesTitle': 'What you can change',
+  'help.place':
+    '<b>The place</b>, “here” at first: search for a city to ask about its time. Your choice is remembered on this device.',
+  'help.direction':
+    '<b>When</b>, “right now” at first: choose “from now” or “ago” to count a length of time from now, or “after a time” or “before a time” to count from a time you choose.',
+  'help.duration':
+    '<b>How long</b>, “1 hour” at first: pick a common length or type one, such as 10 (hours), 1.5h, 90m, 1h30 or 1:30, up to 999 hours.',
+  'help.anchor':
+    '<b>The time to count from</b>, such as “3 pm”: set a time and whether it is yesterday, today or tomorrow.',
+  'help.anchorPlace':
+    '<b>Whose time</b>, “my time” at first: with a place chosen, say whether that time is yours or the place’s.',
+  'help.questionsTitle': 'Questions it can answer',
+  'help.question1': 'What time is it here right now?',
+  'help.question2': 'What time is it in London right now?',
+  'help.question3': 'What time will it be in London 10 hours from now?',
+  'help.question4': 'What time was it in London 8 hours ago?',
+  'help.question5':
+    'What time will it be in London 10 hours after 3 pm my time?',
+  'help.clocks':
+    'If the clocks change during the time you ask about, a note under the answer says so.',
+  'help.offline':
+    'TimeTravels works offline once it has loaded, and you can add it to your home screen.',
+  'about.title': 'About TimeTravels',
+  'about.what': 'TimeTravels is a time calculator you talk to in one sentence.',
+  'about.version': 'Version {version}',
+  'about.source':
+    'The source code is on <link>GitHub</link>, under the MIT licence.',
+  'about.feedback':
+    'Found a problem, or have an idea? <link>Open an issue on GitHub</link>.',
+  'about.accessibilityTitle': 'Accessibility',
+  'about.accessibility':
+    'Every screen is checked against WCAG 2.2 AA in light and dark themes, and every choice works from the keyboard. <link>How it was checked</link>.',
+  'about.privacyTitle': 'Privacy',
+  'about.privacyStorage':
+    'There are no accounts. The place you choose is saved in your browser on this device, and is never sent anywhere.',
+  'about.privacyAnalytics':
+    'The site uses Cloudflare Web Analytics to count page views and measure page speed. It sets no cookies, and Cloudflare says it does not collect or use visitors’ personal data.',
+  'about.creditsTitle': 'Credits',
+  'about.credits':
+    'Built with React, react-intl, Base UI, temporal-polyfill and Open Props. The CSS reset is <reset>A (more) modern CSS reset</reset> by Andy Bell, under <licence>CC BY 3.0</licence>.',
+  'about.licences':
+    '<link>Licences for all the code TimeTravels includes</link>',
 } as const;
 
 export type MessageId = keyof typeof en;
