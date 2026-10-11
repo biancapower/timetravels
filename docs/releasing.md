@@ -1,6 +1,12 @@
 # Releasing
 
-A release is a version number in `package.json`, an entry in `CHANGELOG.md`, and a tag on `main`. The maintainer tags; Claude prepares everything before that.
+A release is a version number in `package.json`, an entry in `CHANGELOG.md`, the `production` branch moved to the release commit, and a tag on that commit. Moving `production` deploys timetravels.dev ([decision 0015](decisions/0015-production-branch.md)). The maintainer moves it and tags; Claude prepares everything before that.
+
+## Where things run
+
+- **`production`** is what timetravels.dev serves. Only the maintainer moves it, at a release.
+- **`main`** is where pull requests merge. Cloudflare builds it as a preview: the staging address, `main-timetravels.bianca-83c.workers.dev`.
+- **Every other branch** gets its own preview address, which Cloudflare posts on its pull request.
 
 ## The version number
 
@@ -9,11 +15,11 @@ A release is a version number in `package.json`, an entry in `CHANGELOG.md`, and
 ## Steps
 
 1. **Close or move the milestone's issues.** Every issue in the release's milestone is closed, or moved to another milestone with a comment saying why.
-2. **User test.** Claude drafts a test script from the issues' acceptance criteria. The maintainer works through it on a real phone and a real desktop browser, online and offline. Claude files every finding as an issue, verbatim, labelled `severity:1` to `severity:3`, and fixes nothing without an issue (see `CLAUDE.md`).
-3. **Release pull request.** Claude sets the version in `package.json`, adds the release's entry to `CHANGELOG.md`, and puts a draft of the GitHub release notes in the pull request description. Merging it deploys the release to timetravels.dev, because Cloudflare builds every change to `main`.
-4. **Release review.** A fresh Claude session reviews the release with the maintainer. It writes nothing.
-5. **Tag and publish.** The maintainer tags the merge commit `v` plus the version (for example `v0.1.0`) and publishes the release notes on GitHub. If that happens on a later day than the changelog says, the date in `CHANGELOG.md` is corrected in the next pull request.
+2. **Release pull request.** Claude sets the version in `package.json`, adds the release's entry to `CHANGELOG.md`, and puts a draft of the GitHub release notes in the pull request description. Merging it puts the release candidate on staging.
+3. **User test, on staging.** Claude drafts a test script from the issues' acceptance criteria. The maintainer works through it on a real phone and a real desktop browser, online and offline. Claude files every finding as an issue, verbatim, labelled `severity:1` to `severity:3`, and fixes nothing without an issue (see `CLAUDE.md`). Fixes merge to `main` and so reach staging.
+4. **Release review, on staging.** A fresh Claude session reviews the release with the maintainer. It writes nothing. Anything it finds is fixed as in step 3.
+5. **Go live.** The maintainer moves `production` to the release commit on `main`, checks timetravels.dev shows the new version on its About page, then tags that commit `v` plus the version (for example `v0.1.0`) and publishes the release notes on GitHub. If that happens on a later day than the changelog says, the date in `CHANGELOG.md` is corrected in the next pull request.
 
-The release is live from step 3, before the review. A problem the review finds is fixed like any other: an issue, then a pull request, and a patch release if it can't wait for the next one.
+A fix that can't wait for the next release is a patch release: the same steps, with a short changelog entry.
 
-Claude never tags or publishes a release; the guard hook in `.claude/settings.json` blocks it.
+Claude never moves `production`, tags or publishes a release; the guard hook in `.claude/settings.json` blocks each of them.
