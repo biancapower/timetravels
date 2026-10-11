@@ -93,3 +93,39 @@ test('Enter in the place search picks a city, and never saves the form', async (
   await expect(search).toHaveValue('Tokyo');
   await expect(form).toContainText('What time is it at home right now?');
 });
+
+test('tapping away saves a change, closes an untouched form, and keeps an unfinished one open', async ({
+  page,
+}, testInfo) => {
+  // The page's top corner, clear of the sentence and the form.
+  const away = () =>
+    testInfo.project.use.hasTouch
+      ? page.touchscreen.tap(4, 4)
+      : page.mouse.click(4, 4);
+
+  await page.goto('/');
+  await slot(page, 'here').click();
+  await page.getByRole('option', { name: /^Home/ }).click();
+  const home = page.getByRole('dialog', { name: 'Where is home?' });
+  await expect(home).toBeVisible();
+  await away();
+  await expect(home).toBeHidden();
+  await expect(
+    page.getByRole('heading', { name: asked('here') }),
+  ).toBeVisible();
+
+  await slot(page, 'here').click();
+  await page.getByRole('option', { name: 'Name a place' }).click();
+  const form = page.getByRole('dialog', { name: 'Name a place' });
+  await form.getByRole('textbox', { name: 'Name' }).fill('Gym');
+  await away();
+  await expect(form.getByRole('alert')).toHaveText('Choose a place for it.');
+
+  await form.getByRole('combobox', { name: 'Place' }).fill('lond');
+  await form.getByRole('option', { name: 'London' }).click();
+  await away();
+  await expect(form).toBeHidden();
+  await expect(
+    page.getByRole('heading', { name: asked('at Gym') }),
+  ).toBeVisible();
+});

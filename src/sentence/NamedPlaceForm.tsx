@@ -58,9 +58,8 @@ export function NamedPlaceForm({
   const original = editing.kind === 'named' ? editing.original : undefined;
   const existing = isHome ? saved.home : original?.place;
   const [name, setName] = useState(original?.name ?? '');
-  const [place, setPlace] = useState<Place | null>(
-    existing ?? (isHome ? (homeDefault ?? null) : null),
-  );
+  const initial = existing ?? (isHome ? (homeDefault ?? null) : null);
+  const [place, setPlace] = useState<Place | null>(initial);
   const [query, setQuery] = useState(place?.city ?? '');
   const placeId = useId();
   const [tried, setTried] = useState(false);
@@ -86,20 +85,27 @@ export function NamedPlaceForm({
         ? null
         : text('namedPlace.placeMissing');
 
+  const touched =
+    name !== (original?.name ?? '') ||
+    chosen?.city !== initial?.city ||
+    chosen?.zone !== initial?.zone;
+
+  /** Saves the form, or shows why it can't and reports false. */
   const save = () => {
     setTried(true);
-    if (problem || !chosen) return;
+    if (problem || !chosen) return false;
     if (isHome) {
       onDone({
         saved: { ...saved, home: chosen },
         where: { kind: 'home', place: chosen },
       });
-      return;
+      return true;
     }
     onDone({
       saved: withNamed(saved, { name: trimmed, place: chosen }, original?.name),
       where: { kind: 'named', name: trimmed, place: chosen },
     });
+    return true;
   };
 
   const remove = () => {
@@ -132,8 +138,14 @@ export function NamedPlaceForm({
   return (
     <Popover.Root
       open
-      onOpenChange={(open) => {
-        if (!open) onDone(null);
+      onOpenChange={(open, details) => {
+        if (open) return;
+        // Tapping or tabbing away keeps a change, as leaving a field
+        // does; a change that can't be saved yet keeps the form open.
+        const leaving =
+          details.reason === 'outside-press' || details.reason === 'focus-out';
+        if (!leaving || !touched) onDone(null);
+        else if (!save()) details.cancel();
       }}
     >
       <Popover.Portal>
