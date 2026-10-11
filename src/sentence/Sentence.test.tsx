@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { expect, test, vi } from 'vitest';
+import { App } from '../App';
 import { catalogues, type Messages } from '../i18n/messages';
 import { Sentence } from './Sentence';
 import { named } from '../testing/named';
@@ -41,4 +42,16 @@ test('the sentence follows the message, so a translation can reorder the slots',
   expect(
     here.compareDocumentPosition(now) & Node.DOCUMENT_POSITION_FOLLOWING,
   ).toBeTruthy();
+});
+
+// The group's CSS keeps it on one line; jsdom doesn't apply CSS modules, so
+// this checks the grouping the style hangs on.
+test('the closing “?” is grouped with the slot before it', () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  const heading = screen.getByRole('heading', { level: 1 });
+  const slots = within(heading).getAllByRole('button');
+  const last = slots[slots.length - 1];
+  const group = last?.parentElement;
+  expect(group).not.toBe(heading);
+  expect(group?.textContent).toMatch(/\?$/);
 });

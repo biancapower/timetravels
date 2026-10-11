@@ -47,3 +47,8 @@ button.slot[aria-expanded='true'] {
   color: var(--accent);
   text-decoration-color: currentColor;
 }
+
+/* The last slot and the closing punctuation, kept on one line. */
+.end {
+  white-space: nowrap;
+}
