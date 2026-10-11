@@ -96,3 +96,15 @@ test('every slot opens with Enter and closes with Escape, returning focus', asyn
     await openAndClose(name);
   }
 });
+
+test('Tab goes from the last slot to the help button', async ({ page }) => {
+  await page.goto('/');
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'right now' }).focus();
+  await page.keyboard.press('Tab');
+  const help = page.getByRole('button', { name: 'Help' });
+  await expect(help).toBeFocused();
+  // Safari's default Tab order skips buttons unless they set tabindex, as
+  // the pickers' buttons do, so the help button sets it too.
+  await expect(help).toHaveAttribute('tabindex', '0');
+});
