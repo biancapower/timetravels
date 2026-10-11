@@ -33,7 +33,7 @@ export default defineConfig({
       workbox: {
         // Precache everything the app needs, including the Temporal polyfill
         // chunk that only some browsers load, so it works offline from the start.
-        globPatterns: ['**/*.{js,css,html,svg,png}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,txt}'],
       },
     }),
   ],

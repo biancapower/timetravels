@@ -46,7 +46,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "node scripts/third-party-licences.js && tsc && vite build",
     "preview": "vite preview",
     "typecheck": "tsc",
     "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm test:hooks",
