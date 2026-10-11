@@ -412,16 +412,3 @@ export function transitionsBetween(
   }
   return found;
 }
-
-/**
- * How far the wall clock moves across a span because of one clock change:
- * 10 hours across a change forward an hour is 11 hours on the clock.
- */
-export function clockMoveAcross(
-  span: Pick<Duration, 'hours' | 'minutes'>,
-  change: Pick<Transition, 'direction' | 'minutes'>,
-): Duration {
-  const sign = change.direction === 'forward' ? 1 : -1;
-  const minutes = span.hours * 60 + span.minutes + sign * change.minutes;
-  return { hours: Math.floor(minutes / 60), minutes: minutes % 60 };
-}

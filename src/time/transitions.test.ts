@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { clockMoveAcross, transitionsBetween } from './index';
+import { transitionsBetween } from './index';
 
 const instant = (text: string) => Temporal.Instant.from(text);
 
@@ -68,19 +68,6 @@ test('a zone without daylight saving never has a change', () => {
       ['Asia/Tokyo'],
     ),
   ).toEqual([]);
-});
-
-test('clockMoveAcross gives the clock movement one change makes to a span', () => {
-  const forward = { direction: 'forward', minutes: 60 } as const;
-  const back = { direction: 'back', minutes: 60 } as const;
-  const lordHowe = { direction: 'forward', minutes: 30 } as const;
-  const tenHours = { hours: 10, minutes: 0 };
-  expect(clockMoveAcross(tenHours, forward)).toEqual({ hours: 11, minutes: 0 });
-  expect(clockMoveAcross(tenHours, back)).toEqual({ hours: 9, minutes: 0 });
-  expect(clockMoveAcross(tenHours, lordHowe)).toEqual({
-    hours: 10,
-    minutes: 30,
-  });
 });
 
 // Casablanca's clocks go back on 15 February 2026 and forward on 22 March 2026.

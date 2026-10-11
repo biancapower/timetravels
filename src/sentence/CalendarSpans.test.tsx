@@ -137,14 +137,14 @@ test('a day that lands on a repeated time says which one', () => {
   ).toBeInTheDocument();
 });
 
-test('an exact span keeps the clock-moves wording', () => {
+test('an exact span says how the change moves the answer', () => {
   show(saturdayEvening, 'Australia/Sydney', {
     when: 'later',
     duration: { hours: 24, minutes: 0 },
   });
   expect(
     screen.getByText(
-      'Sydney’s clocks go forward an hour at 2 am on Sunday 4 October, so the clock moves 25 hours in these 24 hours.',
+      'Sydney’s clocks go forward an hour at 2 am on Sunday 4 October, so the answer is an hour later than counting on the clock gives.',
     ),
   ).toBeInTheDocument();
 });

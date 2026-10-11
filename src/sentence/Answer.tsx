@@ -2,7 +2,6 @@ import { useIntl } from 'react-intl';
 import type { Where } from '../places/named';
 import { cityOf } from '../places/places';
 import {
-  clockMoveAcross,
   dayRelation,
   elapsed,
   formatClockTime,
@@ -79,6 +78,7 @@ export function Answer({
     isShort(question.duration)
       ? question.when
       : 'none';
+  const countsBack = question.when === 'earlier' || question.when === 'before';
   const name =
     where?.kind === 'home'
       ? intl.formatMessage({ id: 'placePicker.home' })
@@ -133,11 +133,15 @@ export function Answer({
                     locale,
                   }),
                   date: longDate(change.wallTime.toPlainDate()),
-                  clock: formatDuration(
-                    intl,
-                    clockMoveAcross(question.duration, change),
-                  ),
-                  span: formatDuration(intl, question.duration),
+                  whose:
+                    change.zone === question.answerZone ? 'answer' : 'other',
+                  // Forward makes the clock read later counting on, and
+                  // earlier counting back; back does the opposite.
+                  shift:
+                    (change.direction === 'forward') === !countsBack
+                      ? 'later'
+                      : 'earlier',
+                  count: countsBack ? 'back' : 'on',
                 },
               )}
         </p>
