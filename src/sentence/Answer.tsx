@@ -51,24 +51,22 @@ export function Answer({
     ? transitionsBetween(span.start.toInstant(), moment.toInstant(), span.zones)
     : [];
   const chosen = formatClockTime(question.anchor.time, { locale });
+  const name =
+    where?.kind === 'home'
+      ? intl.formatMessage({ id: 'placePicker.home' })
+      : where?.kind === 'named'
+        ? where.name
+        : undefined;
+  const label = name
+    ? intl.formatMessage(
+        { id: 'answer.named' },
+        { name, city, offset: formatOffset(moment, { locale }) },
+      )
+    : zoneLabel(moment, { locale, city });
   return (
     <div className={styles.answer}>
       <p className={styles.time}>{answerTime(today, moment, locale, intl)}</p>
-      <p className={styles.zone}>
-        {where?.kind === 'home' || where?.kind === 'named'
-          ? intl.formatMessage(
-              { id: 'answer.named' },
-              {
-                name:
-                  where.kind === 'home'
-                    ? intl.formatMessage({ id: 'placePicker.home' })
-                    : where.name,
-                city,
-                offset: formatOffset(moment, { locale }),
-              },
-            )
-          : zoneLabel(moment, { locale, city })}
-      </p>
+      <p className={styles.zone}>{label}</p>
       {changes.map((change) => (
         <p
           key={`${change.zone}:${change.instant.toString()}`}
