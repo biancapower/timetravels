@@ -132,8 +132,7 @@ export function NamedPlaceForm({
           { name: original.name },
         )
       : text('namedPlace.addTitle');
-  // Until the name is typed over, every city is offered.
-  const shown = chosen ? places : filterPlaces(places, query);
+  const shown = filterPlaces(places, query);
 
   return (
     <Popover.Root
