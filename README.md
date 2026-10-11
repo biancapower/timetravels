@@ -38,7 +38,7 @@ The dev server does not run the service worker. To try installing the app or usi
 - ESLint and Prettier
 - pnpm
 - Custom CSS with Open Props; Base UI, a headless component library, for the pickers
-- Cloudflare Workers, serving the build as static assets
+- Cloudflare Workers, serving the build as static assets: the `production` branch is the live site and `main` is staging ([releasing](docs/releasing.md))
 
 Time-zone rules come from the browser's own `Intl` data, or from the polyfill where Temporal isn't native. That's why the app works offline, and why zone rules update with the browser rather than with the app.
 

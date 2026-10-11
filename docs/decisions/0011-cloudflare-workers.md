@@ -14,4 +14,4 @@ Sources: Cloudflare's [Wrangler configuration](https://developers.cloudflare.com
 
 **Consequences.** Previews live at `*.workers.dev` addresses and are not advertised. `public/_headers` works unchanged. Static asset requests are free and unlimited; builds are limited to 3,000 minutes a month on the free plan. Dependabot will propose Wrangler updates like any other development dependency.
 
-**Status.** The move to Workers proposed by Claude after the maintainer's dashboard showed Pages as legacy, and the Wrangler dependency recommended by a research subagent; approved by @biancapower, 2026-10-10.
+**Status.** Where it says `main` deploys production, superseded by [decision 0015](0015-production-branch.md). The move to Workers proposed by Claude after the maintainer's dashboard showed Pages as legacy, and the Wrangler dependency recommended by a research subagent; approved by @biancapower, 2026-10-10.
