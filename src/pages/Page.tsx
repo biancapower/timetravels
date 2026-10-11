@@ -46,7 +46,13 @@ export function Page({ title, section, onClose, children }: PageProps) {
 
   return (
     <main className={styles.page}>
-      <button type="button" className={styles.close} onClick={onClose}>
+      {/* tabIndex puts it in Safari's default Tab order, like the slots. */}
+      <button
+        type="button"
+        tabIndex={0}
+        className={styles.close}
+        onClick={onClose}
+      >
         {intl.formatMessage({ id: 'nav.close' })}
       </button>
       <h1 ref={heading} tabIndex={-1} className={styles.title}>
