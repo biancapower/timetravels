@@ -290,18 +290,24 @@ function issueAt(wall: Temporal.PlainDateTime, zone: string): AnchorIssue {
   return first.equals(last) ? 'none' : 'repeated';
 }
 
+export interface Landing {
+  /** The clock time the calendar part names, before any exact part. */
+  wall: Temporal.PlainDateTime;
+  issue: AnchorIssue;
+}
+
 /**
- * Whether a duration's calendar part lands on a clock time that was
- * skipped or repeated, before any exact part is added. Temporal then
- * moves a skipped time on by the jump and takes the first of a repeated
- * one, as anchorAt does.
+ * Where a duration's calendar part lands, and whether that clock time was
+ * skipped or repeated. Temporal then moves a skipped time on by the jump
+ * and takes the first of a repeated one, as anchorAt does. Null for a
+ * duration with no calendar part.
  */
 export function calendarLanding(
   moment: Moment,
   duration: Duration,
   direction: Direction,
-): AnchorIssue {
-  if (!isCalendar(duration)) return 'none';
+): Landing | null {
+  if (!isCalendar(duration)) return null;
   const sign = direction === 'later' ? 1 : -1;
   const wall = moment.toPlainDateTime().add({
     years: sign * (duration.years ?? 0),
@@ -309,7 +315,7 @@ export function calendarLanding(
     weeks: sign * (duration.weeks ?? 0),
     days: sign * (duration.days ?? 0),
   });
-  return issueAt(wall, moment.timeZoneId);
+  return { wall, issue: issueAt(wall, moment.timeZoneId) };
 }
 
 /** The exact time between two moments, in either order, in hours and minutes. */

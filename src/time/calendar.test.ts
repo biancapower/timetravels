@@ -80,23 +80,25 @@ test('isCalendar is true when any day, week, month or year is set', () => {
 test('calendarLanding flags a step that lands on a skipped time', () => {
   // 02:30 on the 4th never happened in Sydney.
   const start = at('2026-10-03T02:30', 'Australia/Sydney');
-  expect(calendarLanding(start, { ...none, days: 1 }, 'later')).toBe('skipped');
+  const landing = calendarLanding(start, { ...none, days: 1 }, 'later');
+  expect(landing?.issue).toBe('skipped');
+  expect(landing?.wall.toString()).toBe('2026-10-04T02:30:00');
 });
 
 test('calendarLanding flags a step that lands on a repeated time', () => {
   // 01:30 on the 25th happened twice in London.
   const start = at('2026-10-24T01:30', 'Europe/London');
-  expect(calendarLanding(start, { ...none, days: 1 }, 'later')).toBe(
-    'repeated',
-  );
+  const landing = calendarLanding(start, { ...none, days: 1 }, 'later');
+  expect(landing?.issue).toBe('repeated');
+  expect(landing?.wall.toString()).toBe('2026-10-25T01:30:00');
 });
 
-test('calendarLanding is none for ordinary steps and exact spans', () => {
+test('calendarLanding is none for ordinary steps, and null for exact spans', () => {
   const start = at('2026-10-03T02:30', 'Australia/Sydney');
-  expect(calendarLanding(start, { ...none, days: 2 }, 'later')).toBe('none');
-  expect(calendarLanding(start, { hours: 24, minutes: 0 }, 'later')).toBe(
+  expect(calendarLanding(start, { ...none, days: 2 }, 'later')?.issue).toBe(
     'none',
   );
+  expect(calendarLanding(start, { hours: 24, minutes: 0 }, 'later')).toBeNull();
 });
 
 test('elapsed is the exact time between two moments, in either order', () => {
