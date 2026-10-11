@@ -61,8 +61,8 @@ export function PlacePicker({
         role="button"
         onKeyDown={(event) => {
           // On a closed trigger, Base UI picks the first place starting with
-          // a typed letter, silently changing the answer. Choosing a place
-          // goes through the search instead.
+          // a typed letter, silently changing the answer, and has no option
+          // to turn that off. This skips its handler for the same keys.
           const letter =
             event.key.length === 1 &&
             event.key !== ' ' &&

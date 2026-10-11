@@ -100,6 +100,9 @@ test('a letter typed on the closed place slot leaves the place unchanged', async
   const heading = page.getByRole('heading', { level: 1 });
   await heading.getByRole('button', { name: 'here' }).focus();
   await page.keyboard.press('h');
+  await expect(
+    page.getByRole('combobox', { name: 'Search for a city' }),
+  ).not.toBeVisible();
   await expect(heading).toHaveText(/^What time is it here right now ?\?$/);
   expect(
     await page.evaluate(() => localStorage.getItem('timetravels.place')),
