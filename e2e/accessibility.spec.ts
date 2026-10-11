@@ -16,9 +16,8 @@ async function expectNoViolations(page: Page) {
   expect(results.violations).toEqual([]);
   // axe marks contrast it cannot measure as incomplete rather than failed.
   // Text under an open popup or its invisible backdrop ("bgOverlap", or
-  // "elmPartiallyObscured" for the open slot, which has its own fill), and
-  // text in a popup that lies over the page's text ("elmPartiallyObscuring"),
-  // is checked in the states where nothing overlaps it; any other reason is
+  // "elmPartiallyObscured" for the open slot, which has its own fill) is
+  // checked in the states where nothing covers it; any other reason is
   // unproven, so it fails.
   const unmeasured = results.incomplete
     .filter((rule) => rule.id === 'color-contrast')
@@ -34,8 +33,7 @@ function isCovered(data: unknown) {
     data !== null &&
     'messageKey' in data &&
     (data.messageKey === 'bgOverlap' ||
-      data.messageKey === 'elmPartiallyObscured' ||
-      data.messageKey === 'elmPartiallyObscuring')
+      data.messageKey === 'elmPartiallyObscured')
   );
 }
 
@@ -112,7 +110,10 @@ for (const colorScheme of ['light', 'dark'] as const) {
 
       await page.getByRole('option', { name: 'Edit Mark’s place' }).click();
       const form = page.getByRole('dialog', { name: 'Change Mark’s place' });
-      // The preview is short enough here to sit clear of the answer's text.
+      // The form lies over the answer's text, where axe can't measure the
+      // form's own text. Hiding the page behind it lets every word be measured
+      // against the form's background.
+      await page.addStyleTag({ content: 'main { visibility: hidden; }' });
       await expect(form).toContainText('It will read');
       await expectNoViolations(page);
       await form.getByRole('textbox', { name: 'Name' }).fill('Home');
