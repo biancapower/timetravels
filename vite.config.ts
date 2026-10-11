@@ -19,7 +19,8 @@ export default defineConfig({
       manifest: {
         name: 'TimeTravels',
         short_name: 'TimeTravels',
-        description: 'A time calculator you talk to in one sentence.',
+        description:
+          'A time calculator you ask in plain words, the way you’d ask a person.',
         // A manifest takes one colour; it matches the light ground, and the page's
         // theme-color tags switch the browser bar for dark mode once loaded.
         theme_color: '#f8f9fa',
