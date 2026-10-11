@@ -3,6 +3,7 @@ import { IntlProvider } from 'react-intl';
 import { afterEach, expect, test, vi } from 'vitest';
 import { App } from './App';
 import { catalogues } from './i18n/messages';
+import { noSavedPlaces } from './places/named';
 import { Answer } from './sentence/Answer';
 import { Sentence } from './sentence/Sentence';
 import { named } from './testing/named';
@@ -31,8 +32,10 @@ test('renders the sentence with its two slots', () => {
       <Sentence
         when="now"
         duration={{ hours: 1, minutes: 0 }}
-        place={null}
+        where={null}
         places={[]}
+        saved={noSavedPlaces}
+        onSavedChange={vi.fn()}
         onWhenChange={vi.fn()}
         onDurationChange={vi.fn()}
         onPlaceChange={vi.fn()}

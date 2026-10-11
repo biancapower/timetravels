@@ -1,4 +1,5 @@
 import { useIntl } from 'react-intl';
+import type { Where } from '../places/named';
 import { cityOf } from '../places/places';
 import {
   clockMoveAcross,
@@ -23,9 +24,11 @@ interface AnswerProps {
   question: Question;
   /** The city to name in the label; taken from the zone id when omitted. */
   city?: string;
+  /** Home or a named place, to name in the label before its city. */
+  where?: Where | null;
   /** The city whose time the chosen time is, for the note on a skipped or repeated time. */
   anchorCity?: string;
-  /** The device's own locale when omitted. */
+  /** The interface's locale when omitted. */
   locale?: string;
 }
 
@@ -33,10 +36,12 @@ export function Answer({
   now,
   question,
   city,
+  where,
   anchorCity,
-  locale,
+  locale: given,
 }: AnswerProps) {
   const intl = useIntl();
+  const locale = given ?? intl.locale;
   const { today, moment, anchored, span, landing } = resolveAnswer(
     now,
     question,
@@ -74,12 +79,24 @@ export function Answer({
     isShort(question.duration)
       ? question.when
       : 'none';
+  const name =
+    where?.kind === 'home'
+      ? intl.formatMessage({ id: 'placePicker.home' })
+      : where?.kind === 'named'
+        ? where.name
+        : undefined;
+  const label = name
+    ? intl.formatMessage(
+        { id: 'answer.named' },
+        { name, city, offset: formatOffset(moment, { locale }) },
+      )
+    : zoneLabel(moment, { locale, city });
   return (
     <div className={styles.answer}>
       <p className={styles.time}>
         {answerTime(today, moment, locale, intl, calendar)}
       </p>
-      <p className={styles.zone}>{zoneLabel(moment, { locale, city })}</p>
+      <p className={styles.zone}>{label}</p>
       {changes.map((change) => (
         <p
           key={`${change.zone}:${change.instant.toString()}`}
@@ -184,7 +201,7 @@ export function Answer({
 function answerTime(
   today: Moment,
   moment: Moment,
-  locale: string | undefined,
+  locale: string,
   intl: ReturnType<typeof useIntl>,
   withDate: boolean,
 ): string {

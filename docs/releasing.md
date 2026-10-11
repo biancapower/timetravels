@@ -5,7 +5,7 @@ A release is a version number in `package.json`, an entry in `CHANGELOG.md`, the
 ## Where things run
 
 - **`production`** is what timetravels.dev serves. Only the maintainer moves it, at a release.
-- **`main`** is where pull requests merge. Cloudflare builds it as a preview, which is staging; the build's page in the Cloudflare dashboard shows its address.
+- **`main`** is where pull requests merge. Cloudflare builds it as a preview, which is staging: https://main-timetravels.bianca-83c.workers.dev
 - **Every other branch** gets its own preview address, which Cloudflare posts on its pull request.
 
 ## The version number

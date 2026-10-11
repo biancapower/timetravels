@@ -1,14 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import styles from './App.module.css';
+import { formatLocale } from './i18n/formatLocale';
 import { catalogues, pickLocale, type Locale } from './i18n/messages';
 import { About } from './pages/About';
 import { Help } from './pages/Help';
 import { HelpButton } from './pages/HelpButton';
 import { useRoute } from './pages/useRoute';
 import { aliases } from './places/aliases';
-import { buildPlaces, cityOf, type Place } from './places/places';
-import { loadPlace, savePlace } from './places/storage';
+import type { SavedPlaces, Where } from './places/named';
+import { buildPlaces, cityOf } from './places/places';
+import {
+  loadPlace,
+  loadSavedPlaces,
+  savePlace,
+  saveSavedPlaces,
+} from './places/storage';
 import type { When } from './sentence/DirectionPicker';
 import { LiveAnswer } from './sentence/LiveAnswer';
 import {
@@ -34,7 +41,9 @@ export function App({
   const [places] = useState(() =>
     buildPlaces(Intl.supportedValuesOf('timeZone'), aliases),
   );
-  const [place, setPlace] = useState(() => loadPlace(places));
+  const [saved, setSaved] = useState(() => loadSavedPlaces(places));
+  const [where, setWhere] = useState(() => loadPlace(places, saved));
+  const place = where?.place;
   const [when, setWhen] = useState<When>('now');
   const [duration, setDuration] = useState<Duration>({ hours: 1, minutes: 0 });
   const [anchor, setAnchor] = useState<AnchorSetting>(() => ({
@@ -56,10 +65,20 @@ export function App({
     opener.current = null;
   }, [route.view]);
 
-  const choosePlace = (chosen: Place | null) => {
-    setPlace(chosen);
+  const choosePlace = (chosen: Where | null) => {
+    setWhere(chosen);
     savePlace(chosen);
   };
+  const changeSaved = (next: SavedPlaces, chosen: Where | null) => {
+    setSaved(next);
+    saveSavedPlaces(next);
+    choosePlace(chosen);
+  };
+  // The city the device's zone is named after, rather than an alias that
+  // shares the zone, such as Canberra for Sydney.
+  const homeDefault =
+    places.find((p) => p.zone === zone && p.city === cityOf(zone)) ??
+    places.find((p) => p.zone === zone);
 
   const question: Question = {
     when,
@@ -74,25 +93,32 @@ export function App({
   const tense = tenseOf(question);
 
   return (
-    <IntlProvider locale={locale} messages={catalogues[locale]}>
+    <IntlProvider
+      locale={formatLocale(navigator.languages, locale)}
+      messages={catalogues[locale]}
+    >
       {/* Hidden, not removed, under Help and About, so it comes back as it was. */}
       <div className={styles.screen} hidden={route.view !== 'sentence'}>
         <main className={styles.page}>
           <Sentence
             when={when}
             duration={duration}
-            place={place}
+            where={where}
             places={places}
+            saved={saved}
+            homeDefault={homeDefault}
             anchor={question.anchor}
             tense={tense}
             onWhenChange={setWhen}
             onDurationChange={setDuration}
             onPlaceChange={choosePlace}
+            onSavedChange={changeSaved}
             onAnchorChange={setAnchor}
           />
           <LiveAnswer
             question={question}
             city={place?.city ?? cityOf(zone)}
+            where={where}
             anchorCity={question.anchor.inPlace ? place?.city : cityOf(zone)}
           />
         </main>
