@@ -52,6 +52,18 @@ must_block=(
   'git push --tags'
   'git push origin --follow-tags'
   'git push origin refs/tags/v1.0.0'
+  # The production branch deploys timetravels.dev.
+  'git push origin production'
+  'git push origin main:production'
+  'git push origin 047a457:refs/heads/production'
+  'git push -u origin HEAD:production'
+  'git push origin "production"'
+  "git push origin 'x:production'"
+  'git push origin production; echo done'
+  'git push origin production&&echo done'
+  # Documented over-block: a branch path ending in the word, such as
+  # feature/production, looks the same as the production branch.
+  'git push origin feature/production'
   # Documented over-block: "--no-verify anywhere" also catches it inside
   # an unrelated grep argument. False positive, not a security gap.
   'grep -- --no-verify README.md'
@@ -66,6 +78,8 @@ must_allow=(
   'git push origin feature'
   'git push -u origin feature'
   'git push origin feature && echo a+b'
+  'git push -u origin 45/production-branch'
+  'git push origin production-notes'
   'git tag --list'
   'git tag -l'
   'pnpm test'
@@ -90,6 +104,13 @@ known_gaps=(
   # Base64 + eval: the dangerous command never appears as plaintext in
   # the string the hook scans.
   'eval "$(base64 -d <<< Z2l0IHB1c2ggLS1mb3JjZSBvcmlnaW4gbWFpbg==)"'
+  # A bare push from a local branch named production, or tracking it,
+  # never names it in the command.
+  'git push'
+  # Moving the branch through the GitHub API or merging a pull request
+  # into it isn't a git push at all.
+  'gh api -X PATCH repos/o/r/git/refs/heads/production -f sha=abc'
+  'gh pr merge 12 --merge'
 )
 
 check_list() {
