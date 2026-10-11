@@ -7,9 +7,12 @@ import './styles/global.css';
 // Temporal at load time, only inside functions called after it.
 import { App } from './App';
 import { catalogues, pickLocale } from './i18n/messages';
+import { trackInputModality } from './sentence/inputModality';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Missing #root element');
+
+trackInputModality();
 
 const locale = pickLocale(navigator.languages);
 const messages = catalogues[locale];
