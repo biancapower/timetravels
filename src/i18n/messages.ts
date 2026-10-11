@@ -75,7 +75,7 @@ const en = {
   'footer.copyright': '© 2026 <link>the author</link>',
   'help.title': 'How TimeTravels works',
   'help.intro':
-    'Ask a question in one sentence. The underlined words are choices: tap one to change it, and the answer updates straight away.',
+    'Your question is written as an everyday sentence, the way you’d say it out loud. The underlined words are the parts you can change: tap one, pick something else, and the answer updates straight away.',
   'help.choicesTitle': 'What you can change',
   'help.place':
     '<b>The place</b>, “here” at first: search for a city to ask about its time. Your choice is remembered on this device.',
@@ -99,7 +99,8 @@ const en = {
   'help.offline':
     'TimeTravels works offline once it has loaded, and you can add it to your home screen.',
   'about.title': 'About TimeTravels',
-  'about.what': 'TimeTravels is a time calculator you talk to in one sentence.',
+  'about.what':
+    'TimeTravels is a time calculator you ask in plain words, the way you’d ask a person.',
   'about.version': 'Version {version}',
   'about.source':
     'The source code is on <link>GitHub</link>, under the MIT licence.',
