@@ -129,3 +129,42 @@ test('an exact span keeps the clock-moves wording', () => {
     ),
   ).toBeInTheDocument();
 });
+
+test('a skipped landing doesn’t also count the day’s hours', () => {
+  // 02:30 plus a day lands in the skipped hour and moves to 03:30, so the
+  // span is a full 24 hours; counting it would explain nothing.
+  show('2026-10-02T16:30:00Z', 'Australia/Sydney', {
+    when: 'later',
+    duration: day,
+  });
+  expect(
+    screen.getByText(
+      'Sydney’s clocks go forward an hour at 2 am on Sunday 4 October.',
+    ),
+  ).toBeInTheDocument();
+});
+
+test('a change only in the answer’s place doesn’t count the hours', () => {
+  // The day is counted in London, "my time", where nothing changes; the
+  // change is Sydney's.
+  show(
+    saturdayEvening,
+    'Australia/Sydney',
+    {
+      when: 'after',
+      duration: day,
+      deviceZone: 'Europe/London',
+      anchor: {
+        time: Temporal.PlainTime.from('12:00'),
+        day: 0,
+        inPlace: false,
+      },
+    },
+    { city: 'Sydney', anchorCity: 'London' },
+  );
+  expect(
+    screen.getByText(
+      'Sydney’s clocks go forward an hour at 2 am on Sunday 4 October.',
+    ),
+  ).toBeInTheDocument();
+});

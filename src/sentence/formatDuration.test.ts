@@ -6,6 +6,7 @@ import { formatDuration } from './formatDuration';
 const intl = createIntl({ locale: 'en', messages: catalogues.en });
 
 test.each([
+  [{ hours: 0, minutes: 0 }, '0 minutes'],
   [{ hours: 1, minutes: 0 }, '1 hour'],
   [{ hours: 0, minutes: 30 }, '30 minutes'],
   [{ hours: 1, minutes: 30 }, '1 hour 30 minutes'],

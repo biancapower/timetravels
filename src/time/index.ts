@@ -137,7 +137,6 @@ const durationPatterns: readonly [
   [/^(\d+):([0-5]\d)$/, (m) => Number(m[1]) * 60 + Number(m[2])],
 ];
 
-// Calendar units are whole numbers, kept to about a century each.
 const unitNames: Record<string, keyof Duration> = {};
 for (const [unit, names] of [
   ['years', ['y', 'yr', 'yrs', 'year', 'years']],
@@ -149,6 +148,7 @@ for (const [unit, names] of [
 ] as const) {
   for (const name of names) unitNames[name] = unit;
 }
+// Calendar units are whole numbers, kept to about a century each.
 const calendarLimits = { years: 100, months: 1200, weeks: 5200, days: 36500 };
 const part = String.raw`(\d+(?:\.\d+)?)\s*([a-z]+)`;
 const separator = String.raw`(?:\s*,\s*|\s+and\s+|\s*)`;
@@ -418,7 +418,7 @@ export function transitionsBetween(
  * 10 hours across a change forward an hour is 11 hours on the clock.
  */
 export function clockMoveAcross(
-  span: Duration,
+  span: Pick<Duration, 'hours' | 'minutes'>,
   change: Pick<Transition, 'direction' | 'minutes'>,
 ): Duration {
   const sign = change.direction === 'forward' ? 1 : -1;

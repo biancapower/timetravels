@@ -61,10 +61,17 @@ export function Answer({
     });
   const tenseOf = (instant: Temporal.Instant) =>
     Temporal.Instant.compare(instant, now) < 0 ? 'past' : 'future';
-  // A calendar span's real length is worth saying when one change makes a
-  // short span an hour longer or shorter; across months it's just a number.
+  // A calendar span's real length is worth saying when one change, in the
+  // zone the days were counted in, makes a short span an hour longer or
+  // shorter. Across months it's just a big number, a change elsewhere
+  // doesn't alter it, and a skipped landing has its own note.
   const reach =
-    calendar && changes.length === 1 && isShort(question.duration)
+    calendar &&
+    span &&
+    changes.length === 1 &&
+    changes[0]?.zone === span.start.timeZoneId &&
+    landing?.issue === 'none' &&
+    isShort(question.duration)
       ? question.when
       : 'none';
   return (

@@ -16,6 +16,9 @@ export function formatDuration(intl: IntlShape, duration: Duration): string {
         { [unit]: duration[unit] ?? 0 },
       ),
     );
+  if (parts.length === 0) {
+    return intl.formatMessage({ id: 'duration.minutes' }, { minutes: 0 });
+  }
   return new Intl.ListFormat(intl.locale, {
     type: 'unit',
     style: 'narrow',
