@@ -65,7 +65,7 @@ const en = {
   'directionPicker.before': 'before a time',
   'durationPicker.label': 'Choose how long',
   'durationPicker.input': 'Type a duration',
-  'durationPicker.placeholder': 'For example 90m, 1h30 or 6 months',
+  'durationPicker.placeholder': 'For example 90m or 6 months',
   'durationPicker.set': 'Set',
   'durationPicker.invalid': 'Couldn’t read that duration',
   'durationPicker.quick': 'Common durations',
