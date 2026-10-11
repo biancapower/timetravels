@@ -204,7 +204,8 @@ export function NamedPlaceForm({
                       if (event.key === 'Enter') event.preventDefault();
                     }}
                   />
-                  <Combobox.List className={styles.list}>
+                  {/* Cities are listed only while the field is searched. */}
+                  <Combobox.List className={styles.list} hidden={!!chosen}>
                     {(choice: Place) => (
                       <Combobox.Item
                         key={`${choice.city}|${choice.zone}`}
