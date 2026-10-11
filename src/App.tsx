@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import styles from './App.module.css';
+import { formatLocale } from './i18n/formatLocale';
 import { catalogues, pickLocale, type Locale } from './i18n/messages';
 import { About } from './pages/About';
 import { Help } from './pages/Help';
@@ -74,7 +75,10 @@ export function App({
   const tense = tenseOf(question);
 
   return (
-    <IntlProvider locale={locale} messages={catalogues[locale]}>
+    <IntlProvider
+      locale={formatLocale(navigator.languages)}
+      messages={catalogues[locale]}
+    >
       {/* Hidden, not removed, under Help and About, so it comes back as it was. */}
       <div className={styles.screen} hidden={route.view !== 'sentence'}>
         <main className={styles.page}>

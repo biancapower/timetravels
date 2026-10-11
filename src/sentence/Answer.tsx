@@ -22,7 +22,7 @@ interface AnswerProps {
   city?: string;
   /** The city whose time the chosen time is, for the note on a skipped or repeated time. */
   anchorCity?: string;
-  /** The device's own locale when omitted. */
+  /** The interface's locale when omitted. */
   locale?: string;
 }
 
@@ -31,9 +31,10 @@ export function Answer({
   question,
   city,
   anchorCity,
-  locale,
+  locale: given,
 }: AnswerProps) {
   const intl = useIntl();
+  const locale = given ?? intl.locale;
   const { today, moment, anchored, span } = resolveAnswer(now, question);
   const cityFor = (zone: string) =>
     (zone === question.answerZone ? city : undefined) ??
@@ -113,7 +114,7 @@ export function Answer({
 function answerTime(
   today: Moment,
   moment: Moment,
-  locale: string | undefined,
+  locale: string,
   intl: ReturnType<typeof useIntl>,
 ): string {
   const relation = dayRelation(today, moment);
