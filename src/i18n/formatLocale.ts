@@ -1,22 +1,26 @@
 /**
  * The locale to format dates and times in: the visitor's first preferred
- * language. A browser's own default follows its interface language, which
- * can differ, such as an en-US browser for someone who prefers en-AU. The
- * default is kept when it names the same language and region, so nothing
- * changes for visitors it already suited.
+ * language that the interface's messages are in, so dates don't switch
+ * language mid-sentence. A browser's own default follows its interface
+ * language, which can differ, such as an en-US browser for someone who
+ * prefers en-AU. The default is kept when it names the same language and
+ * region, so nothing changes for visitors it already suited.
  */
 export function formatLocale(
   preferred: readonly string[],
+  language: string,
   fallback = new Intl.DateTimeFormat().resolvedOptions().locale,
 ): string {
+  const standing = new Intl.Locale(fallback);
   for (const tag of preferred) {
-    let base: string;
+    let wanted: Intl.Locale;
     try {
-      base = new Intl.Locale(tag).baseName;
+      wanted = new Intl.Locale(tag);
     } catch {
       continue; // A malformed tag, such as "en_US", names no language.
     }
-    return base === new Intl.Locale(fallback).baseName ? fallback : tag;
+    if (wanted.language !== language) continue;
+    return wanted.baseName === standing.baseName ? fallback : tag;
   }
-  return fallback;
+  return standing.language === language ? fallback : language;
 }

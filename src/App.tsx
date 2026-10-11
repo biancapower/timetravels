@@ -76,7 +76,7 @@ export function App({
 
   return (
     <IntlProvider
-      locale={formatLocale(navigator.languages)}
+      locale={formatLocale(navigator.languages, locale)}
       messages={catalogues[locale]}
     >
       {/* Hidden, not removed, under Help and About, so it comes back as it was. */}
