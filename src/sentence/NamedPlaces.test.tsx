@@ -145,6 +145,9 @@ test('a name that is empty, the app’s own word, or taken is refused with a rea
   expect(within(form).getByRole('alert')).toHaveTextContent(
     'You already have a place called “office”.',
   );
+  expect(name).toHaveAccessibleDescription(
+    'You already have a place called “office”.',
+  );
   fireEvent.change(name, { target: { value: 'a'.repeat(31) } });
   expect(within(form).getByRole('alert')).toHaveTextContent(
     'Keep the name to 30 characters or fewer.',
@@ -154,6 +157,8 @@ test('a name that is empty, the app’s own word, or taken is refused with a rea
   expect(within(form).getByRole('alert')).toHaveTextContent(
     'Choose a place for it.',
   );
+  expect(name).not.toHaveAttribute('aria-describedby');
+  expect(name).not.toHaveAttribute('aria-invalid');
 });
 
 test('a chosen named place is renamed and moved with Edit, and the sentence follows', async () => {

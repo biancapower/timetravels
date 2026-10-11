@@ -153,7 +153,7 @@ export function NamedPlaceForm({
                     value={name}
                     autoComplete="off"
                     aria-invalid={error && problem ? true : undefined}
-                    aria-describedby={error ? errorId : undefined}
+                    aria-describedby={error && problem ? errorId : undefined}
                     onChange={(event) => {
                       setName(event.target.value);
                     }}
