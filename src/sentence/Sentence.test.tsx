@@ -1,9 +1,8 @@
-import { noSavedPlaces } from '../places/named';
 import { render, screen, within } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { expect, test, vi } from 'vitest';
 import { catalogues, type Messages } from '../i18n/messages';
-import type { Where } from '../places/named';
+import { noSavedPlaces, type Where } from '../places/named';
 import { Sentence } from './Sentence';
 import { named } from '../testing/named';
 
