@@ -161,3 +161,41 @@ test('"before a time" across a change counts back', () => {
     ),
   ).toBeInTheDocument();
 });
+
+test('"ago" across a change back reads later than counting back', () => {
+  // 6 am on Sunday 5 April in Sydney; 10 hours earlier crosses 3 am.
+  show('2026-04-04T20:00:00Z', 'Australia/Sydney', {
+    when: 'earlier',
+    duration: tenHours,
+  });
+  expect(
+    screen.getByText(
+      'Sydney’s clocks went back an hour at 3 am on Sunday 5 April, so the answer is an hour later than counting back on the clock gives.',
+    ),
+  ).toBeInTheDocument();
+});
+
+test('a change only in the answer’s place, after my time, speaks of the answer', () => {
+  // Noon in London is 10 pm in Sydney; 10 hours on crosses Sydney's 2 am.
+  show(
+    '2026-10-03T11:00:00Z',
+    'Australia/Sydney',
+    {
+      when: 'after',
+      duration: tenHours,
+      deviceZone: 'Europe/London',
+      anchor: {
+        time: Temporal.PlainTime.from('12:00'),
+        day: 0,
+        inPlace: false,
+      },
+    },
+    { city: 'Sydney', anchorCity: 'London' },
+  );
+  expect(clocks()).toHaveLength(1);
+  expect(
+    screen.getByText(
+      'Sydney’s clocks go forward an hour at 2 am on Sunday 4 October, so the answer is an hour later than counting on the clock gives.',
+    ),
+  ).toBeInTheDocument();
+});

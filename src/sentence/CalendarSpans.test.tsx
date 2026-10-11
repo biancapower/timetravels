@@ -63,6 +63,7 @@ test('a day across the change says how long it really is', () => {
       'Sydney’s clocks go forward an hour at 2 am on Sunday 4 October, so 1 day from now is 23 hours away.',
     ),
   ).toBeInTheDocument();
+  expect(screen.queryByText(/keep the clock time/)).not.toBeInTheDocument();
 });
 
 test('a day ago across a past change reads in the past', () => {
