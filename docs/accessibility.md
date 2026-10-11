@@ -20,7 +20,7 @@ Errors in the duration and time pickers appear in an alert region that is always
 
 **Automated rules.** Every screen is checked with axe (`@axe-core/playwright`) against WCAG 2.2 AA in light and dark themes, on a phone and a desktop: the sentence, each picker open (including the place list with results and the "Whose time" menu), the duration and time pickers' errors, the clock-change note, sentence 5, a focused slot, and the Help and About pages. Contrast that axe cannot measure fails the check too, except text covered by an open popup, which is checked where nothing covers it. No violations were found, and none needed fixing. These are in `e2e/accessibility.spec.ts` and run in `pnpm check:full`. Lighthouse 13.5.0 gave the live site an accessibility score of 100 on 2026-10-10.
 
-**Keyboard.** Tab reaches every slot in reading order; Enter opens each slot, Escape closes it, and focus returns to the slot, in every sentence. These are in `e2e/keyboard.spec.ts`.
+**Keyboard.** Tab reaches every slot in reading order; Enter opens each slot, Escape closes it, and focus returns to the slot, in every sentence. These are in `e2e/keyboard.spec.ts`. Every button sets `tabindex="0"`, because Safari's default Tab order (with "Press Tab to highlight each item" off) skips buttons without one; the picker library's slot buttons already set it, so without it Tab reached the slots but not the Help button.
 
 **Help and About.** The Help button comes after the sentence in reading order. Help ends with links to About and to its Privacy section. Each page opens with focus on its title, or on the Privacy heading from the Privacy link, and changes the page title. Close, Escape and the browser's Back button each go back one page, and back on the sentence, it is as it was, with focus on the Help button. These are in `e2e/pages.spec.ts` and `src/pages/Pages.test.tsx`.
 
@@ -52,6 +52,6 @@ Made earlier, while building the sentences:
 
 Automated checks cannot judge how the sentence sounds. Before release, with a screen reader:
 
-1. **VoiceOver on an iPhone.** Swipe through the sentence: does it read as one question, with each slot announced as a button with its value? Open each slot, choose something, and check the new answer is read out once.
-2. **NVDA on Windows or Orca on Linux.** The same, with the keyboard only.
-3. **TalkBack on Android.** The same; Base UI, the picker library, publishes no screen-reader test results ([decision 0008](decisions/0008-headless-component-library.md)), so this matters.
+1. **TalkBack on Android** (the maintainer's Pixel). Swipe through the sentence: does it read as one question, with each slot announced as a button with its value? Open each slot, choose something, and check the new answer is read out once. Base UI, the picker library, publishes no screen-reader test results ([decision 0008](decisions/0008-headless-component-library.md)), so this matters.
+2. **VoiceOver on an iPad** (iPadOS 18.7.5), standing in for an iPhone. The same, with swipes.
+3. **VoiceOver with Safari on a Mac.** The same, with the keyboard only, including the Help button and the Help and About pages.

@@ -107,7 +107,8 @@ export function AnchorPicker({
                   ? intl.formatMessage({ id: 'anchorPicker.invalid' })
                   : null}
               </p>
-              <button className={styles.set} type="submit">
+              {/* tabIndex puts it in Safari's default Tab order, like the slots. */}
+              <button className={styles.set} type="submit" tabIndex={0}>
                 {intl.formatMessage({ id: 'anchorPicker.set' })}
               </button>
             </form>

@@ -74,7 +74,8 @@ export function DurationPicker({
                 aria-describedby={invalid ? errorId : undefined}
                 autoComplete="off"
               />
-              <button className={styles.set} type="submit">
+              {/* tabIndex puts it in Safari's default Tab order, like the slots. */}
+              <button className={styles.set} type="submit" tabIndex={0}>
                 {intl.formatMessage({ id: 'durationPicker.set' })}
               </button>
             </form>
@@ -94,6 +95,7 @@ export function DurationPicker({
                   key={`${String(duration.hours)}:${String(duration.minutes)}`}
                   className={styles.choice}
                   type="button"
+                  tabIndex={0}
                   onClick={() => {
                     choose(duration);
                   }}
