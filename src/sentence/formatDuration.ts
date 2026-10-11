@@ -1,17 +1,23 @@
 import type { IntlShape } from 'react-intl';
 import type { Duration } from '../time';
 
-/** A duration in words from the catalogue, such as "1 hour 30 minutes". */
-export function formatDuration(
-  intl: IntlShape,
-  { hours, minutes }: Duration,
-): string {
-  if (hours && minutes) {
-    return intl.formatMessage(
-      { id: 'duration.hoursMinutes' },
-      { hours, minutes },
+const units = ['years', 'months', 'weeks', 'days', 'hours', 'minutes'] as const;
+
+/**
+ * A duration in words from the catalogue, largest unit first, such as
+ * "1 day 2 hours". The parts are joined the way the locale lists units.
+ */
+export function formatDuration(intl: IntlShape, duration: Duration): string {
+  const parts = units
+    .filter((unit) => (duration[unit] ?? 0) > 0)
+    .map((unit) =>
+      intl.formatMessage(
+        { id: `duration.${unit}` },
+        { [unit]: duration[unit] ?? 0 },
+      ),
     );
-  }
-  if (hours) return intl.formatMessage({ id: 'duration.hours' }, { hours });
-  return intl.formatMessage({ id: 'duration.minutes' }, { minutes });
+  return new Intl.ListFormat(intl.locale, {
+    type: 'unit',
+    style: 'narrow',
+  }).format(parts);
 }

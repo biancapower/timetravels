@@ -47,8 +47,10 @@ const en = {
   'anchorPicker.invalid': 'Choose a time',
   'duration.hours': '{hours, plural, one {# hour} other {# hours}}',
   'duration.minutes': '{minutes, plural, one {# minute} other {# minutes}}',
-  'duration.hoursMinutes':
-    '{hours, plural, one {# hour} other {# hours}} {minutes, plural, one {# minute} other {# minutes}}',
+  'duration.years': '{years, plural, one {# year} other {# years}}',
+  'duration.months': '{months, plural, one {# month} other {# months}}',
+  'duration.weeks': '{weeks, plural, one {# week} other {# weeks}}',
+  'duration.days': '{days, plural, one {# day} other {# days}}',
   'directionPicker.label': 'Choose when',
   'directionPicker.now': 'right now',
   'directionPicker.later': 'from now',
