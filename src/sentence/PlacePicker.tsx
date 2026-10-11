@@ -56,7 +56,22 @@ export function PlacePicker({
       }
       isItemEqualToValue={(a, b) => keyOf(a) === keyOf(b)}
     >
-      <Combobox.Trigger className={className} role="button">
+      <Combobox.Trigger
+        className={className}
+        role="button"
+        onKeyDown={(event) => {
+          // On a closed trigger, Base UI picks the first place starting with
+          // a typed letter, silently changing the answer. Choosing a place
+          // goes through the search instead.
+          const letter =
+            event.key.length === 1 &&
+            event.key !== ' ' &&
+            !event.ctrlKey &&
+            !event.metaKey &&
+            !event.altKey;
+          if (letter) event.preventBaseUIHandler();
+        }}
+      >
         {children}
       </Combobox.Trigger>
       <Combobox.Portal>
