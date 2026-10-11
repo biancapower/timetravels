@@ -1,18 +1,23 @@
-/* A round question mark in the top corner, clear of the sentence. */
+/* A bare question mark in the top corner, in the muted colour so it doesn't
+   compete with the sentence. The box keeps a full-size tap target. */
 .help {
   position: absolute;
-  inset-block-start: var(--size-3);
-  inset-inline-end: var(--size-3);
+  inset-block-start: var(--size-2);
+  inset-inline-end: var(--size-2);
   width: 2.75rem;
   height: 2.75rem;
-  border: 1px solid var(--muted);
+  border: 0;
   border-radius: var(--radius-round);
-  background: var(--surface);
-  color: var(--accent);
+  background: none;
+  color: var(--muted);
   font: inherit;
-  font-size: var(--font-size-3);
-  font-weight: var(--font-weight-7);
+  font-size: var(--font-size-4);
+  font-weight: var(--font-weight-6);
   cursor: pointer;
+}
+
+.help:hover {
+  color: var(--accent);
 }
 
 .help:focus-visible {
