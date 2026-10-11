@@ -4,12 +4,15 @@ import { cityOf } from '../places/places';
 import {
   clockMoveAcross,
   dayRelation,
+  elapsed,
   formatClockTime,
   formatDateTime,
   formatOffset,
   formatTime,
+  isCalendar,
   transitionsBetween,
   zoneLabel,
+  type Duration,
   type Moment,
 } from '../time';
 import { formatDuration } from './formatDuration';
@@ -39,7 +42,11 @@ export function Answer({
 }: AnswerProps) {
   const intl = useIntl();
   const locale = given ?? intl.locale;
-  const { today, moment, anchored, span } = resolveAnswer(now, question);
+  const { today, moment, anchored, span, landing } = resolveAnswer(
+    now,
+    question,
+  );
+  const calendar = isCalendar(question.duration);
   const cityFor = (zone: string) =>
     (zone === question.answerZone ? city : undefined) ??
     (anchored && zone === anchored.moment.timeZoneId
@@ -51,6 +58,27 @@ export function Answer({
     ? transitionsBetween(span.start.toInstant(), moment.toInstant(), span.zones)
     : [];
   const chosen = formatClockTime(question.anchor.time, { locale });
+  const longDate = (date: Temporal.PlainDate) =>
+    date.toLocaleString(locale, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
+  const tenseOf = (instant: Temporal.Instant) =>
+    Temporal.Instant.compare(instant, now) < 0 ? 'past' : 'future';
+  // A calendar span's real length is worth saying when one change, in the
+  // zone the days were counted in, makes a short span an hour longer or
+  // shorter. Across months it's just a big number, a change elsewhere
+  // doesn't alter it, and a skipped landing has its own note.
+  const reach =
+    calendar &&
+    span &&
+    changes.length === 1 &&
+    changes[0]?.zone === span.start.timeZoneId &&
+    landing?.issue === 'none' &&
+    isShort(question.duration)
+      ? question.when
+      : 'none';
   const name =
     where?.kind === 'home'
       ? intl.formatMessage({ id: 'placePicker.home' })
@@ -65,38 +93,77 @@ export function Answer({
     : zoneLabel(moment, { locale, city });
   return (
     <div className={styles.answer}>
-      <p className={styles.time}>{answerTime(today, moment, locale, intl)}</p>
+      <p className={styles.time}>
+        {answerTime(today, moment, locale, intl, calendar)}
+      </p>
       <p className={styles.zone}>{label}</p>
       {changes.map((change) => (
         <p
           key={`${change.zone}:${change.instant.toString()}`}
           className={styles.note}
         >
+          {calendar
+            ? intl.formatMessage(
+                { id: 'answer.transitionCalendar' },
+                {
+                  city: cityFor(change.zone),
+                  tense: tenseOf(change.instant),
+                  direction: change.direction,
+                  amount: change.minutes,
+                  time: formatClockTime(change.wallTime.toPlainTime(), {
+                    locale,
+                  }),
+                  date: longDate(change.wallTime.toPlainDate()),
+                  reach,
+                  span: formatDuration(intl, question.duration),
+                  anchor: chosen,
+                  actual: span
+                    ? formatDuration(intl, elapsed(span.start, moment))
+                    : '',
+                },
+              )
+            : intl.formatMessage(
+                { id: 'answer.transition' },
+                {
+                  city: cityFor(change.zone),
+                  tense: tenseOf(change.instant),
+                  direction: change.direction,
+                  amount: change.minutes,
+                  time: formatClockTime(change.wallTime.toPlainTime(), {
+                    locale,
+                  }),
+                  date: longDate(change.wallTime.toPlainDate()),
+                  clock: formatDuration(
+                    intl,
+                    clockMoveAcross(question.duration, change),
+                  ),
+                  span: formatDuration(intl, question.duration),
+                },
+              )}
+        </p>
+      ))}
+      {landing && landing.issue !== 'none' && (
+        <p className={styles.note}>
           {intl.formatMessage(
-            { id: 'answer.transition' },
             {
-              city: cityFor(change.zone),
-              tense:
-                Temporal.Instant.compare(change.instant, now) < 0
-                  ? 'past'
-                  : 'future',
-              direction: change.direction,
-              amount: change.minutes,
-              time: formatClockTime(change.wallTime.toPlainTime(), { locale }),
-              date: change.wallTime.toPlainDate().toLocaleString(locale, {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
+              id:
+                landing.issue === 'skipped'
+                  ? 'answer.landingSkipped'
+                  : 'answer.landingRepeated',
+            },
+            {
+              tense: tenseOf(landing.moment.toInstant()),
+              time: formatClockTime(landing.wall.toPlainTime(), { locale }),
+              city: cityFor(landing.moment.timeZoneId),
+              date: longDate(landing.wall.toPlainDate()),
+              actual: formatClockTime(landing.moment.toPlainTime(), {
+                locale,
               }),
-              clock: formatDuration(
-                intl,
-                clockMoveAcross(question.duration, change),
-              ),
-              span: formatDuration(intl, question.duration),
+              offset: formatOffset(landing.moment, { locale }),
             },
           )}
         </p>
-      ))}
+      )}
       {anchored?.issue === 'skipped' && (
         <p className={styles.note}>
           {intl.formatMessage(
@@ -127,14 +194,22 @@ export function Answer({
   );
 }
 
+/**
+ * The answer's time: with "tomorrow" or "yesterday" when it is, and the
+ * date when it's further away or the span was counted in calendar units.
+ */
 function answerTime(
   today: Moment,
   moment: Moment,
   locale: string,
   intl: ReturnType<typeof useIntl>,
+  withDate: boolean,
 ): string {
   const relation = dayRelation(today, moment);
-  if (relation === 'today') return formatTime(moment, { locale });
+  const time = withDate
+    ? formatDateTime(moment, { locale, reference: today })
+    : formatTime(moment, { locale });
+  if (relation === 'today') return time;
   if (relation === 'further')
     return formatDateTime(moment, { locale, reference: today });
   return intl.formatMessage(
@@ -143,7 +218,12 @@ function answerTime(
       relativeDay: new Intl.RelativeTimeFormat(locale, {
         numeric: 'auto',
       }).format(relation === 'tomorrow' ? 1 : -1, 'day'),
-      time: formatTime(moment, { locale }),
+      time,
     },
   );
+}
+
+/** A calendar span of a week or less, with no months or years. */
+function isShort({ years, months, weeks, days }: Duration): boolean {
+  return !years && !months && (weeks ?? 0) * 7 + (days ?? 0) <= 7;
 }

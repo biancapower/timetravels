@@ -70,3 +70,27 @@ test('a duration that cannot be read is reported', async ({ page }) => {
     'Couldn’t read that duration',
   );
 });
+
+test('6 months from now keeps the time and names the clock change', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'right now' }).click();
+  await page.getByRole('menuitemradio', { name: 'from now' }).click();
+  await heading.getByRole('button', { name: '1 hour' }).click();
+  await page.getByRole('textbox', { name: 'Type a duration' }).fill('6 months');
+  await page.keyboard.press('Enter');
+  await expect(heading).toHaveAccessibleName(
+    sentence('What time will it be here 6 months from now?'),
+  );
+  await expect(
+    page.getByText(/^Saturday 10 April 2027.*10:00\spm$/),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      'Sydney’s clocks go back an hour at 3 am on Sunday 4 April.',
+      { exact: true },
+    ),
+  ).toBeVisible();
+});

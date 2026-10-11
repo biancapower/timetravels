@@ -16,7 +16,7 @@ test('the help button opens the guide, and Close returns focus to it', async () 
   const title = screen.getByRole('heading', { name: 'How TimeTravels works' });
   expect(title).toHaveFocus();
   expect(location.hash).toBe('#help');
-  expect(screen.getByText(/1h30 or 1:30/)).toBeInTheDocument();
+  expect(screen.getByText(/3d, 2 weeks, 6 months or 1y/)).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   expect(await screen.findByRole('button', { name: 'Help' })).toHaveFocus();

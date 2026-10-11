@@ -8,6 +8,9 @@ import styles from './Picker.module.css';
 const common: readonly Duration[] = [
   { hours: 0, minutes: 30 },
   ...[1, 2, 3, 6, 8, 10, 12, 24].map((hours) => ({ hours, minutes: 0 })),
+  { days: 1, hours: 0, minutes: 0 },
+  { weeks: 1, hours: 0, minutes: 0 },
+  { months: 1, hours: 0, minutes: 0 },
 ];
 
 interface DurationPickerProps {
@@ -92,7 +95,7 @@ export function DurationPicker({
             >
               {common.map((duration) => (
                 <button
-                  key={`${String(duration.hours)}:${String(duration.minutes)}`}
+                  key={formatDuration(intl, duration)}
                   className={styles.choice}
                   type="button"
                   tabIndex={0}

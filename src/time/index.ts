@@ -3,17 +3,34 @@
 /** A moment in a particular time zone. */
 export type Moment = Temporal.ZonedDateTime;
 
-/** A span of hours and minutes, each a non-negative whole number; direction comes from Direction. */
+/**
+ * A span, each part a non-negative whole number; direction comes from
+ * Direction. Hours and minutes are exact elapsed time. Years, months, weeks
+ * and days are calendar units: they move the date and keep the clock time.
+ */
 export interface Duration {
+  years?: number;
+  months?: number;
+  weeks?: number;
+  days?: number;
   hours: number;
   minutes: number;
+}
+
+const calendarUnits = ['years', 'months', 'weeks', 'days'] as const;
+
+/** Whether a duration has any calendar part: days, weeks, months or years. */
+export function isCalendar(duration: Duration): boolean {
+  return calendarUnits.some((unit) => (duration[unit] ?? 0) > 0);
 }
 
 export type Direction = 'later' | 'earlier';
 
 /**
- * Moves a moment by a duration in exact elapsed time, not wall-clock
- * time, so a span across a daylight-saving change is the real span.
+ * Moves a moment by a duration. Hours and minutes are exact elapsed time,
+ * so a span across a daylight-saving change is the real span. A calendar
+ * part moves the date first and keeps the clock time, falling back to the
+ * month's last day when the day doesn't exist (Temporal's default).
  */
 export function shift(
   moment: Moment,
@@ -120,20 +137,68 @@ const durationPatterns: readonly [
   [/^(\d+):([0-5]\d)$/, (m) => Number(m[1]) * 60 + Number(m[2])],
 ];
 
+const unitNames: Record<string, keyof Duration> = {};
+for (const [unit, names] of [
+  ['years', ['y', 'yr', 'yrs', 'year', 'years']],
+  ['months', ['mo', 'mos', 'month', 'months']],
+  ['weeks', ['w', 'wk', 'wks', 'week', 'weeks']],
+  ['days', ['d', 'day', 'days']],
+  ['hours', ['h', 'hr', 'hrs', 'hour', 'hours']],
+  ['minutes', ['m', 'min', 'mins', 'minute', 'minutes']],
+] as const) {
+  for (const name of names) unitNames[name] = unit;
+}
+// Calendar units are whole numbers, kept to about a century each.
+const calendarLimits = { years: 100, months: 1200, weeks: 5200, days: 36500 };
+const part = String.raw`(\d+(?:\.\d+)?)\s*([a-z]+)`;
+const separator = String.raw`(?:\s*,\s*|\s+and\s+|\s*)`;
+const listPattern = new RegExp(`^${part}(?:${separator}${part})*$`);
+
 /**
- * Reads a typed duration such as "10", "1.5h", "90m", "1h30" or "1:30".
- * Returns null for anything else, for zero, and for 1000 hours or more.
+ * Reads a typed duration such as "10", "1.5h", "90m", "1h30", "1:30",
+ * "3d", "6 months" or "1 day 2 hours". Returns null for anything else,
+ * for zero, for 1000 hours or more of exact time, and for a calendar unit
+ * at or over its limit.
  */
 export function parseDuration(text: string): Duration | null {
   const input = text.trim().toLowerCase();
   for (const [pattern, toMinutes] of durationPatterns) {
     const match = pattern.exec(input);
     if (!match) continue;
-    const total = Math.round(toMinutes(match));
-    if (total <= 0 || total >= longestMinutes) return null;
-    return { hours: Math.floor(total / 60), minutes: total % 60 };
+    return exact(Math.round(toMinutes(match)));
   }
-  return null;
+  return listPattern.test(input) ? parseParts(input) : null;
+}
+
+function exact(totalMinutes: number): Duration | null {
+  if (totalMinutes <= 0 || totalMinutes >= longestMinutes) return null;
+  return { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
+}
+
+/** "1 year, 6 months", "1d2h": each unit at most once, in any order. */
+function parseParts(input: string): Duration | null {
+  const seen = new Set<keyof Duration>();
+  const calendar: Partial<Record<(typeof calendarUnits)[number], number>> = {};
+  let minutes = 0;
+  for (const [, amount = '', name = ''] of input.matchAll(
+    new RegExp(part, 'g'),
+  )) {
+    const unit = unitNames[name];
+    if (!unit || seen.has(unit)) return null;
+    seen.add(unit);
+    const value = Number(amount);
+    if (unit === 'hours') minutes += value * 60;
+    else if (unit === 'minutes') minutes += value;
+    else if (!Number.isInteger(value) || value >= calendarLimits[unit]) {
+      return null;
+    } else if (value > 0) {
+      calendar[unit] = value;
+    }
+  }
+  const total = Math.round(minutes);
+  if (total >= longestMinutes) return null;
+  if (Object.keys(calendar).length === 0) return exact(total);
+  return { ...calendar, hours: Math.floor(total / 60), minutes: total % 60 };
 }
 
 /**
@@ -208,16 +273,67 @@ export function anchorAt(
     .toPlainDate()
     .add({ days: day })
     .toPlainDateTime(time);
+  const issue = issueAt(wall, zone);
+  return {
+    moment: wall.toZonedDateTime(zone, {
+      disambiguation: issue === 'repeated' ? 'earlier' : 'compatible',
+    }),
+    issue,
+  };
+}
+
+/** Whether a wall-clock time was skipped, or happened twice, in a zone. */
+function issueAt(wall: Temporal.PlainDateTime, zone: string): AnchorIssue {
   const first = wall.toZonedDateTime(zone, { disambiguation: 'earlier' });
   const last = wall.toZonedDateTime(zone, { disambiguation: 'later' });
-  if (!first.toPlainDateTime().equals(wall)) {
-    return {
-      moment: wall.toZonedDateTime(zone, { disambiguation: 'compatible' }),
-      issue: 'skipped',
-    };
-  }
-  if (!first.equals(last)) return { moment: first, issue: 'repeated' };
-  return { moment: first, issue: 'none' };
+  if (!first.toPlainDateTime().equals(wall)) return 'skipped';
+  return first.equals(last) ? 'none' : 'repeated';
+}
+
+export interface Landing {
+  /** The clock time the calendar part names, before any exact part. */
+  wall: Temporal.PlainDateTime;
+  /** Where that lands: moved on past a skipped time, the first of a repeated one. */
+  moment: Moment;
+  issue: AnchorIssue;
+}
+
+/**
+ * Where a duration's calendar part lands, and whether that clock time was
+ * skipped or repeated. Temporal then moves a skipped time on by the jump
+ * and takes the first of a repeated one, as anchorAt does. Null for a
+ * duration with no calendar part.
+ */
+export function calendarLanding(
+  moment: Moment,
+  duration: Duration,
+  direction: Direction,
+): Landing | null {
+  if (!isCalendar(duration)) return null;
+  const sign = direction === 'later' ? 1 : -1;
+  const wall = moment.toPlainDateTime().add({
+    years: sign * (duration.years ?? 0),
+    months: sign * (duration.months ?? 0),
+    weeks: sign * (duration.weeks ?? 0),
+    days: sign * (duration.days ?? 0),
+  });
+  const zone = moment.timeZoneId;
+  const issue = issueAt(wall, zone);
+  return {
+    wall,
+    moment: wall.toZonedDateTime(zone, {
+      disambiguation: issue === 'repeated' ? 'earlier' : 'compatible',
+    }),
+    issue,
+  };
+}
+
+/** The exact time between two moments, in either order, in hours and minutes. */
+export function elapsed(a: Moment, b: Moment): Duration {
+  const minutes = Math.round(
+    Math.abs(b.epochMilliseconds - a.epochMilliseconds) / 60000,
+  );
+  return { hours: Math.floor(minutes / 60), minutes: minutes % 60 };
 }
 
 /**
@@ -302,7 +418,7 @@ export function transitionsBetween(
  * 10 hours across a change forward an hour is 11 hours on the clock.
  */
 export function clockMoveAcross(
-  span: Duration,
+  span: Pick<Duration, 'hours' | 'minutes'>,
   change: Pick<Transition, 'direction' | 'minutes'>,
 ): Duration {
   const sign = change.direction === 'forward' ? 1 : -1;

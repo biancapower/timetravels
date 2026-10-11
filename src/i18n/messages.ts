@@ -28,6 +28,12 @@ const en = {
   'answer.named': '{name} ({city}, {offset})',
   'answer.transition':
     '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}, so the clock {tense, select, past {moved} other {moves}} {clock} in these {span}.',
+  'answer.transitionCalendar':
+    '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}{reach, select, later {, so {span} from now is {actual} away} earlier {, so {span} ago was {actual} ago} after {, so {span} after {anchor} is {actual} after it} before {, so {span} before {anchor} is {actual} before it} other {}}.',
+  'answer.landingSkipped':
+    '{tense, select, past {There was no} other {There’s no}} {time} in {city} on {date}: the clocks {tense, select, past {went} other {go}} forward. This counts from {actual}.',
+  'answer.landingRepeated':
+    '{time} {tense, select, past {happened} other {happens}} twice in {city} on {date}, when the clocks {tense, select, past {went} other {go}} back. This counts from the first, at {offset}.',
   'answer.skipped':
     'There was no {time} in {city} that day: the clocks went forward. This counts from {actual}.',
   'answer.repeated':
@@ -48,8 +54,10 @@ const en = {
   'anchorPicker.invalid': 'Choose a time',
   'duration.hours': '{hours, plural, one {# hour} other {# hours}}',
   'duration.minutes': '{minutes, plural, one {# minute} other {# minutes}}',
-  'duration.hoursMinutes':
-    '{hours, plural, one {# hour} other {# hours}} {minutes, plural, one {# minute} other {# minutes}}',
+  'duration.years': '{years, plural, one {# year} other {# years}}',
+  'duration.months': '{months, plural, one {# month} other {# months}}',
+  'duration.weeks': '{weeks, plural, one {# week} other {# weeks}}',
+  'duration.days': '{days, plural, one {# day} other {# days}}',
   'directionPicker.label': 'Choose when',
   'directionPicker.now': 'right now',
   'directionPicker.later': 'from now',
@@ -58,7 +66,7 @@ const en = {
   'directionPicker.before': 'before a time',
   'durationPicker.label': 'Choose how long',
   'durationPicker.input': 'Type a duration',
-  'durationPicker.placeholder': 'For example 90m or 1h30',
+  'durationPicker.placeholder': 'e.g. 90m, 1h30 or 6mo',
   'durationPicker.set': 'Set',
   'durationPicker.invalid': 'Couldn’t read that duration',
   'durationPicker.quick': 'Common durations',
@@ -104,7 +112,7 @@ const en = {
   'help.direction':
     '<b>When</b>, “right now” at first: choose “from now” or “ago” to count a length of time from now, or “after a time” or “before a time” to count from a time you choose.',
   'help.duration':
-    '<b>How long</b>, once you choose “from now”, “ago”, “after a time” or “before a time”: pick a common length or type one, such as 10 (hours), 1.5h, 90m, 1h30 or 1:30, up to 999 hours.',
+    '<b>How long</b>, once you choose “from now”, “ago”, “after a time” or “before a time”: pick a common length or type one, such as 10 (hours), 1.5h, 90m, 1h30, 1:30, 3d, 2 weeks, 6 months or 1y. Hours and minutes are exact; days and longer keep the clock time, so 1 day from now is this time tomorrow even if the clocks change. In “1 day 2 hours”, the day comes first, then the hours.',
   'help.anchor':
     '<b>The time to count from</b>, such as “3 pm”, with “after a time” or “before a time”: set a time and whether it is yesterday, today or tomorrow.',
   'help.anchorPlace':
