@@ -91,7 +91,7 @@ test('a day after a chosen time says how long after it is', () => {
   ).toBeInTheDocument();
 });
 
-test('a span of months names each change without counting hours', () => {
+test('a span of months names each change, and says the clock time is kept', () => {
   show(saturdayEvening, 'Australia/Sydney', {
     when: 'later',
     duration: { months: 7, hours: 0, minutes: 0 },
@@ -107,6 +107,11 @@ test('a span of months names each change without counting hours', () => {
       'Sydney’s clocks go back an hour at 3 am on Sunday 4 April.',
     ),
   ).toBeInTheDocument();
+  expect(
+    screen.getAllByText(
+      'Calculations done in days or longer keep the clock time, so the answer is the same time of day.',
+    ),
+  ).toHaveLength(1);
 });
 
 test('a day that lands on a skipped time says so', () => {
@@ -161,6 +166,7 @@ test('a skipped landing doesn’t also count the day’s hours', () => {
       'Sydney’s clocks go forward an hour at 2 am on Sunday 4 October.',
     ),
   ).toBeInTheDocument();
+  expect(screen.queryByText(/keep the clock time/)).not.toBeInTheDocument();
 });
 
 test('a change only in the answer’s place doesn’t count the hours', () => {
@@ -186,4 +192,5 @@ test('a change only in the answer’s place doesn’t count the hours', () => {
       'Sydney’s clocks go forward an hour at 2 am on Sunday 4 October.',
     ),
   ).toBeInTheDocument();
+  expect(screen.queryByText(/keep the clock time/)).not.toBeInTheDocument();
 });

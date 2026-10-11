@@ -78,6 +78,18 @@ export function Answer({
     isShort(question.duration)
       ? question.when
       : 'none';
+  // Across a longer calendar span, it's worth saying that the clock time is
+  // kept, when it is: the days were counted on the answer's own clock, no
+  // hours were added after them, and the landing wasn't moved.
+  const kept =
+    calendar &&
+    span &&
+    reach === 'none' &&
+    landing?.issue === 'none' &&
+    !question.duration.hours &&
+    !question.duration.minutes &&
+    span.start.timeZoneId === question.answerZone &&
+    changes.every((change) => change.zone === question.answerZone);
   const countsBack = question.when === 'earlier' || question.when === 'before';
   const name =
     where?.kind === 'home'
@@ -146,6 +158,11 @@ export function Answer({
               )}
         </p>
       ))}
+      {kept && changes.length > 0 && (
+        <p className={styles.note}>
+          {intl.formatMessage({ id: 'answer.calendarKept' })}
+        </p>
+      )}
       {landing && landing.issue !== 'none' && (
         <p className={styles.note}>
           {intl.formatMessage(
