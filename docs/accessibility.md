@@ -1,6 +1,6 @@
 # Accessibility
 
-TimeTravels' interface is unusual: the question is a sentence, and some of its words are controls. This page records how that was checked before release 0.1.0, what was found, and what is still to be checked by a person.
+TimeTravels' interface is unusual: the question is a sentence, and some of its words are controls. This page records how that was checked, what was found, and what is still to be checked by a person.
 
 ## How the sentence reads
 
@@ -50,7 +50,7 @@ Made earlier, while building the sentences:
 
 ## Still to be checked by a person
 
-Automated checks cannot judge how the sentence sounds. Before release, with a screen reader:
+Automated checks cannot judge how the sentence sounds. Nobody has listened to TimeTravels through a screen reader yet: the checks below are tracked in [issue #42](https://github.com/biancapower/timetravels/issues/42), which isn't tied to a release.
 
 1. **TalkBack on Android** (the maintainer's Pixel). Swipe through the sentence: does it read as one question, with each slot announced as a button with its value? Open each slot, choose something, and check the new answer is read out once. Base UI, the picker library, publishes no screen-reader test results ([decision 0008](decisions/0008-headless-component-library.md)), so this matters.
 2. **VoiceOver on an iPad** (iPadOS 18.7.5), standing in for an iPhone. The same, with swipes.
