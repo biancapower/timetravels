@@ -40,6 +40,22 @@ test('About from the footer, then Back, returns to the sentence', async ({
   ).toBeVisible();
 });
 
+test('Escape closes Help, and Privacy in the footer opens About at Privacy', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Help' }).click();
+  await expect(page).toHaveTitle('How TimeTravels works · TimeTravels');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Help' })).toBeFocused();
+  await expect(page).toHaveTitle('TimeTravels');
+
+  await page.getByRole('link', { name: 'Privacy' }).click();
+  await expect(page.getByRole('heading', { name: 'Privacy' })).toBeFocused();
+  await page.getByRole('button', { name: 'Close' }).click();
+  await expect(page.getByRole('link', { name: 'Privacy' })).toBeFocused();
+});
+
 test('a link to #privacy opens About at its Privacy section', async ({
   page,
 }) => {

@@ -72,6 +72,7 @@ const en = {
   'nav.about': 'About',
   'nav.privacy': 'Privacy',
   'nav.close': 'Close',
+  'nav.pageTitle': '{page} · TimeTravels',
   'footer.copyright': '© 2026 <link>the author</link>',
   'help.title': 'How TimeTravels works',
   'help.intro':

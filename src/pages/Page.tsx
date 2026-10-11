@@ -19,6 +19,17 @@ export function Page({ title, section, onClose, children }: PageProps) {
   const heading = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
+    const previous = document.title;
+    document.title = intl.formatMessage(
+      { id: 'nav.pageTitle' },
+      { page: title },
+    );
+    return () => {
+      document.title = previous;
+    };
+  }, [intl, title]);
+
+  useEffect(() => {
     const target = section ? document.getElementById(section) : heading.current;
     target?.focus();
   }, [section]);
