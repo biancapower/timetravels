@@ -137,20 +137,68 @@ const durationPatterns: readonly [
   [/^(\d+):([0-5]\d)$/, (m) => Number(m[1]) * 60 + Number(m[2])],
 ];
 
+// Calendar units are whole numbers, kept to about a century each.
+const unitNames: Record<string, keyof Duration> = {};
+for (const [unit, names] of [
+  ['years', ['y', 'yr', 'yrs', 'year', 'years']],
+  ['months', ['mo', 'mos', 'month', 'months']],
+  ['weeks', ['w', 'wk', 'wks', 'week', 'weeks']],
+  ['days', ['d', 'day', 'days']],
+  ['hours', ['h', 'hr', 'hrs', 'hour', 'hours']],
+  ['minutes', ['m', 'min', 'mins', 'minute', 'minutes']],
+] as const) {
+  for (const name of names) unitNames[name] = unit;
+}
+const calendarLimits = { years: 100, months: 1200, weeks: 5200, days: 36500 };
+const part = String.raw`(\d+(?:\.\d+)?)\s*([a-z]+)`;
+const separator = String.raw`(?:\s*,\s*|\s+and\s+|\s*)`;
+const listPattern = new RegExp(`^${part}(?:${separator}${part})*$`);
+
 /**
- * Reads a typed duration such as "10", "1.5h", "90m", "1h30" or "1:30".
- * Returns null for anything else, for zero, and for 1000 hours or more.
+ * Reads a typed duration such as "10", "1.5h", "90m", "1h30", "1:30",
+ * "3d", "6 months" or "1 day 2 hours". Returns null for anything else,
+ * for zero, for 1000 hours or more of exact time, and for a calendar unit
+ * at or over its limit.
  */
 export function parseDuration(text: string): Duration | null {
   const input = text.trim().toLowerCase();
   for (const [pattern, toMinutes] of durationPatterns) {
     const match = pattern.exec(input);
     if (!match) continue;
-    const total = Math.round(toMinutes(match));
-    if (total <= 0 || total >= longestMinutes) return null;
-    return { hours: Math.floor(total / 60), minutes: total % 60 };
+    return exact(Math.round(toMinutes(match)));
   }
-  return null;
+  return listPattern.test(input) ? parseParts(input) : null;
+}
+
+function exact(totalMinutes: number): Duration | null {
+  if (totalMinutes <= 0 || totalMinutes >= longestMinutes) return null;
+  return { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
+}
+
+/** "1 year, 6 months", "1d2h": each unit at most once, in any order. */
+function parseParts(input: string): Duration | null {
+  const seen = new Set<keyof Duration>();
+  const calendar: Partial<Record<(typeof calendarUnits)[number], number>> = {};
+  let minutes = 0;
+  for (const [, amount = '', name = ''] of input.matchAll(
+    new RegExp(part, 'g'),
+  )) {
+    const unit = unitNames[name];
+    if (!unit || seen.has(unit)) return null;
+    seen.add(unit);
+    const value = Number(amount);
+    if (unit === 'hours') minutes += value * 60;
+    else if (unit === 'minutes') minutes += value;
+    else if (!Number.isInteger(value) || value >= calendarLimits[unit]) {
+      return null;
+    } else if (value > 0) {
+      calendar[unit] = value;
+    }
+  }
+  const total = Math.round(minutes);
+  if (total >= longestMinutes) return null;
+  if (Object.keys(calendar).length === 0) return exact(total);
+  return { ...calendar, hours: Math.floor(total / 60), minutes: total % 60 };
 }
 
 /**
