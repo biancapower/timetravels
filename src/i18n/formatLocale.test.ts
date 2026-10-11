@@ -28,3 +28,7 @@ test('a preferred language without messages is passed over', () => {
 test('an en-US visitor still sees US dates', () => {
   expect(formatLocale(['en-US'], 'en', 'en-AU')).toBe('en-US');
 });
+
+test('a bare language keeps the browser’s region', () => {
+  expect(formatLocale(['en'], 'en', 'en-AU')).toBe('en-AU');
+});
