@@ -77,9 +77,7 @@ export function Answer({
   return (
     <div className={styles.answer}>
       <p className={styles.time}>
-        {calendar
-          ? formatDateTime(moment, { locale, reference: today })
-          : answerTime(today, moment, locale, intl)}
+        {answerTime(today, moment, locale, intl, calendar)}
       </p>
       <p className={styles.zone}>{zoneLabel(moment, { locale, city })}</p>
       {changes.map((change) => (
@@ -179,14 +177,22 @@ export function Answer({
   );
 }
 
+/**
+ * The answer's time: with "tomorrow" or "yesterday" when it is, and the
+ * date when it's further away or the span was counted in calendar units.
+ */
 function answerTime(
   today: Moment,
   moment: Moment,
   locale: string | undefined,
   intl: ReturnType<typeof useIntl>,
+  withDate: boolean,
 ): string {
   const relation = dayRelation(today, moment);
-  if (relation === 'today') return formatTime(moment, { locale });
+  const time = withDate
+    ? formatDateTime(moment, { locale, reference: today })
+    : formatTime(moment, { locale });
+  if (relation === 'today') return time;
   if (relation === 'further')
     return formatDateTime(moment, { locale, reference: today });
   return intl.formatMessage(
@@ -195,7 +201,7 @@ function answerTime(
       relativeDay: new Intl.RelativeTimeFormat(locale, {
         numeric: 'auto',
       }).format(relation === 'tomorrow' ? 1 : -1, 'day'),
-      time: formatTime(moment, { locale }),
+      time,
     },
   );
 }

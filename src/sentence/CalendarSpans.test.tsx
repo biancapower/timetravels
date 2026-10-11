@@ -32,9 +32,28 @@ const notes = () => screen.queryAllByText(/clocks (go|went)|no .* in|twice in/);
 // clocks go forward at 02:00.
 const saturdayEvening = '2026-10-03T12:00:00Z';
 
-test('a calendar answer shows its date', () => {
+test('a calendar answer a day away says tomorrow, with its date', () => {
   show(saturdayEvening, 'Australia/Sydney', { when: 'later', duration: day });
-  expect(screen.getByText(/^Sunday 4 October.*10:00 pm$/)).toBeInTheDocument();
+  expect(
+    screen.getByText(/^tomorrow, Sunday 4 October.*10:00 pm$/),
+  ).toBeInTheDocument();
+});
+
+test('a calendar answer a day back says yesterday, with its date', () => {
+  show(saturdayEvening, 'Australia/Sydney', { when: 'earlier', duration: day });
+  expect(
+    screen.getByText(/^yesterday, Friday 2 October.*10:00 pm$/),
+  ).toBeInTheDocument();
+});
+
+test('a calendar answer further away shows only its date', () => {
+  show(saturdayEvening, 'Australia/Sydney', {
+    when: 'later',
+    duration: { weeks: 1, hours: 0, minutes: 0 },
+  });
+  expect(
+    screen.getByText(/^Saturday 10 October.*10:00 pm$/),
+  ).toBeInTheDocument();
 });
 
 test('a day across the change says how long it really is', () => {
