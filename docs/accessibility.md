@@ -9,7 +9,7 @@ The question is the page's main heading. Each slot is a button inside it, named 
 | Slot | Opens | Pattern |
 |---|---|---|
 | The place ("here", "London", "home", "Mark's place") | "Choose a place" dialog with a search combobox and a listbox: Here, Home, the named places, "Name a place", then the cities. Each saved place is followed by its own "Edit" option, named "Edit Mark's place", since an option can't hold a button | WAI-ARIA combobox |
-| "Name a place", "Edit" beside a saved place, or Home before it is set up | A dialog titled "Name a place", "Change Mark's place" or "Where is home?", opened against the place slot once the list has closed: a name field (not for home), an inline city search, the sentence as it will read, and Save, Remove and Cancel | Dialog with a form |
+| "Name a place", "Edit" beside a saved place, or Home before it is set up | A dialog titled "Name a place", "Change Mark's place" or "Where is home?", opened against the place slot once the list has closed: a name field (not for home), a place field that shows the chosen city and searches as you type over it, the sentence as it will read, and Save, Remove and Cancel | Dialog with a form |
 | The time ("right now", "from now", "ago", "after", "before") | "Choose when" menu of radio items | Menu with radio items |
 | The duration ("1 hour") | "Choose how long" dialog with a text field and common durations | Dialog with a form |
 | The chosen time ("3 pm") | "Choose a time" dialog with a time field and a day choice | Dialog with a form |

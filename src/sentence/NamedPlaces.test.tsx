@@ -69,10 +69,9 @@ async function openForm(option: string | RegExp, title: string) {
 }
 
 function choosePlace(form: HTMLElement, search: string, city: string) {
-  fireEvent.change(
-    within(form).getByRole('combobox', { name: 'Search for a city' }),
-    { target: { value: search } },
-  );
+  fireEvent.change(within(form).getByRole('combobox', { name: 'Place' }), {
+    target: { value: search },
+  });
   fireEvent.click(within(form).getByRole('option', { name: city }));
 }
 
@@ -80,7 +79,9 @@ test('home is set up from the picker, starting at the device’s own place', asy
   render(<App zone="Australia/Sydney" locale="en" />);
   openPicker('here');
   const form = await openForm(/^Home/, 'Where is home?');
-  expect(within(form).getByText('Place: Sydney')).toBeInTheDocument();
+  expect(within(form).getByRole('combobox', { name: 'Place' })).toHaveValue(
+    'Sydney',
+  );
   expect(form).toHaveTextContent('What time is it at home right now?');
 
   fireEvent.click(within(form).getByRole('button', { name: 'Save' }));
@@ -99,6 +100,25 @@ test('home can be anywhere, not only where the device is', async () => {
   choosePlace(form, 'lond', 'London');
   fireEvent.click(within(form).getByRole('button', { name: 'Save' }));
   expect(await screen.findByText(/^Home \(London, GMT/)).toBeInTheDocument();
+});
+
+test('the place field keeps the chosen city, and typing over it unchooses it', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  openPicker('here');
+  const form = await openForm('Name a place', 'Name a place');
+  const field = within(form).getByRole('combobox', { name: 'Place' });
+  fireEvent.change(within(form).getByRole('textbox', { name: 'Name' }), {
+    target: { value: 'Gym' },
+  });
+  choosePlace(form, 'lond', 'London');
+  expect(field).toHaveValue('London');
+  expect(form).toHaveTextContent('What time is it at Gym right now?');
+
+  fireEvent.change(field, { target: { value: 'Lon' } });
+  fireEvent.click(within(form).getByRole('button', { name: 'Save' }));
+  expect(within(form).getByRole('alert')).toHaveTextContent(
+    'Choose a place for it.',
+  );
 });
 
 test('a place is named, previewed, saved and chosen', async () => {

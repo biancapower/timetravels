@@ -61,11 +61,14 @@ export function NamedPlaceForm({
   const [place, setPlace] = useState<Place | null>(
     existing ?? (isHome ? (homeDefault ?? null) : null),
   );
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(place?.city ?? '');
+  const placeId = useId();
   const [tried, setTried] = useState(false);
   const errorId = useId();
 
   const trimmed = name.trim();
+  // The field shows the chosen city's name; typing over it unchooses it.
+  const chosen = place && query === place.city ? place : null;
   const problem = isHome
     ? null
     : nameProblem(name, saved, {
@@ -79,23 +82,23 @@ export function NamedPlaceForm({
           { id: problemMessage[problem] },
           { max: longestName, name: trimmed },
         )
-      : place
+      : chosen
         ? null
         : text('namedPlace.placeMissing');
 
   const save = () => {
     setTried(true);
-    if (problem || !place) return;
+    if (problem || !chosen) return;
     if (isHome) {
       onDone({
-        saved: { ...saved, home: place },
-        where: { kind: 'home', place },
+        saved: { ...saved, home: chosen },
+        where: { kind: 'home', place: chosen },
       });
       return;
     }
     onDone({
-      saved: withNamed(saved, { name: trimmed, place }, original?.name),
-      where: { kind: 'named', name: trimmed, place },
+      saved: withNamed(saved, { name: trimmed, place: chosen }, original?.name),
+      where: { kind: 'named', name: trimmed, place: chosen },
     });
   };
 
@@ -123,8 +126,8 @@ export function NamedPlaceForm({
           { name: original.name },
         )
       : text('namedPlace.addTitle');
-  const searchLabel = text('placePicker.search');
-  const shown = filterPlaces(places, query);
+  // Until the name is typed over, every city is offered.
+  const shown = chosen ? places : filterPlaces(places, query);
 
   return (
     <Popover.Root
@@ -161,34 +164,29 @@ export function NamedPlaceForm({
                 </label>
               )}
               <div className={styles.field}>
-                <p className={styles.chosen}>
-                  {place
-                    ? intl.formatMessage(
-                        { id: 'namedPlace.place' },
-                        { city: place.city },
-                      )
-                    : text('namedPlace.placeNone')}
-                </p>
+                <label htmlFor={placeId}>{text('namedPlace.place')}</label>
                 <Combobox.Root<Place>
                   inline
                   open
                   items={places}
                   filteredItems={shown}
-                  value={place}
-                  onValueChange={(chosen) => {
-                    if (chosen) setPlace(chosen);
+                  value={chosen}
+                  onValueChange={(next) => {
+                    if (!next) return;
+                    setPlace(next);
+                    setQuery(next.city);
                   }}
                   inputValue={query}
                   onInputValueChange={setQuery}
-                  itemToStringLabel={(chosen) => chosen.city}
+                  itemToStringLabel={(item) => item.city}
                   isItemEqualToValue={(a, b) =>
                     a.city === b.city && a.zone === b.zone
                   }
                 >
                   <Combobox.Input
+                    id={placeId}
                     className={styles.input}
-                    placeholder={searchLabel}
-                    aria-label={searchLabel}
+                    placeholder={text('placePicker.search')}
                     onKeyDown={(event) => {
                       // Enter here picks the highlighted city; it never
                       // submits the form, even with none highlighted.
@@ -219,7 +217,7 @@ export function NamedPlaceForm({
                       {
                         kind: isHome ? 'home' : 'named',
                         name: trimmed,
-                        city: place?.city,
+                        city: chosen?.city,
                         place: (chunks: ReactNode[]) => (
                           <span className={styles.slot}>{chunks}</span>
                         ),

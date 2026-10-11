@@ -26,10 +26,6 @@
   gap: var(--size-1);
 }
 
-.chosen {
-  margin: 0;
-}
-
 .input {
   width: 100%;
   padding: var(--size-2);

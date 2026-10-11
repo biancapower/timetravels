@@ -20,7 +20,9 @@ test('set up home, use it, keep it across a reload, then remove it', async ({
   await press(slot(page, 'here'));
   await press(page.getByRole('option', { name: /^Home/ }));
   const form = page.getByRole('dialog', { name: 'Where is home?' });
-  await expect(form).toContainText('Place: Sydney');
+  await expect(form.getByRole('combobox', { name: 'Place' })).toHaveValue(
+    'Sydney',
+  );
   await expect(form).toContainText('What time is it at home right now?');
   await press(form.getByRole('button', { name: 'Save' }));
 
@@ -78,15 +80,16 @@ test('Enter in the place search picks a city, and never saves the form', async (
   await slot(page, 'here').click();
   await page.getByRole('option', { name: /^Home/ }).click();
   const form = page.getByRole('dialog', { name: 'Where is home?' });
-  const search = form.getByRole('combobox', { name: 'Search for a city' });
+  const search = form.getByRole('combobox', { name: 'Place' });
 
   await search.fill('tok');
   await page.keyboard.press('Enter');
   await expect(form).toBeVisible();
-  await expect(form).toContainText('Place: Sydney');
+  await expect(search).toHaveValue('tok');
 
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect(form).toBeVisible();
-  await expect(form).toContainText('Place: Tokyo');
+  await expect(search).toHaveValue('Tokyo');
+  await expect(form).toContainText('What time is it at home right now?');
 });
