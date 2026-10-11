@@ -16,6 +16,15 @@
   cursor: pointer;
 }
 
+/* Dark mode's muted grey is bright against the near-black ground, so it is
+   mixed further towards the ground: 4.0:1, above the 3:1 that text this
+   large needs. */
+@media (prefers-color-scheme: dark) {
+  .help {
+    color: color-mix(in srgb, var(--muted) 60%, var(--ground));
+  }
+}
+
 .help:hover {
   color: var(--accent);
 }
