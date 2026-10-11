@@ -189,6 +189,11 @@ export function NamedPlaceForm({
                     className={styles.input}
                     placeholder={searchLabel}
                     aria-label={searchLabel}
+                    onKeyDown={(event) => {
+                      // Enter here picks the highlighted city; it never
+                      // submits the form, even with none highlighted.
+                      if (event.key === 'Enter') event.preventDefault();
+                    }}
                   />
                   <Combobox.List className={styles.list}>
                     {(choice: Place) => (

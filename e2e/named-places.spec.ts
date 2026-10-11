@@ -70,3 +70,23 @@ test('name a place by keyboard, and Escape leaves the form', async ({
   await expect(form).toBeHidden();
   await expect(slot(page, 'here')).toBeFocused();
 });
+
+test('Enter in the place search picks a city, and never saves the form', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await slot(page, 'here').click();
+  await page.getByRole('option', { name: /^Home/ }).click();
+  const form = page.getByRole('dialog', { name: 'Where is home?' });
+  const search = form.getByRole('combobox', { name: 'Search for a city' });
+
+  await search.fill('tok');
+  await page.keyboard.press('Enter');
+  await expect(form).toBeVisible();
+  await expect(form).toContainText('Place: Sydney');
+
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(form).toBeVisible();
+  await expect(form).toContainText('Place: Tokyo');
+});
