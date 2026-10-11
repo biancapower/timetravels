@@ -1,6 +1,6 @@
 {
   "name": "timetravels",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "A time calculator you ask in plain words, the way you'd ask a person.",
   "license": "MIT",

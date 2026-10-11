@@ -32,7 +32,12 @@ test('About from Help, then Back twice, returns to the sentence', async ({
   await expect(
     page.getByRole('heading', { name: 'About TimeTravels' }),
   ).toBeFocused();
-  await expect(page.getByText(/^Version \d+\.\d+\.\d+$/)).toBeVisible();
+  const { version } = JSON.parse(readFileSync('package.json', 'utf8')) as {
+    version: string;
+  };
+  await expect(
+    page.getByText(`Version ${version}`, { exact: true }),
+  ).toBeVisible();
 
   await page.goBack();
   await expect(

@@ -8,7 +8,7 @@ Tap an underlined word to change it; the answer sits underneath and updates as y
 
 **Use it:** [timetravels.dev](https://timetravels.dev), in any browser, or add it to your home screen to install it. The live site uses Cloudflare Web Analytics to count page views and measure page speed; Cloudflare says it does not collect or use visitors' personal data ([decision 0012](docs/decisions/0012-web-analytics.md)).
 
-**Status:** pre-release. The app answers what time it is now, a number of hours from now or ago, or a number of hours after or before a chosen time, here or in another place; the rest of release 0.1.0 is being worked through.
+**Status:** 0.1.0, the first release. The app answers what time it is now, a number of hours from now or ago, or a number of hours after or before a chosen time, here or in another place. [CHANGELOG.md](CHANGELOG.md) says what each release does and doesn't do.
 
 ## Running it
 
@@ -47,6 +47,7 @@ Time-zone rules come from the browser's own `Intl` data, or from the polyfill wh
 1. [Decisions](docs/decisions/): why the project is shaped the way it is, one short record per decision
 2. [Working with AI](docs/working-with-ai.md): how Claude is used on this repository and what the commit history shows
 3. [Accessibility](docs/accessibility.md): how the sentence works with screen readers and keyboards, what was checked, and what a person has still to check
+4. [Releasing](docs/releasing.md): the steps from a finished milestone to a release, and where the version number lives
 
 ## Licence
 
