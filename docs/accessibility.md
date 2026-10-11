@@ -52,6 +52,6 @@ Made earlier, while building the sentences:
 
 Automated checks cannot judge how the sentence sounds. Before release, with a screen reader:
 
-1. **VoiceOver on an iPhone.** Swipe through the sentence: does it read as one question, with each slot announced as a button with its value? Open each slot, choose something, and check the new answer is read out once.
-2. **NVDA on Windows or Orca on Linux.** The same, with the keyboard only.
-3. **TalkBack on Android.** The same; Base UI, the picker library, publishes no screen-reader test results ([decision 0008](decisions/0008-headless-component-library.md)), so this matters.
+1. **TalkBack on Android** (the maintainer's Pixel). Swipe through the sentence: does it read as one question, with each slot announced as a button with its value? Open each slot, choose something, and check the new answer is read out once. Base UI, the picker library, publishes no screen-reader test results ([decision 0008](decisions/0008-headless-component-library.md)), so this matters.
+2. **VoiceOver on an iPad** (iPadOS 18.7.5), standing in for an iPhone. The same, with swipes.
+3. **VoiceOver with Safari on a Mac.** The same, with the keyboard only, including the Help button and the Help and About pages.
