@@ -123,7 +123,9 @@ export function PlacePicker({
     const starts = (name: string) => fold(name).startsWith(typed);
     const found: Item[] = [];
     if (starts(hereLabel)) found.push({ kind: 'here' });
-    // An Edit option stays beside the place it edits.
+    // The app's own words match from their start, as Here always has; a
+    // name the person chose matches anywhere in it, as a city does. An Edit
+    // option stays beside the place it edits.
     let keep = false;
     for (const item of mine) {
       if (item.kind === 'home') keep = starts(homeLabel);
