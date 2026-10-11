@@ -82,9 +82,9 @@ const en = {
   'help.direction':
     '<b>When</b>, “right now” at first: choose “from now” or “ago” to count a length of time from now, or “after a time” or “before a time” to count from a time you choose.',
   'help.duration':
-    '<b>How long</b>, “1 hour” at first: pick a common length or type one, such as 10 (hours), 1.5h, 90m, 1h30 or 1:30, up to 999 hours.',
+    '<b>How long</b>, once you choose “from now”, “ago”, “after a time” or “before a time”: pick a common length or type one, such as 10 (hours), 1.5h, 90m, 1h30 or 1:30, up to 999 hours.',
   'help.anchor':
-    '<b>The time to count from</b>, such as “3 pm”: set a time and whether it is yesterday, today or tomorrow.',
+    '<b>The time to count from</b>, such as “3 pm”, with “after a time” or “before a time”: set a time and whether it is yesterday, today or tomorrow.',
   'help.anchorPlace':
     '<b>Whose time</b>, “my time” at first: with a place chosen, say whether that time is yours or the place’s.',
   'help.questionsTitle': 'Questions it can answer',
@@ -111,7 +111,7 @@ const en = {
     'Every screen is checked against WCAG 2.2 AA in light and dark themes, and every choice works from the keyboard. <link>How it was checked</link>.',
   'about.privacyTitle': 'Privacy',
   'about.privacyStorage':
-    'There are no accounts. The place you choose is saved in your browser on this device, and is never sent anywhere.',
+    'There are no accounts. The place you choose is saved in your browser on this device, and is never sent anywhere. Your browser also keeps a copy of the app itself, so it works offline.',
   'about.privacyAnalytics':
     'The site uses Cloudflare Web Analytics to count page views and measure page speed. It sets no cookies, and Cloudflare says it does not collect or use visitors’ personal data.',
   'about.creditsTitle': 'Credits',
