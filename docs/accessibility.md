@@ -18,9 +18,11 @@ Errors in the duration and time pickers appear in an alert region that is always
 
 ## Checks and results
 
-**Automated rules.** Every screen is checked with axe (`@axe-core/playwright`) against WCAG 2.2 AA in light and dark themes, on a phone and a desktop: the sentence, each picker open (including the place list with results and the "Whose time" menu), the duration and time pickers' errors, the clock-change note, and sentence 5. Contrast that axe cannot measure fails the check too, except text covered by an open popup, which is checked where nothing covers it. No violations were found, and none needed fixing. These are in `e2e/accessibility.spec.ts` and run in `pnpm check:full`. Lighthouse 13.5.0 gave the live site an accessibility score of 100 on 2026-10-10.
+**Automated rules.** Every screen is checked with axe (`@axe-core/playwright`) against WCAG 2.2 AA in light and dark themes, on a phone and a desktop: the sentence, each picker open (including the place list with results and the "Whose time" menu), the duration and time pickers' errors, the clock-change note, sentence 5, a focused slot, and the Help and About pages. Contrast that axe cannot measure fails the check too, except text covered by an open popup, which is checked where nothing covers it. No violations were found, and none needed fixing. These are in `e2e/accessibility.spec.ts` and run in `pnpm check:full`. Lighthouse 13.5.0 gave the live site an accessibility score of 100 on 2026-10-10.
 
 **Keyboard.** Tab reaches every slot in reading order; Enter opens each slot, Escape closes it, and focus returns to the slot, in every sentence. These are in `e2e/keyboard.spec.ts`.
+
+**Help and About.** The Help button and the footer links come after the sentence in reading order. Each page opens with focus on its title, or on the Privacy heading from the footer's Privacy link, and changes the page title. Close, Escape and the browser's Back button all return to the sentence as it was, with focus on whatever opened the page. These are in `e2e/pages.spec.ts` and `src/pages/Pages.test.tsx`.
 
 **Contrast.** The text contrast is in [decision 0006](decisions/0006-visual-foundations.md). For the rest, against WCAG's 3:1 for interface parts and 4.5:1 for text:
 
