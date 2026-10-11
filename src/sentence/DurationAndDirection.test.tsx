@@ -208,3 +208,35 @@ test('with a place, it comes before the duration, and focus stays on the slot', 
     expect(slot).toHaveFocus();
   });
 });
+
+test('the common durations include a day, a week and a month', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  await chooseWhen('right now', 'from now');
+  fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
+  const common = await screen.findByRole('group', { name: 'Common durations' });
+  for (const name of ['1 day', '1 week', '1 month']) {
+    expect(within(common).getByRole('button', { name })).toBeInTheDocument();
+  }
+  fireEvent.click(within(common).getByRole('button', { name: '1 month' }));
+  expect(
+    await screen.findByRole('heading', {
+      name: named('What time will it be here 1 month from now?'),
+    }),
+  ).toBeInTheDocument();
+});
+
+test('a typed calendar duration is read', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  await chooseWhen('right now', 'from now');
+  fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
+  fireEvent.change(
+    await screen.findByRole('textbox', { name: 'Type a duration' }),
+    { target: { value: '6 months' } },
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Set' }));
+  expect(
+    await screen.findByRole('heading', {
+      name: named('What time will it be here 6 months from now?'),
+    }),
+  ).toBeInTheDocument();
+});

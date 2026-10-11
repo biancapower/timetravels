@@ -15,7 +15,7 @@ test('open help, read it, and close it back to the sentence as it was', async ({
   await expect(
     page.getByRole('heading', { name: 'How TimeTravels works' }),
   ).toBeFocused();
-  await expect(page.getByText(/1h30 or 1:30/)).toBeVisible();
+  await expect(page.getByText(/3d, 2 weeks, 6 months or 1y/)).toBeVisible();
 
   await page.getByRole('button', { name: 'Close' }).click();
   await expect(page.getByRole('button', { name: 'Help' })).toBeFocused();

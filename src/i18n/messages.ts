@@ -65,7 +65,7 @@ const en = {
   'directionPicker.before': 'before a time',
   'durationPicker.label': 'Choose how long',
   'durationPicker.input': 'Type a duration',
-  'durationPicker.placeholder': 'For example 90m or 1h30',
+  'durationPicker.placeholder': 'For example 90m, 1h30 or 6 months',
   'durationPicker.set': 'Set',
   'durationPicker.invalid': 'Couldn’t read that duration',
   'durationPicker.quick': 'Common durations',
@@ -88,7 +88,7 @@ const en = {
   'help.direction':
     '<b>When</b>, “right now” at first: choose “from now” or “ago” to count a length of time from now, or “after a time” or “before a time” to count from a time you choose.',
   'help.duration':
-    '<b>How long</b>, once you choose “from now”, “ago”, “after a time” or “before a time”: pick a common length or type one, such as 10 (hours), 1.5h, 90m, 1h30 or 1:30, up to 999 hours.',
+    '<b>How long</b>, once you choose “from now”, “ago”, “after a time” or “before a time”: pick a common length or type one, such as 10 (hours), 1.5h, 90m, 1h30, 1:30, 3d, 2 weeks, 6 months or 1y. Hours and minutes are exact; days and longer keep the clock time, so 1 day from now is this time tomorrow even if the clocks change. In “1 day 2 hours”, the day comes first, then the hours.',
   'help.anchor':
     '<b>The time to count from</b>, such as “3 pm”, with “after a time” or “before a time”: set a time and whether it is yesterday, today or tomorrow.',
   'help.anchorPlace':
