@@ -130,12 +130,15 @@ test('tapping away saves a change, closes an untouched form, and keeps an unfini
   ).toBeVisible();
 });
 
-test('the city list shows only while searching', async ({ page }) => {
+test('home opens without a field focused, and the city list shows only while searching', async ({
+  page,
+}) => {
   await page.goto('/');
   await slot(page, 'here').click();
   await page.getByRole('option', { name: /^Home/ }).click();
   const form = page.getByRole('dialog', { name: 'Where is home?' });
   const search = form.getByRole('combobox', { name: 'Place' });
+  await expect(form).toBeFocused();
   await expect(search).toHaveValue('Sydney');
   await expect(form.getByRole('option')).toHaveCount(0);
   await expect(form.getByRole('button', { name: 'Save' })).toBeInViewport();

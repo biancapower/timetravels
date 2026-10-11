@@ -1,6 +1,6 @@
 import { Combobox } from '@base-ui/react/combobox';
 import { Popover } from '@base-ui/react/popover';
-import { useId, useState, type ReactNode, type RefObject } from 'react';
+import { useId, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { useIntl } from 'react-intl';
 import type { MessageId } from '../i18n/messages';
 import {
@@ -62,6 +62,7 @@ export function NamedPlaceForm({
   const [place, setPlace] = useState<Place | null>(initial);
   const [query, setQuery] = useState(place?.city ?? '');
   const placeId = useId();
+  const popup = useRef<HTMLDivElement>(null);
   const [tried, setTried] = useState(false);
   const errorId = useId();
 
@@ -149,7 +150,14 @@ export function NamedPlaceForm({
     >
       <Popover.Portal>
         <Popover.Positioner anchor={anchor} align="start" sideOffset={8}>
-          <Popover.Popup className={styles.popup} finalFocus={anchor}>
+          <Popover.Popup
+            ref={popup}
+            className={styles.popup}
+            // A new place starts in its name field; otherwise nothing needs
+            // typing yet, and a phone's keyboard would cover the form.
+            initialFocus={isHome || original ? popup : true}
+            finalFocus={anchor}
+          >
             <form
               className={styles.form}
               noValidate
