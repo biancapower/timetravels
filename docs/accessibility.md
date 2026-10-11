@@ -36,9 +36,9 @@ Errors in the duration and time pickers appear in an alert region that is always
 
 **Motion.** The app has no animations or transitions, so there is nothing for `prefers-reduced-motion` to reduce. Any added later must respect it.
 
-## Fixes made for this release
+## Fixes made
 
-Made in this pass:
+Made in the accessibility pass:
 
 - **The answer is announced when a choice changes it**, from a hidden status region, but not on the minute tick, which would interrupt a screen reader every minute. The announcement clears five seconds later, so no stale copy stays on the page.
 
