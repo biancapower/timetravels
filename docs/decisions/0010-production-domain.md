@@ -10,4 +10,4 @@
 
 **Consequences.** The README gives `https://timetravels.dev` as the app's address. Cloudflare builds the repository itself through its GitHub integration, with Node 24 taken from `.node-version` and also set as the Cloudflare project's `NODE_VERSION` build variable, and the pnpm version set as its `PNPM_VERSION`. Nothing checks that `PNPM_VERSION` matches `packageManager` in `package.json`, so when one changes, the other is changed by hand. The Cloudflare side, connecting the project and adding the domain, is done by the maintainer; Claude never holds the credentials or deploys.
 
-**Status.** Proposed by @biancapower; approved by @biancapower, 2026-10-10.
+**Status.** Proposed by @biancapower; approved by @biancapower, 2026-10-10. Where it says every push to `main` deploys production, superseded by [decision 0015](0015-production-branch.md).
