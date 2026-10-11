@@ -14,4 +14,6 @@ A release is a version number in `package.json`, an entry in `CHANGELOG.md`, and
 4. **Release review.** A fresh Claude session reviews the release with the maintainer. It writes nothing.
 5. **Tag and publish.** The maintainer tags the merge commit `v` plus the version (for example `v0.1.0`) and publishes the release notes on GitHub. If that happens on a later day than the changelog says, the date in `CHANGELOG.md` is corrected in the next pull request.
 
+The release is live from step 3, before the review. A problem the review finds is fixed like any other: an issue, then a pull request, and a patch release if it can't wait for the next one.
+
 Claude never tags or publishes a release; the guard hook in `.claude/settings.json` blocks it.

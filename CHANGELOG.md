@@ -15,13 +15,13 @@ The first release, live at [timetravels.dev](https://timetravels.dev).
   - What time will it be in London 10 hours from now?
   - What time was it in London 8 hours ago?
   - What time will it be in London 10 hours after 3 pm my time?
-- **Any time zone.** Search for a city; the list comes from the browser's own time-zone data, with common city names added. Your chosen place is remembered on the device.
+- **Places around the world.** Search for a city; the list comes from the browser's own time-zone data, one city per zone, with common city names added. Your chosen place is remembered on the device.
 - **Durations** picked from a list or typed: 10 (hours), 1.5h, 90m, 1h30 or 1:30, up to 999 hours.
 - **Clock changes.** A note under the answer when the clocks change during the time asked about, and when a chosen time is skipped or happens twice that day.
 - **Help and About pages,** with privacy, credits, and the licences of the code it includes.
 - **Installs and works offline** on phones and desktops, and offers a new version without reloading under you.
 - **Light and dark themes,** following your device.
-- **Accessibility:** every screen checked against WCAG 2.2 AA with axe in both themes, and every choice usable from the keyboard.
+- **Accessibility:** every screen checked against WCAG 2.2 AA with axe in both themes, and the sentence and its pickers usable from the keyboard alone.
 
 ### What it doesn't do yet
 
