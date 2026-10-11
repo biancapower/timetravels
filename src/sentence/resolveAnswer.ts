@@ -1,10 +1,12 @@
 import {
   anchorAt,
+  calendarLanding,
   nowIn,
   shift,
   type AnchorDay,
   type Anchored,
   type Duration,
+  type Landing,
   type Moment,
 } from '../time';
 import type { When } from './DirectionPicker';
@@ -34,6 +36,8 @@ export interface Resolved {
   anchored?: Anchored;
   /** Where the span starts and the places it involves, when there is a span. */
   span?: { start: Moment; zones: string[] };
+  /** Where a duration's calendar part lands, when it has one. */
+  landing?: Landing;
 }
 
 /** Puts the sentence's slots together using src/time; no arithmetic of its own. */
@@ -49,19 +53,18 @@ export function resolveAnswer(
       today,
       moment: shift(today, duration, when),
       span: { start: today, zones: [answerZone] },
+      landing: calendarLanding(today, duration, when) ?? undefined,
     };
   }
   const anchorZone = anchor.inPlace ? answerZone : deviceZone;
   const anchored = anchorAt(now, anchorZone, anchor.time, anchor.day);
-  const moment = shift(
-    anchored.moment,
-    duration,
-    when === 'after' ? 'later' : 'earlier',
-  );
+  const direction = when === 'after' ? 'later' : 'earlier';
+  const moment = shift(anchored.moment, duration, direction);
   return {
     today,
     moment: moment.withTimeZone(answerZone),
     anchored,
     span: { start: anchored.moment, zones: [answerZone, anchorZone] },
+    landing: calendarLanding(anchored.moment, duration, direction) ?? undefined,
   };
 }

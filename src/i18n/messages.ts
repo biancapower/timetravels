@@ -27,6 +27,12 @@ const en = {
   'answer.relativeDay': '{relativeDay}, {time}',
   'answer.transition':
     '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}, so the clock {tense, select, past {moved} other {moves}} {clock} in these {span}.',
+  'answer.transitionCalendar':
+    '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}{reach, select, later {, so {span} from now is {actual} away} earlier {, so {span} ago was {actual} ago} after {, so {span} after {anchor} is {actual} after it} before {, so {span} before {anchor} is {actual} before it} other {}}.',
+  'answer.landingSkipped':
+    '{tense, select, past {There was no} other {There’s no}} {time} in {city} on {date}: the clocks {tense, select, past {went} other {go}} forward. This counts from {actual}.',
+  'answer.landingRepeated':
+    '{time} {tense, select, past {happened} other {happens}} twice in {city} on {date}, when the clocks {tense, select, past {went} other {go}} back. This counts from the first, at {offset}.',
   'answer.skipped':
     'There was no {time} in {city} that day: the clocks went forward. This counts from {actual}.',
   'answer.repeated':
