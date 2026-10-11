@@ -31,6 +31,7 @@ GUARD_GH_VISIBILITY='\bgh\b[[:space:]]+repo[[:space:]]+edit\b.*--visibility\b'
 GUARD_GH_RELEASE='\bgh\b[[:space:]]+release[[:space:]]+create\b'
 GUARD_TAG_PUSH='--tags|--follow-tags|refs/tags/'
 GUARD_LIST_FLAG='(^|[[:space:]])(-l|--list)([[:space:]]|$)'
+GUARD_PRODUCTION='(^|[[:space:]:/])production([[:space:]]|$)'
 
 # guard_check CMD
 # Prints a one-line reason and returns 1 if CMD should be blocked;
@@ -53,6 +54,16 @@ guard_check() {
     && grep -qE -- '\bpush\b' <<<"$cmd" \
     && grep -qE -- "$GUARD_TAG_PUSH" <<<"$cmd"; then
     echo "blocked: pushing tags publishes a release tag; a human does this"
+    return 1
+  fi
+
+  # The production branch is what timetravels.dev deploys from, so pushing
+  # to it is deploying. A branch merely named like it (45/production-branch)
+  # is fine.
+  if grep -qE -- '\bgit\b' <<<"$cmd" \
+    && grep -qE -- '\bpush\b' <<<"$cmd" \
+    && grep -qE -- "$GUARD_PRODUCTION" <<<"$cmd"; then
+    echo "blocked: pushing to production deploys timetravels.dev; a human does this"
     return 1
   fi
 

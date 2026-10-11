@@ -52,6 +52,11 @@ must_block=(
   'git push --tags'
   'git push origin --follow-tags'
   'git push origin refs/tags/v1.0.0'
+  # The production branch deploys timetravels.dev.
+  'git push origin production'
+  'git push origin main:production'
+  'git push origin 047a457:refs/heads/production'
+  'git push -u origin HEAD:production'
   # Documented over-block: "--no-verify anywhere" also catches it inside
   # an unrelated grep argument. False positive, not a security gap.
   'grep -- --no-verify README.md'
@@ -66,6 +71,8 @@ must_allow=(
   'git push origin feature'
   'git push -u origin feature'
   'git push origin feature && echo a+b'
+  'git push -u origin 45/production-branch'
+  'git push origin production-notes'
   'git tag --list'
   'git tag -l'
   'pnpm test'
