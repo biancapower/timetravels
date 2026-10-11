@@ -45,7 +45,7 @@
     "wrangler": "4.149.0"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/third-party-licences.js && vite",
     "build": "node scripts/third-party-licences.js && tsc && vite build",
     "preview": "vite preview",
     "typecheck": "tsc",
