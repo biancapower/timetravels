@@ -1,6 +1,6 @@
 # TimeTravels
 
-A time calculator you talk to in one sentence.
+A time calculator you ask in plain words, the way you’d ask a person.
 
 > What time will it be in **London** **10 hours** **from now**?
 

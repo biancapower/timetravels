@@ -51,6 +51,19 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await expectNoViolations(page);
     });
 
+    test('the Help and About pages', async ({ page }) => {
+      await page.goto('/#help');
+      await expect(
+        page.getByRole('heading', { name: 'How TimeTravels works' }),
+      ).toBeVisible();
+      await expectNoViolations(page);
+      await page.goto('/#about');
+      await expect(
+        page.getByRole('heading', { name: 'About TimeTravels' }),
+      ).toBeVisible();
+      await expectNoViolations(page);
+    });
+
     test('a focused slot, filled with the accent', async ({ page }) => {
       await page.goto('/');
       await slot(page, 'here').focus();

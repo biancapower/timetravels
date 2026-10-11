@@ -1,8 +1,15 @@
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+const { version } = JSON.parse(
+  readFileSync(new URL('package.json', import.meta.url), 'utf8'),
+) as { version: string };
+
 export default defineConfig({
+  // The About page shows the version from package.json.
+  define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [
     react(),
     VitePWA({
@@ -12,7 +19,8 @@ export default defineConfig({
       manifest: {
         name: 'TimeTravels',
         short_name: 'TimeTravels',
-        description: 'A time calculator you talk to in one sentence.',
+        description:
+          'A time calculator you ask in plain words, the way you’d ask a person.',
         // A manifest takes one colour; it matches the light ground, and the page's
         // theme-color tags switch the browser bar for dark mode once loaded.
         theme_color: '#f8f9fa',
@@ -33,7 +41,7 @@ export default defineConfig({
       workbox: {
         // Precache everything the app needs, including the Temporal polyfill
         // chunk that only some browsers load, so it works offline from the start.
-        globPatterns: ['**/*.{js,css,html,svg,png}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,txt}'],
       },
     }),
   ],

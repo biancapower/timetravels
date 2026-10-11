@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import styles from './App.module.css';
 import { catalogues, pickLocale, type Locale } from './i18n/messages';
+import { About } from './pages/About';
+import { Help } from './pages/Help';
+import { HelpButton } from './pages/HelpButton';
+import { useRoute } from './pages/useRoute';
 import { aliases } from './places/aliases';
 import { buildPlaces, cityOf, type Place } from './places/places';
 import { loadPlace, savePlace } from './places/storage';
@@ -38,6 +42,20 @@ export function App({
     inPlace: false,
   }));
 
+  const { route, open, close } = useRoute();
+  // The control on the sentence screen that opened Help, to return focus to
+  // on closing. Moving from Help to About doesn't change it.
+  const opener = useRef<HTMLElement | null>(null);
+  const openPage = (hash: string, from: HTMLElement) => {
+    opener.current = from;
+    open(hash);
+  };
+  useEffect(() => {
+    if (route.view !== 'sentence') return;
+    opener.current?.focus();
+    opener.current = null;
+  }, [route.view]);
+
   const choosePlace = (chosen: Place | null) => {
     setPlace(chosen);
     savePlace(chosen);
@@ -57,25 +75,34 @@ export function App({
 
   return (
     <IntlProvider locale={locale} messages={catalogues[locale]}>
-      <main className={styles.page}>
-        <Sentence
-          when={when}
-          duration={duration}
-          place={place}
-          places={places}
-          anchor={question.anchor}
-          tense={tense}
-          onWhenChange={setWhen}
-          onDurationChange={setDuration}
-          onPlaceChange={choosePlace}
-          onAnchorChange={setAnchor}
-        />
-        <LiveAnswer
-          question={question}
-          city={place?.city ?? cityOf(zone)}
-          anchorCity={question.anchor.inPlace ? place?.city : cityOf(zone)}
-        />
-      </main>
+      {/* Hidden, not removed, under Help and About, so it comes back as it was. */}
+      <div className={styles.screen} hidden={route.view !== 'sentence'}>
+        <main className={styles.page}>
+          <Sentence
+            when={when}
+            duration={duration}
+            place={place}
+            places={places}
+            anchor={question.anchor}
+            tense={tense}
+            onWhenChange={setWhen}
+            onDurationChange={setDuration}
+            onPlaceChange={choosePlace}
+            onAnchorChange={setAnchor}
+          />
+          <LiveAnswer
+            question={question}
+            city={place?.city ?? cityOf(zone)}
+            anchorCity={question.anchor.inPlace ? place?.city : cityOf(zone)}
+          />
+        </main>
+        {/* After the sentence in reading order, though it sits in the top corner. */}
+        <HelpButton onOpen={openPage} />
+      </div>
+      {route.view === 'help' && <Help onOpen={open} onClose={close} />}
+      {route.view === 'about' && (
+        <About section={route.section} onClose={close} />
+      )}
       <UpdateNotice />
     </IntlProvider>
   );

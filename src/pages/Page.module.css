@@ -1,0 +1,67 @@
+.page {
+  max-width: 40rem;
+  margin-inline: auto;
+  padding: var(--size-7) clamp(var(--size-5), 6vw, var(--size-10))
+    var(--size-10);
+  font-size: var(--font-size-2);
+  line-height: var(--font-lineheight-3);
+}
+
+.close {
+  display: block;
+  margin-inline-start: auto;
+  padding: var(--size-2) var(--size-3);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-2);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-size-1);
+  cursor: pointer;
+}
+
+.title {
+  margin-block: var(--size-5) var(--size-4);
+  font-size: var(--font-size-fluid-2);
+  font-weight: var(--font-weight-7);
+  line-height: var(--font-lineheight-1);
+}
+
+.page h2 {
+  margin-block: var(--size-7) var(--size-2);
+  font-size: var(--font-size-4);
+  line-height: var(--font-lineheight-1);
+}
+
+.page p,
+.page ul {
+  margin-block: 0 var(--size-3);
+}
+
+.page ul {
+  padding-inline-start: var(--size-5);
+}
+
+.page li + li {
+  margin-block-start: var(--size-2);
+}
+
+.page a {
+  color: var(--accent);
+}
+
+.close:focus-visible,
+.page a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Headings take focus only so a screen reader starts there. */
+.title:focus,
+.page h2:focus {
+  outline: none;
+}
+
+.muted {
+  color: var(--muted);
+}
