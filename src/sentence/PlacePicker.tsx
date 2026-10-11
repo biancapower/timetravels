@@ -72,6 +72,7 @@ export function PlacePicker({
   const text = (id: MessageId) => intl.formatMessage({ id });
   const hereLabel = text('placePicker.here');
   const homeLabel = text('placePicker.home');
+  const addLabel = text('placePicker.add');
   const searchLabel = text('placePicker.search');
 
   const label = (item: Item): string => {
@@ -85,7 +86,7 @@ export function PlacePicker({
       case 'city':
         return item.place.city;
       case 'add':
-        return text('placePicker.add');
+        return addLabel;
       case 'edit':
         return intl.formatMessage(
           { id: 'placePicker.edit' },
@@ -129,10 +130,11 @@ export function PlacePicker({
       else if (item.kind === 'named') keep = fold(item.name).includes(typed);
       if (keep) found.push(item);
     }
+    if (starts(addLabel)) found.push({ kind: 'add' });
     for (const place of filterPlaces(places, query))
       found.push({ kind: 'city', place });
     return found;
-  }, [items, mine, places, query, hereLabel, homeLabel]);
+  }, [items, mine, places, query, hereLabel, homeLabel, addLabel]);
 
   const choose = (item: Item | null) => {
     if (!item) return;

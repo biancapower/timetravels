@@ -212,3 +212,17 @@ test('Cancel leaves everything as it was', async () => {
   fireEvent.click(within(form).getByRole('button', { name: 'Cancel' }));
   expect(screen.getByText(/^Home \(London, GMT/)).toBeInTheDocument();
 });
+
+test('typing the start of “Name a place” offers it', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  openPicker('here');
+  fireEvent.change(
+    screen.getByRole('combobox', { name: 'Search for a city' }),
+    {
+      target: { value: 'name' },
+    },
+  );
+  expect(
+    await screen.findByRole('option', { name: 'Name a place' }),
+  ).toBeInTheDocument();
+});
