@@ -293,6 +293,8 @@ function issueAt(wall: Temporal.PlainDateTime, zone: string): AnchorIssue {
 export interface Landing {
   /** The clock time the calendar part names, before any exact part. */
   wall: Temporal.PlainDateTime;
+  /** Where that lands: moved on past a skipped time, the first of a repeated one. */
+  moment: Moment;
   issue: AnchorIssue;
 }
 
@@ -315,7 +317,15 @@ export function calendarLanding(
     weeks: sign * (duration.weeks ?? 0),
     days: sign * (duration.days ?? 0),
   });
-  return { wall, issue: issueAt(wall, moment.timeZoneId) };
+  const zone = moment.timeZoneId;
+  const issue = issueAt(wall, zone);
+  return {
+    wall,
+    moment: wall.toZonedDateTime(zone, {
+      disambiguation: issue === 'repeated' ? 'earlier' : 'compatible',
+    }),
+    issue,
+  };
 }
 
 /** The exact time between two moments, in either order, in hours and minutes. */

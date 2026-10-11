@@ -83,6 +83,7 @@ test('calendarLanding flags a step that lands on a skipped time', () => {
   const landing = calendarLanding(start, { ...none, days: 1 }, 'later');
   expect(landing?.issue).toBe('skipped');
   expect(landing?.wall.toString()).toBe('2026-10-04T02:30:00');
+  expect(landing?.moment.toPlainTime().toString()).toBe('03:30:00');
 });
 
 test('calendarLanding flags a step that lands on a repeated time', () => {
@@ -91,6 +92,7 @@ test('calendarLanding flags a step that lands on a repeated time', () => {
   const landing = calendarLanding(start, { ...none, days: 1 }, 'later');
   expect(landing?.issue).toBe('repeated');
   expect(landing?.wall.toString()).toBe('2026-10-25T01:30:00');
+  expect(landing?.moment.offset).toBe('+01:00');
 });
 
 test('calendarLanding is none for ordinary steps, and null for exact spans', () => {
