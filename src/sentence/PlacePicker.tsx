@@ -1,6 +1,7 @@
 import { Combobox } from '@base-ui/react/combobox';
 import { useMemo, useState, type ReactNode } from 'react';
 import { useIntl } from 'react-intl';
+import type { Where } from '../places/named';
 import { filterPlaces, type Place } from '../places/places';
 import styles from './PlacePicker.module.css';
 
@@ -11,9 +12,9 @@ function keyOf(choice: Choice): string {
 }
 
 interface PlacePickerProps {
-  place: Place | null;
+  where: Where | null;
   places: readonly Place[];
-  onChange: (place: Place | null) => void;
+  onChange: (where: Where | null) => void;
   className?: string;
   /** The slot's text, from the sentence's message. */
   children: ReactNode;
@@ -21,7 +22,7 @@ interface PlacePickerProps {
 
 /** The place slot: a button that opens a search over every place, with "Here" first. */
 export function PlacePicker({
-  place,
+  where,
   places,
   onChange,
   className,
@@ -46,9 +47,13 @@ export function PlacePicker({
     <Combobox.Root<Choice>
       items={choices}
       filteredItems={shown}
-      value={place ?? 'here'}
+      value={where?.kind === 'city' ? where.place : 'here'}
       onValueChange={(choice) => {
-        onChange(choice === 'here' || choice === null ? null : choice);
+        onChange(
+          choice === 'here' || choice === null
+            ? null
+            : { kind: 'city', place: choice },
+        );
       }}
       inputValue={query}
       onInputValueChange={setQuery}

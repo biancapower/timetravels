@@ -31,7 +31,7 @@ test('renders the sentence with its two slots', () => {
       <Sentence
         when="now"
         duration={{ hours: 1, minutes: 0 }}
-        place={null}
+        where={null}
         places={[]}
         onWhenChange={vi.fn()}
         onDurationChange={vi.fn()}

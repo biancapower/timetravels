@@ -8,8 +8,9 @@ import { Help } from './pages/Help';
 import { HelpButton } from './pages/HelpButton';
 import { useRoute } from './pages/useRoute';
 import { aliases } from './places/aliases';
-import { buildPlaces, cityOf, type Place } from './places/places';
-import { loadPlace, savePlace } from './places/storage';
+import type { Where } from './places/named';
+import { buildPlaces, cityOf } from './places/places';
+import { loadPlace, loadSavedPlaces, savePlace } from './places/storage';
 import type { When } from './sentence/DirectionPicker';
 import { LiveAnswer } from './sentence/LiveAnswer';
 import {
@@ -35,7 +36,9 @@ export function App({
   const [places] = useState(() =>
     buildPlaces(Intl.supportedValuesOf('timeZone'), aliases),
   );
-  const [place, setPlace] = useState(() => loadPlace(places));
+  const [saved] = useState(() => loadSavedPlaces(places));
+  const [where, setWhere] = useState(() => loadPlace(places, saved));
+  const place = where?.place;
   const [when, setWhen] = useState<When>('now');
   const [duration, setDuration] = useState<Duration>({ hours: 1, minutes: 0 });
   const [anchor, setAnchor] = useState<AnchorSetting>(() => ({
@@ -57,8 +60,8 @@ export function App({
     opener.current = null;
   }, [route.view]);
 
-  const choosePlace = (chosen: Place | null) => {
-    setPlace(chosen);
+  const choosePlace = (chosen: Where | null) => {
+    setWhere(chosen);
     savePlace(chosen);
   };
 
@@ -85,7 +88,7 @@ export function App({
           <Sentence
             when={when}
             duration={duration}
-            place={place}
+            where={where}
             places={places}
             anchor={question.anchor}
             tense={tense}
@@ -97,6 +100,7 @@ export function App({
           <LiveAnswer
             question={question}
             city={place?.city ?? cityOf(zone)}
+            where={where}
             anchorCity={question.anchor.inPlace ? place?.city : cityOf(zone)}
           />
         </main>

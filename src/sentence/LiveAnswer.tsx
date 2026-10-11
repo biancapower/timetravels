@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMinuteClock } from '../clock/useMinuteClock';
+import type { Where } from '../places/named';
 import { Answer } from './Answer';
 import type { Question } from './resolveAnswer';
 import styles from './LiveAnswer.module.css';
@@ -9,6 +10,7 @@ const announcedFor = 5_000;
 interface LiveAnswerProps {
   question: Question;
   city?: string;
+  where?: Where | null;
   anchorCity?: string;
 }
 
@@ -17,12 +19,17 @@ interface LiveAnswerProps {
  * reader hears the new answer when a choice changes it, but not on every
  * minute tick, which would interrupt every sixty seconds.
  */
-export function LiveAnswer({ question, city, anchorCity }: LiveAnswerProps) {
+export function LiveAnswer({
+  question,
+  city,
+  where,
+  anchorCity,
+}: LiveAnswerProps) {
   const now = useMinuteClock();
   const answer = useRef<HTMLDivElement>(null);
   const [announcement, setAnnouncement] = useState('');
 
-  const choices = JSON.stringify({ question, city, anchorCity });
+  const choices = JSON.stringify({ question, city, where, anchorCity });
   const announcedChoices = useRef(choices);
   useEffect(() => {
     if (announcedChoices.current === choices) return;
@@ -45,6 +52,7 @@ export function LiveAnswer({ question, city, anchorCity }: LiveAnswerProps) {
           now={now}
           question={question}
           city={city}
+          where={where}
           anchorCity={anchorCity}
         />
       </div>

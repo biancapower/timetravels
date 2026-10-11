@@ -1,4 +1,5 @@
 import { useIntl } from 'react-intl';
+import type { Where } from '../places/named';
 import { cityOf } from '../places/places';
 import {
   clockMoveAcross,
@@ -20,6 +21,8 @@ interface AnswerProps {
   question: Question;
   /** The city to name in the label; taken from the zone id when omitted. */
   city?: string;
+  /** Home or a named place, to name in the label before its city. */
+  where?: Where | null;
   /** The city whose time the chosen time is, for the note on a skipped or repeated time. */
   anchorCity?: string;
   /** The interface's locale when omitted. */
@@ -30,6 +33,7 @@ export function Answer({
   now,
   question,
   city,
+  where,
   anchorCity,
   locale: given,
 }: AnswerProps) {
@@ -50,7 +54,21 @@ export function Answer({
   return (
     <div className={styles.answer}>
       <p className={styles.time}>{answerTime(today, moment, locale, intl)}</p>
-      <p className={styles.zone}>{zoneLabel(moment, { locale, city })}</p>
+      <p className={styles.zone}>
+        {where?.kind === 'home' || where?.kind === 'named'
+          ? intl.formatMessage(
+              { id: 'answer.named' },
+              {
+                name:
+                  where.kind === 'home'
+                    ? intl.formatMessage({ id: 'placePicker.home' })
+                    : where.name,
+                city,
+                offset: formatOffset(moment, { locale }),
+              },
+            )
+          : zoneLabel(moment, { locale, city })}
+      </p>
       {changes.map((change) => (
         <p
           key={`${change.zone}:${change.instant.toString()}`}
