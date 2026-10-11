@@ -48,3 +48,44 @@
   padding: var(--size-3);
   color: var(--muted);
 }
+
+/* Home and named places share their row with an Edit option. */
+.list {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.item {
+  grid-column: 1 / -1;
+}
+
+.editable {
+  grid-column: 1;
+}
+
+.edit {
+  grid-column: 2;
+  margin-inline-end: var(--size-2);
+  padding: var(--size-1) var(--size-2);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-2);
+  color: var(--accent);
+  font-size: var(--font-size-0);
+}
+
+.add {
+  color: var(--accent);
+}
+
+.add::before {
+  content: '+ ' / '';
+}
+
+.detail {
+  color: var(--muted);
+}
+
+.item[data-highlighted] .detail {
+  color: inherit;
+}

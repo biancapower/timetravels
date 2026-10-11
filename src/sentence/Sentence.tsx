@@ -1,6 +1,6 @@
 import { isValidElement, useState, type ReactNode } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import type { Where } from '../places/named';
+import type { SavedPlaces, Where } from '../places/named';
 import type { Place } from '../places/places';
 import { formatClockTime, type AnchorDay, type Duration } from '../time';
 import { AnchorPicker } from './AnchorPicker';
@@ -17,12 +17,16 @@ interface SentenceProps {
   duration: Duration;
   where: Where | null;
   places: readonly Place[];
+  saved: SavedPlaces;
+  /** Where home starts when it is set up. */
+  homeDefault?: Place;
   anchor: AnchorSetting;
   /** Whether the answer is in the past, which sets the verb of sentence 5. */
   tense: 'past' | 'future';
   onWhenChange: (when: When) => void;
   onDurationChange: (duration: Duration) => void;
   onPlaceChange: (where: Where | null) => void;
+  onSavedChange: (saved: SavedPlaces, where: Where | null) => void;
   onAnchorChange: (anchor: AnchorSetting) => void;
 }
 
@@ -38,11 +42,14 @@ export function Sentence({
   duration,
   where,
   places,
+  saved,
+  homeDefault,
   anchor,
   tense,
   onWhenChange,
   onDurationChange,
   onPlaceChange,
+  onSavedChange,
   onAnchorChange,
 }: SentenceProps) {
   const intl = useIntl();
@@ -89,7 +96,10 @@ export function Sentence({
             <PlacePicker
               where={where}
               places={places}
+              saved={saved}
+              homeDefault={homeDefault}
               onChange={onPlaceChange}
+              onSavedChange={onSavedChange}
               className={styles.slot}
             >
               {chunks}

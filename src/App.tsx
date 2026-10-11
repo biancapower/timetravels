@@ -8,9 +8,14 @@ import { Help } from './pages/Help';
 import { HelpButton } from './pages/HelpButton';
 import { useRoute } from './pages/useRoute';
 import { aliases } from './places/aliases';
-import type { Where } from './places/named';
+import type { SavedPlaces, Where } from './places/named';
 import { buildPlaces, cityOf } from './places/places';
-import { loadPlace, loadSavedPlaces, savePlace } from './places/storage';
+import {
+  loadPlace,
+  loadSavedPlaces,
+  savePlace,
+  saveSavedPlaces,
+} from './places/storage';
 import type { When } from './sentence/DirectionPicker';
 import { LiveAnswer } from './sentence/LiveAnswer';
 import {
@@ -36,7 +41,7 @@ export function App({
   const [places] = useState(() =>
     buildPlaces(Intl.supportedValuesOf('timeZone'), aliases),
   );
-  const [saved] = useState(() => loadSavedPlaces(places));
+  const [saved, setSaved] = useState(() => loadSavedPlaces(places));
   const [where, setWhere] = useState(() => loadPlace(places, saved));
   const place = where?.place;
   const [when, setWhen] = useState<When>('now');
@@ -64,6 +69,16 @@ export function App({
     setWhere(chosen);
     savePlace(chosen);
   };
+  const changeSaved = (next: SavedPlaces, chosen: Where | null) => {
+    setSaved(next);
+    saveSavedPlaces(next);
+    choosePlace(chosen);
+  };
+  // The city the device's zone is named after, rather than an alias that
+  // shares the zone, such as Canberra for Sydney.
+  const homeDefault =
+    places.find((p) => p.zone === zone && p.city === cityOf(zone)) ??
+    places.find((p) => p.zone === zone);
 
   const question: Question = {
     when,
@@ -90,11 +105,14 @@ export function App({
             duration={duration}
             where={where}
             places={places}
+            saved={saved}
+            homeDefault={homeDefault}
             anchor={question.anchor}
             tense={tense}
             onWhenChange={setWhen}
             onDurationChange={setDuration}
             onPlaceChange={choosePlace}
+            onSavedChange={changeSaved}
             onAnchorChange={setAnchor}
           />
           <LiveAnswer

@@ -1,3 +1,4 @@
+import { noSavedPlaces } from '../places/named';
 import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { afterEach, expect, test, vi } from 'vitest';
@@ -37,6 +38,8 @@ test('the sentence’s chosen time follows the interface’s locale', () => {
         duration={{ hours: 1, minutes: 0 }}
         where={null}
         places={[]}
+        saved={noSavedPlaces}
+        onSavedChange={vi.fn()}
         onWhenChange={vi.fn()}
         onDurationChange={vi.fn()}
         onPlaceChange={vi.fn()}

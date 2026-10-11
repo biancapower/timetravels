@@ -1,3 +1,4 @@
+import { noSavedPlaces } from '../places/named';
 import { render, screen, within } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { expect, test, vi } from 'vitest';
@@ -21,6 +22,8 @@ test('the sentence follows the message, so a translation can reorder the slots',
         duration={{ hours: 1, minutes: 0 }}
         where={null}
         places={[]}
+        saved={noSavedPlaces}
+        onSavedChange={vi.fn()}
         onWhenChange={vi.fn()}
         onDurationChange={vi.fn()}
         onPlaceChange={vi.fn()}
@@ -57,6 +60,8 @@ for (const when of ['now', 'later', 'earlier', 'after', 'before'] as const) {
             duration={{ hours: 1, minutes: 0 }}
             where={where}
             places={[london]}
+            saved={noSavedPlaces}
+            onSavedChange={vi.fn()}
             onWhenChange={vi.fn()}
             onDurationChange={vi.fn()}
             onPlaceChange={vi.fn()}
@@ -115,6 +120,8 @@ for (const [when, atMark, atHome] of wording) {
           duration={{ hours: 1, minutes: 0 }}
           where={where}
           places={[london]}
+          saved={noSavedPlaces}
+          onSavedChange={vi.fn()}
           onWhenChange={vi.fn()}
           onDurationChange={vi.fn()}
           onPlaceChange={vi.fn()}

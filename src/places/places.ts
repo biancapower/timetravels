@@ -39,7 +39,7 @@ export function buildPlaces(
   return places.sort((a, b) => a.city.localeCompare(b.city));
 }
 
-function fold(text: string): string {
+export function fold(text: string): string {
   return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 }
 

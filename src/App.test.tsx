@@ -1,3 +1,4 @@
+import { noSavedPlaces } from './places/named';
 import { act, render, screen, within } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { afterEach, expect, test, vi } from 'vitest';
@@ -33,6 +34,8 @@ test('renders the sentence with its two slots', () => {
         duration={{ hours: 1, minutes: 0 }}
         where={null}
         places={[]}
+        saved={noSavedPlaces}
+        onSavedChange={vi.fn()}
         onWhenChange={vi.fn()}
         onDurationChange={vi.fn()}
         onPlaceChange={vi.fn()}
