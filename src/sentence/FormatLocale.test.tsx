@@ -7,8 +7,14 @@ import { question } from '../testing/question';
 import { Answer } from './Answer';
 import { Sentence } from './Sentence';
 
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.useRealTimers();
+});
+
 test('the answer formats dates in the interface’s locale when given none', () => {
-  // 22:00 on Saturday 3 October in Sydney; 24 hours on crosses the change.
+  // 22:00 on Saturday 3 October in Sydney; the next 24 hours cross the
+  // clock change, so the note names its date.
   render(
     <IntlProvider locale="en-AU" messages={catalogues.en}>
       <Answer
@@ -49,12 +55,12 @@ test('the sentence’s chosen time follows the interface’s locale', () => {
   );
 });
 
-afterEach(() => {
-  vi.restoreAllMocks();
-  vi.useRealTimers();
-});
-
 test('the app formats with the browser’s first preferred language', () => {
+  // The test proves nothing where the machine's own default is British.
+  const machine = new Intl.Locale(
+    new Intl.DateTimeFormat().resolvedOptions().locale,
+  );
+  expect(machine.region).not.toBe('GB');
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['en-GB', 'en']);
   vi.useFakeTimers({ now: new Date('2026-10-04T06:05:00Z') });
   render(<App zone="Australia/Sydney" />);
