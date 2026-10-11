@@ -3,17 +3,34 @@
 /** A moment in a particular time zone. */
 export type Moment = Temporal.ZonedDateTime;
 
-/** A span of hours and minutes, each a non-negative whole number; direction comes from Direction. */
+/**
+ * A span, each part a non-negative whole number; direction comes from
+ * Direction. Hours and minutes are exact elapsed time. Years, months, weeks
+ * and days are calendar units: they move the date and keep the clock time.
+ */
 export interface Duration {
+  years?: number;
+  months?: number;
+  weeks?: number;
+  days?: number;
   hours: number;
   minutes: number;
+}
+
+const calendarUnits = ['years', 'months', 'weeks', 'days'] as const;
+
+/** Whether a duration has any calendar part: days, weeks, months or years. */
+export function isCalendar(duration: Duration): boolean {
+  return calendarUnits.some((unit) => (duration[unit] ?? 0) > 0);
 }
 
 export type Direction = 'later' | 'earlier';
 
 /**
- * Moves a moment by a duration in exact elapsed time, not wall-clock
- * time, so a span across a daylight-saving change is the real span.
+ * Moves a moment by a duration. Hours and minutes are exact elapsed time,
+ * so a span across a daylight-saving change is the real span. A calendar
+ * part moves the date first and keeps the clock time, falling back to the
+ * month's last day when the day doesn't exist (Temporal's default).
  */
 export function shift(
   moment: Moment,
@@ -208,16 +225,51 @@ export function anchorAt(
     .toPlainDate()
     .add({ days: day })
     .toPlainDateTime(time);
+  const issue = issueAt(wall, zone);
+  return {
+    moment: wall.toZonedDateTime(zone, {
+      disambiguation: issue === 'repeated' ? 'earlier' : 'compatible',
+    }),
+    issue,
+  };
+}
+
+/** Whether a wall-clock time was skipped, or happened twice, in a zone. */
+function issueAt(wall: Temporal.PlainDateTime, zone: string): AnchorIssue {
   const first = wall.toZonedDateTime(zone, { disambiguation: 'earlier' });
   const last = wall.toZonedDateTime(zone, { disambiguation: 'later' });
-  if (!first.toPlainDateTime().equals(wall)) {
-    return {
-      moment: wall.toZonedDateTime(zone, { disambiguation: 'compatible' }),
-      issue: 'skipped',
-    };
-  }
-  if (!first.equals(last)) return { moment: first, issue: 'repeated' };
-  return { moment: first, issue: 'none' };
+  if (!first.toPlainDateTime().equals(wall)) return 'skipped';
+  return first.equals(last) ? 'none' : 'repeated';
+}
+
+/**
+ * Whether a duration's calendar part lands on a clock time that was
+ * skipped or repeated, before any exact part is added. Temporal then
+ * moves a skipped time on by the jump and takes the first of a repeated
+ * one, as anchorAt does.
+ */
+export function calendarLanding(
+  moment: Moment,
+  duration: Duration,
+  direction: Direction,
+): AnchorIssue {
+  if (!isCalendar(duration)) return 'none';
+  const sign = direction === 'later' ? 1 : -1;
+  const wall = moment.toPlainDateTime().add({
+    years: sign * (duration.years ?? 0),
+    months: sign * (duration.months ?? 0),
+    weeks: sign * (duration.weeks ?? 0),
+    days: sign * (duration.days ?? 0),
+  });
+  return issueAt(wall, moment.timeZoneId);
+}
+
+/** The exact time between two moments, in either order, in hours and minutes. */
+export function elapsed(a: Moment, b: Moment): Duration {
+  const minutes = Math.round(
+    Math.abs(b.epochMilliseconds - a.epochMilliseconds) / 60000,
+  );
+  return { hours: Math.floor(minutes / 60), minutes: minutes % 60 };
 }
 
 /**
