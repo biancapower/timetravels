@@ -48,7 +48,13 @@ button.slot[aria-expanded='true'] {
   text-decoration-color: currentColor;
 }
 
-/* The last slot and the closing punctuation, kept on one line. */
+/* No break between the last slot and the closing punctuation. The slot's
+   own words may still wrap, so a long one can't overflow a narrow screen. */
 .end {
   white-space: nowrap;
+}
+
+.end > * {
+  white-space: normal;
+  text-align: start;
 }

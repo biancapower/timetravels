@@ -131,7 +131,9 @@ export function Sentence({
 /**
  * Groups the last slot with the punctuation after it, such as the closing
  * "?", so the punctuation can't wrap onto a line of its own. Safari breaks
- * between a button and the text after it; Chrome doesn't.
+ * between a button and the text after it; Chrome doesn't. It applies when a
+ * message ends with a slot followed by text, as every sentence does now; a
+ * message ending any other way is left as it is.
  */
 function keepEndTogether(nodes: ReactNode[]): ReactNode[] {
   const end = nodes.at(-1);
