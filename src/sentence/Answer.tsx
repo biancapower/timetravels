@@ -2,7 +2,6 @@ import { useIntl } from 'react-intl';
 import type { Where } from '../places/named';
 import { cityOf } from '../places/places';
 import {
-  clockMoveAcross,
   dayRelation,
   elapsed,
   formatClockTime,
@@ -79,6 +78,21 @@ export function Answer({
     isShort(question.duration)
       ? question.when
       : 'none';
+  // Across a longer calendar span, it's worth saying that the clock time is
+  // kept, when it is: the days were counted on the answer's own clock, from
+  // the time chosen, no hours were added after them, and the landing wasn't
+  // moved.
+  const kept =
+    calendar &&
+    span &&
+    !isShort(question.duration) &&
+    anchored?.issue !== 'skipped' &&
+    landing?.issue === 'none' &&
+    !question.duration.hours &&
+    !question.duration.minutes &&
+    span.start.timeZoneId === question.answerZone &&
+    changes.every((change) => change.zone === question.answerZone);
+  const countsBack = question.when === 'earlier' || question.when === 'before';
   const name =
     where?.kind === 'home'
       ? intl.formatMessage({ id: 'placePicker.home' })
@@ -133,15 +147,25 @@ export function Answer({
                     locale,
                   }),
                   date: longDate(change.wallTime.toPlainDate()),
-                  clock: formatDuration(
-                    intl,
-                    clockMoveAcross(question.duration, change),
-                  ),
-                  span: formatDuration(intl, question.duration),
+                  whose:
+                    change.zone === question.answerZone ? 'answer' : 'other',
+                  // A change forward puts the answer later than counting on
+                  // the clock gives, and earlier than counting back; a change
+                  // back does the opposite.
+                  shift:
+                    (change.direction === 'forward') === !countsBack
+                      ? 'later'
+                      : 'earlier',
+                  count: countsBack ? 'back' : 'on',
                 },
               )}
         </p>
       ))}
+      {kept && changes.length > 0 && (
+        <p className={styles.note}>
+          {intl.formatMessage({ id: 'answer.calendarKept' })}
+        </p>
+      )}
       {landing && landing.issue !== 'none' && (
         <p className={styles.note}>
           {intl.formatMessage(

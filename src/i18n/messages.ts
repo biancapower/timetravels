@@ -27,9 +27,11 @@ const en = {
   'answer.relativeDay': '{relativeDay}, {time}',
   'answer.named': '{name} ({city}, {offset})',
   'answer.transition':
-    '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}, so the clock {tense, select, past {moved} other {moves}} {clock} in these {span}.',
+    '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}, so {whose, select, answer {the answer} other {the time in {city}}} is {amount, plural, =60 {an hour} other {# minutes}} {shift, select, later {later} other {earlier}} than counting {count, select, back {back on} other {on}} the clock gives.',
   'answer.transitionCalendar':
     '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}{reach, select, later {, so {span} from now is {actual} away} earlier {, so {span} ago was {actual} ago} after {, so {span} after {anchor} is {actual} after it} before {, so {span} before {anchor} is {actual} before it} other {}}.',
+  'answer.calendarKept':
+    'Calculations done in days or longer keep the clock time, so the answer is the same time of day.',
   'answer.landingSkipped':
     '{tense, select, past {There was no} other {There’s no}} {time} in {city} on {date}: the clocks {tense, select, past {went} other {go}} forward. This counts from {actual}.',
   'answer.landingRepeated':
