@@ -186,6 +186,8 @@ export function PlacePicker({
           pending.current = null;
         }}
         itemToStringLabel={label}
+        // The library's hidden form field holds this; nothing submits it, so
+        // the shown name will do, and it keeps the stored place out of the page.
         itemToStringValue={label}
         isItemEqualToValue={(a, b) => keyOf(a) === keyOf(b)}
       >
