@@ -49,12 +49,13 @@ test('the sentence’s chosen time follows the interface’s locale', () => {
           whose: 'mine',
         }}
         tense="future"
+        anchorTense="future"
         onAnchorChange={vi.fn()}
       />
     </IntlProvider>,
   );
   expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-    /after 15:00\s*\?$/,
+    /after it’s 15:00\s*\?$/,
   );
 });
 
