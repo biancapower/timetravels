@@ -160,7 +160,7 @@ function tensesOf(question: Question): { tense: Tense; anchorTense: Tense } {
     return { tense: 'future', anchorTense: 'future' };
   const now = Temporal.Now.instant();
   const { moment, anchored } = resolveAnswer(now, question);
-  const tenseOf = (of: Moment | undefined): Tense =>
+  const tenseAt = (of: Moment | undefined): Tense =>
     of && isPast(of, now) ? 'past' : 'future';
-  return { tense: tenseOf(moment), anchorTense: tenseOf(anchored?.moment) };
+  return { tense: tenseAt(moment), anchorTense: tenseAt(anchored?.moment) };
 }
