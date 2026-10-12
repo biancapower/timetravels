@@ -5,6 +5,7 @@ import type { Place } from './places';
 // with no named places.
 const key = 'timetravels.place';
 const savedKey = 'timetravels.savedPlaces';
+const anchorKey = 'timetravels.anchorPlace';
 
 function read(from: string): unknown {
   try {
@@ -89,4 +90,14 @@ export function savePlace(where: Where | null): void {
           ? { name: where.name }
           : null,
   );
+}
+
+/** The third place sentence 5's chosen time was last given in, if it still exists. */
+export function loadAnchorPlace(places: readonly Place[]): Place | null {
+  return findPlace(places, read(anchorKey));
+}
+
+/** Saves the third place, or clears it when the time is mine or the picked place's. */
+export function saveAnchorPlace(place: Place | null): void {
+  write(anchorKey, place);
 }

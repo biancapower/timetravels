@@ -45,6 +45,7 @@ const en = {
   'anchor.yesterday': '{time} yesterday',
   'anchorPlace.mine': 'my time',
   'anchorPlace.theirs': '{city} time',
+  'anchorPlace.other': 'another place…',
   'anchorPlacePicker.label': 'Whose time',
   'anchorPicker.label': 'Choose a time',
   'anchorPicker.time': 'Time',
@@ -118,7 +119,7 @@ const en = {
   'help.anchor':
     '<b>The time to count from</b>, such as “3 pm”, with “after a time” or “before a time”: set a time and whether it is yesterday, today or tomorrow.',
   'help.anchorPlace':
-    '<b>Whose time</b>, “my time” at first: with a place chosen, say whether that time is yours or the place’s.',
+    '<b>Whose time</b>, “my time” at first: with a place chosen, say whether that time is yours, the place’s, or another place’s, such as “3 pm Tokyo time”.',
   'help.questionsTitle': 'Questions it can answer',
   'help.question1': 'What time is it here right now?',
   'help.question2': 'What time is it in London right now?',
@@ -145,7 +146,7 @@ const en = {
     'Every screen is checked against WCAG 2.2 AA in light and dark themes, and every choice works from the keyboard. <link>How it was checked</link>.',
   'about.privacyTitle': 'Privacy',
   'about.privacyStorage':
-    'There are no accounts. The place you choose, your home and the places you name are saved in your browser on this device, and are never sent anywhere. Your browser also keeps a copy of the app itself, so it works offline.',
+    'There are no accounts. The places you choose, your home and the places you name are saved in your browser on this device, and are never sent anywhere. Your browser also keeps a copy of the app itself, so it works offline.',
   'about.privacyAnalytics':
     'The site uses Cloudflare Web Analytics to count page views and measure page speed. It sets no cookies, and Cloudflare says it does not collect or use visitors’ personal data.',
   'about.creditsTitle': 'Credits',

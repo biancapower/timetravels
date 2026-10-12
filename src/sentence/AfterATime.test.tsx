@@ -99,6 +99,79 @@ test('the verb is "was it" when the answer is in the past', async () => {
   expect(screen.getByText(/^Saturday 9:00\sam$/i)).toBeInTheDocument();
 });
 
+async function chooseAnotherPlace(search: string, city: string) {
+  fireEvent.click(within(heading()).getByRole('button', { name: /time$/ }));
+  fireEvent.click(
+    await screen.findByRole('menuitem', { name: 'another place…' }),
+  );
+  const dialog = await screen.findByRole('dialog', { name: 'Choose a place' });
+  fireEvent.change(
+    within(dialog).getByRole('combobox', { name: 'Search for a city' }),
+    { target: { value: search } },
+  );
+  fireEvent.click(within(dialog).getByRole('option', { name: city }));
+}
+
+test('another place’s time is judged by its own today, and is remembered', async () => {
+  pickLondon();
+  render(<App zone="Australia/Sydney" locale="en" />);
+  await choose('right now', 'after a time');
+  await chooseAnotherPlace('los', 'Los Angeles');
+  // Today is Los Angeles' Friday: 10 AM there is 6 pm in London, so an hour
+  // on is already past.
+  expect(
+    await screen.findByRole('heading', {
+      name: named(
+        'What time was it in London 1 hour after 10 AM Los Angeles time?',
+      ),
+    }),
+  ).toBeInTheDocument();
+  expect(screen.getByText(/^Friday 7:00\spm$/i)).toBeInTheDocument();
+  expect(
+    JSON.parse(localStorage.getItem('timetravels.anchorPlace') ?? 'null'),
+  ).toEqual({ city: 'Los Angeles', zone: 'America/Los_Angeles' });
+
+  await choose('Los Angeles time', 'my time');
+  expect(
+    await screen.findByRole('heading', {
+      name: named('What time will it be in London 1 hour after 10 AM my time?'),
+    }),
+  ).toBeInTheDocument();
+  expect(localStorage.getItem('timetravels.anchorPlace')).toBeNull();
+});
+
+test('a remembered third place reads in the sentence, and its skipped time names it', async () => {
+  // 10 am on Saturday 3 October in Sydney; its clocks go forward at 2 am
+  // tomorrow.
+  vi.setSystemTime(new Date('2026-10-03T00:00:00Z'));
+  localStorage.setItem(
+    'timetravels.place',
+    JSON.stringify({ city: 'Tokyo', zone: 'Asia/Tokyo' }),
+  );
+  localStorage.setItem(
+    'timetravels.anchorPlace',
+    JSON.stringify({ city: 'Sydney', zone: 'Australia/Sydney' }),
+  );
+  render(<App zone="Europe/London" locale="en" />);
+  await choose('right now', 'after a time');
+  fireEvent.click(within(heading()).getByRole('button', { name: /AM$/ }));
+  const dialog = await screen.findByRole('dialog', { name: 'Choose a time' });
+  fireEvent.change(within(dialog).getByLabelText('Time'), {
+    target: { value: '02:30' },
+  });
+  const day = within(dialog).getByRole('group', { name: 'Day' });
+  fireEvent.click(within(day).getByRole('radio', { name: 'Tomorrow' }));
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Set' }));
+  expect(
+    await screen.findByRole('heading', {
+      name: named(
+        'What time will it be in Tokyo 1 hour after 2:30 AM tomorrow Sydney time?',
+      ),
+    }),
+  ).toBeInTheDocument();
+  expect(screen.getByText(/^There was no 2:30\sam in Sydney/i)).toBeVisible();
+});
+
 function renderAnswer(now: string, time: string, zoneDay = 0) {
   render(
     <IntlProvider locale="en" messages={catalogues.en}>

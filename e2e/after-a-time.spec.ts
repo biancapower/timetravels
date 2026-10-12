@@ -57,3 +57,85 @@ test('10 hours after 3 pm today, in my time and then London time', async ({
   // Today is London's Friday: 3 pm then plus ten hours is 1 am Saturday.
   await expect(page.getByText(/^tomorrow, Saturday 1:00\sam$/)).toBeVisible();
 });
+
+test('another place’s time, picked by tap or click, and remembered', async ({
+  page,
+}, testInfo) => {
+  const press = (locator: ReturnType<typeof page.getByRole>) =>
+    testInfo.project.use.hasTouch ? locator.tap() : locator.click();
+
+  await page.goto('/');
+  const heading = page.getByRole('heading', { level: 1 });
+  await press(heading.getByRole('button', { name: 'right now' }));
+  await press(page.getByRole('menuitemradio', { name: 'after a time' }));
+  await press(heading.getByRole('button', { name: 'my time' }));
+  await press(page.getByRole('menuitem', { name: 'another place…' }));
+  const search = page.getByRole('dialog', { name: 'Choose a place' });
+  await search.getByRole('combobox', { name: 'Search for a city' }).fill('tok');
+  await press(search.getByRole('option', { name: 'Tokyo' }));
+
+  await expect(heading).toHaveAccessibleName(
+    sentence('What time will it be in London 1 hour after 10 am Tokyo time?'),
+  );
+  await expect(
+    heading.getByRole('button', { name: 'Tokyo time' }),
+  ).toBeFocused();
+  // Today is Tokyo's Saturday: 10 am there is 2 am in London; an hour on is 3 am.
+  await expect(page.getByText(/^tomorrow, Saturday 3:00\sam$/)).toBeVisible();
+
+  await page.reload();
+  await press(heading.getByRole('button', { name: 'right now' }));
+  await press(page.getByRole('menuitemradio', { name: 'after a time' }));
+  await expect(heading).toHaveAccessibleName(
+    sentence('What time will it be in London 1 hour after 10 am Tokyo time?'),
+  );
+});
+
+test('another place’s time, picked by keyboard', async ({ page }) => {
+  await page.goto('/');
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'right now' }).click();
+  await page.getByRole('menuitemradio', { name: 'after a time' }).click();
+
+  await heading.getByRole('button', { name: 'my time' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(
+    page.getByRole('menuitemradio', { name: 'my time' }),
+  ).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await expect(
+    page.getByRole('menuitem', { name: 'another place…' }),
+  ).toBeFocused();
+  await page.keyboard.press('Enter');
+
+  const field = page
+    .getByRole('dialog', { name: 'Choose a place' })
+    .getByRole('combobox', { name: 'Search for a city' });
+  await expect(field).toBeFocused();
+  await page.keyboard.type('tok');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(heading).toHaveAccessibleName(
+    sentence('What time will it be in London 1 hour after 10 am Tokyo time?'),
+  );
+  await expect(
+    heading.getByRole('button', { name: 'Tokyo time' }),
+  ).toBeFocused();
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(
+    page.getByRole('dialog', { name: 'Choose a place' }),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(
+    page.getByRole('dialog', { name: 'Choose a place' }),
+  ).toBeHidden();
+  await expect(
+    heading.getByRole('button', { name: 'Tokyo time' }),
+  ).toBeFocused();
+});

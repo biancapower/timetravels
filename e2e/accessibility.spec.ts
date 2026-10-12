@@ -172,6 +172,11 @@ for (const colorScheme of ['light', 'dark'] as const) {
         page.getByRole('menuitemradio', { name: 'London time' }),
       ).toBeVisible();
       await expectNoViolations(page);
+      await page.getByRole('menuitem', { name: 'another place…' }).click();
+      await expect(
+        page.getByRole('dialog', { name: 'Choose a place' }),
+      ).toBeVisible();
+      await expectNoViolations(page);
       await page.keyboard.press('Escape');
 
       await slot(page, /^\d{1,2}(:\d{2})?\s?[ap]m$/).click();

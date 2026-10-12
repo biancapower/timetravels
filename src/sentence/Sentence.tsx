@@ -66,12 +66,15 @@ export function Sentence({
     { time: formatClockTime(anchor.time, { locale: intl.locale }) },
   );
   const anchorPlaceText =
-    anchor.whose === 'theirs'
-      ? intl.formatMessage(
+    anchor.whose === 'mine'
+      ? intl.formatMessage({ id: 'anchorPlace.mine' })
+      : intl.formatMessage(
           { id: 'anchorPlace.theirs' },
-          { city: where?.place.city },
-        )
-      : intl.formatMessage({ id: 'anchorPlace.mine' });
+          {
+            city:
+              anchor.whose === 'theirs' ? where?.place.city : anchor.whose.city,
+          },
+        );
 
   return (
     <h1 className={styles.sentence}>
@@ -122,6 +125,7 @@ export function Sentence({
             <AnchorPlacePicker
               whose={anchor.whose}
               city={where?.place.city ?? ''}
+              places={places}
               onChange={(whose) => {
                 onAnchorChange({ ...anchor, whose });
               }}
