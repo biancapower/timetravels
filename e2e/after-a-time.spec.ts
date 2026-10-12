@@ -124,9 +124,15 @@ test('another place’s time, picked by keyboard', async ({ page }) => {
   ).toBeFocused();
 
   await page.keyboard.press('Enter');
+  await expect(
+    page.getByRole('menuitemradio', { name: 'my time' }),
+  ).toBeFocused();
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('ArrowDown');
+  await expect(
+    page.getByRole('menuitem', { name: 'another place…' }),
+  ).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(
     page.getByRole('dialog', { name: 'Choose a place' }),
