@@ -9,14 +9,15 @@ import {
   type Landing,
   type Moment,
 } from '../time';
+import type { Place } from '../places/places';
 import type { When } from './DirectionPicker';
 
 /** The chosen time in sentence 5: a time of day, which day, and whose time. */
 export interface AnchorSetting {
   time: Temporal.PlainTime;
   day: AnchorDay;
-  /** The picked place's time rather than the device's. */
-  inPlace: boolean;
+  /** Whose time it is: the device's, the picked place's, or a third place's. */
+  whose: 'mine' | 'theirs' | Place;
 }
 
 export interface Question {
@@ -56,7 +57,12 @@ export function resolveAnswer(
       landing: calendarLanding(today, duration, when) ?? undefined,
     };
   }
-  const anchorZone = anchor.inPlace ? answerZone : deviceZone;
+  const anchorZone =
+    anchor.whose === 'mine'
+      ? deviceZone
+      : anchor.whose === 'theirs'
+        ? answerZone
+        : anchor.whose.zone;
   const anchored = anchorAt(now, anchorZone, anchor.time, anchor.day);
   const direction = when === 'after' ? 'later' : 'earlier';
   const moment = shift(anchored.moment, duration, direction);

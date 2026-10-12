@@ -42,7 +42,7 @@ test('the longest sentence fits 360 px without scrolling sideways', async ({
   const heading = page.getByRole('heading', { level: 1 });
   await heading.getByRole('button', { name: 'right now' }).click();
   await page.getByRole('menuitemradio', { name: 'after a time' }).click();
-  await expect(heading.getByRole('button', { name: 'my time' })).toBeVisible();
+  await expect(heading.getByRole('button', { name: 'here' })).toBeVisible();
   const overflow = await page.evaluate(
     () =>
       document.documentElement.scrollWidth -

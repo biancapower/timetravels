@@ -42,7 +42,7 @@ test('renders the sentence with its two slots', () => {
         anchor={{
           time: Temporal.PlainTime.from('15:00'),
           day: 0,
-          inPlace: false,
+          whose: 'mine',
         }}
         tense="future"
         onAnchorChange={vi.fn()}

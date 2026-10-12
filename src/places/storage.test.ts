@@ -2,8 +2,10 @@ import { afterEach, expect, test, vi } from 'vitest';
 import { noSavedPlaces, type SavedPlaces } from './named';
 import type { Place } from './places';
 import {
+  loadAnchorPlace,
   loadPlace,
   loadSavedPlaces,
+  saveAnchorPlace,
   savePlace,
   saveSavedPlaces,
 } from './storage';
@@ -117,4 +119,21 @@ test('a chosen home or named place that has gone means here', () => {
   expect(loadPlace(places, noSavedPlaces)).toBeNull();
   savePlace({ kind: 'named', name: 'Mark’s place', place: london });
   expect(loadPlace(places, noSavedPlaces)).toBeNull();
+});
+
+test('a third place for the chosen time is loaded again, and cleared', () => {
+  saveAnchorPlace(sydney);
+  expect(loadAnchorPlace(places)).toEqual(sydney);
+  saveAnchorPlace(null);
+  expect(loadAnchorPlace(places)).toBeNull();
+});
+
+test('a third place that is unreadable or not in the list is ignored', () => {
+  localStorage.setItem('timetravels.anchorPlace', '{not json');
+  expect(loadAnchorPlace(places)).toBeNull();
+  localStorage.setItem(
+    'timetravels.anchorPlace',
+    JSON.stringify({ city: 'Atlantis', zone: 'X/Y' }),
+  );
+  expect(loadAnchorPlace(places)).toBeNull();
 });

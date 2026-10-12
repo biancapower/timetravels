@@ -9,10 +9,12 @@ import { HelpButton } from './pages/HelpButton';
 import { useRoute } from './pages/useRoute';
 import { aliases } from './places/aliases';
 import type { SavedPlaces, Where } from './places/named';
-import { buildPlaces, cityOf } from './places/places';
+import { buildPlaces, cityOf, type Place } from './places/places';
 import {
+  loadAnchorPlace,
   loadPlace,
   loadSavedPlaces,
+  saveAnchorPlace,
   savePlace,
   saveSavedPlaces,
 } from './places/storage';
@@ -48,7 +50,7 @@ export function App({
   const [duration, setDuration] = useState<Duration>({ hours: 1, minutes: 0 });
   const [anchor, setAnchor] = useState<AnchorSetting>(() => ({
     ...nextWholeHour(Temporal.Now.instant(), zone),
-    inPlace: false,
+    whose: loadAnchorPlace(places) ?? 'mine',
   }));
 
   const { route, open, close } = useRoute();
@@ -69,6 +71,11 @@ export function App({
     setWhere(chosen);
     savePlace(chosen);
   };
+  const changeAnchor = (next: AnchorSetting) => {
+    setAnchor(next);
+    if (next.whose !== anchor.whose)
+      saveAnchorPlace(typeof next.whose === 'object' ? next.whose : null);
+  };
   const changeSaved = (next: SavedPlaces, chosen: Where | null) => {
     setSaved(next);
     saveSavedPlaces(next);
@@ -83,8 +90,8 @@ export function App({
   const question: Question = {
     when,
     duration,
-    // With no place picked there is only one place, so "my time" is the only reading.
-    anchor: place ? anchor : { ...anchor, inPlace: false },
+    // With no place picked there is only one place, so "here" is the only reading.
+    anchor: place ? anchor : { ...anchor, whose: 'mine' },
     answerZone: place?.zone ?? zone,
     deviceZone: zone,
   };
@@ -113,13 +120,13 @@ export function App({
             onDurationChange={setDuration}
             onPlaceChange={choosePlace}
             onSavedChange={changeSaved}
-            onAnchorChange={setAnchor}
+            onAnchorChange={changeAnchor}
           />
           <LiveAnswer
             question={question}
             city={place?.city ?? cityOf(zone)}
             where={where}
-            anchorCity={question.anchor.inPlace ? place?.city : cityOf(zone)}
+            anchorCity={anchorCityOf(question.anchor.whose, place, zone)}
           />
         </main>
         {/* After the sentence in reading order, though it sits in the top corner. */}
@@ -132,6 +139,15 @@ export function App({
       <UpdateNotice />
     </IntlProvider>
   );
+}
+
+function anchorCityOf(
+  whose: AnchorSetting['whose'],
+  place: Place | undefined,
+  zone: string,
+): string | undefined {
+  if (whose === 'mine') return cityOf(zone);
+  return whose === 'theirs' ? place?.city : whose.city;
 }
 
 function tenseOf(question: Question): 'past' | 'future' {

@@ -165,11 +165,16 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await page.reload();
       await slot(page, 'right now').click();
       await page.getByRole('menuitemradio', { name: 'after a time' }).click();
-      await expect(slot(page, 'my time')).toBeVisible();
+      await expect(slot(page, 'here')).toBeVisible();
       await expectNoViolations(page);
-      await slot(page, 'my time').click();
+      await slot(page, 'here').click();
       await expect(
-        page.getByRole('menuitemradio', { name: 'London time' }),
+        page.getByRole('menuitemradio', { name: 'in London' }),
+      ).toBeVisible();
+      await expectNoViolations(page);
+      await page.getByRole('menuitem', { name: 'another place…' }).click();
+      await expect(
+        page.getByRole('dialog', { name: 'Choose a place' }),
       ).toBeVisible();
       await expectNoViolations(page);
       await page.keyboard.press('Escape');
