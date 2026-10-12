@@ -90,7 +90,7 @@ test('the dialog sets the time and the day', async () => {
   expect(screen.getByText(/^tomorrow, Sunday 4:00\spm$/i)).toBeInTheDocument();
 });
 
-test('the verb is "was it" when the answer is in the past', async () => {
+test('the verb is "was it" when the answer is past, with "it’s" while the chosen time is to come', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
   await choose('right now', 'before a time');
   expect(
