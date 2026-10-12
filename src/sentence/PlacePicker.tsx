@@ -186,6 +186,7 @@ export function PlacePicker({
           pending.current = null;
         }}
         itemToStringLabel={label}
+        itemToStringValue={label}
         isItemEqualToValue={(a, b) => keyOf(a) === keyOf(b)}
       >
         <Combobox.Trigger

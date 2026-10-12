@@ -198,6 +198,7 @@ export function NamedPlaceForm({
                   inputValue={query}
                   onInputValueChange={setQuery}
                   itemToStringLabel={(item) => item.city}
+                  itemToStringValue={(item) => item.city}
                   isItemEqualToValue={(a, b) =>
                     a.city === b.city && a.zone === b.zone
                   }
