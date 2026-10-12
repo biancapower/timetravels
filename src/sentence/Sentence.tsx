@@ -23,7 +23,7 @@ interface SentenceProps {
   anchor: AnchorSetting;
   /** Whether the answer is in the past, which sets the verb of sentence 5. */
   tense: 'past' | 'future';
-  /** Whether the chosen time is past, which drops "it's" before it. */
+  /** Whether the chosen time, or the answer, is past, which drops "it's" before it. */
   anchorTense: 'past' | 'future';
   onWhenChange: (when: When) => void;
   onDurationChange: (duration: Duration) => void;

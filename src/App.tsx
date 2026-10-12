@@ -96,8 +96,8 @@ export function App({
     deviceZone: zone,
   };
   // Sentence 5's verb follows whether its answer is past, and "it's" before
-  // the chosen time whether that time is. Both are worked out whenever the
-  // app renders, which is on any choice, not on the minute tick.
+  // the chosen time whether that time or the answer is. Both are worked out
+  // whenever the app renders, which is on any choice, not on the minute tick.
   const { tense, anchorTense } = tensesOf(question);
 
   return (
@@ -154,7 +154,10 @@ function anchorCityOf(
 
 type Tense = 'past' | 'future';
 
-/** Whether sentence 5's answer and its chosen time are past. */
+/**
+ * Whether sentence 5's answer is past, and whether its chosen time reads as
+ * past: "was it … before it's 10 am" clashes, so a past answer makes it so.
+ */
 function tensesOf(question: Question): { tense: Tense; anchorTense: Tense } {
   if (question.when !== 'after' && question.when !== 'before')
     return { tense: 'future', anchorTense: 'future' };
@@ -162,5 +165,9 @@ function tensesOf(question: Question): { tense: Tense; anchorTense: Tense } {
   const { moment, anchored } = resolveAnswer(now, question);
   const tenseAt = (of: Moment | undefined): Tense =>
     of && isPast(of, now) ? 'past' : 'future';
-  return { tense: tenseAt(moment), anchorTense: tenseAt(anchored?.moment) };
+  const tense = tenseAt(moment);
+  return {
+    tense,
+    anchorTense: tense === 'past' ? 'past' : tenseAt(anchored?.moment),
+  };
 }

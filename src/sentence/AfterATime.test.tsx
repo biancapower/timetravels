@@ -90,12 +90,12 @@ test('the dialog sets the time and the day', async () => {
   expect(screen.getByText(/^tomorrow, Sunday 4:00\spm$/i)).toBeInTheDocument();
 });
 
-test('the verb is "was it" when the answer is past, with "it’s" while the chosen time is to come', async () => {
+test('the verb is "was it" when the answer is past, and drops “it’s” though the chosen time is to come', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
   await choose('right now', 'before a time');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time was it here 1 hour before it’s 10 AM?'),
+      name: named('What time was it here 1 hour before 10 AM?'),
     }),
   ).toBeInTheDocument();
   expect(screen.getByText(/^Saturday 9:00\sam$/i)).toBeInTheDocument();
