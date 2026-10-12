@@ -38,7 +38,7 @@ test('Tab reaches every slot of sentence 5 in reading order', async ({
   await page
     .getByRole('menuitemradio', { name: 'after a time' })
     .press('Enter');
-  await expect(heading.getByRole('button', { name: 'my time' })).toBeVisible();
+  await expect(heading.getByRole('button', { name: 'here' })).toBeVisible();
 
   // Browsers resume tabbing from the last focused element, so start from
   // the first slot and check the order from there.
@@ -48,7 +48,7 @@ test('Tab reaches every slot of sentence 5 in reading order', async ({
     '1 hour',
     'after',
     expect.stringMatching(/^\d{1,2}(:\d{2})? [ap]m$/) as unknown as string,
-    'my time',
+    'here',
   ]);
 });
 
@@ -91,7 +91,7 @@ test('every slot opens with Enter and closes with Escape, returning focus', asyn
     '1 hour',
     'after',
     /^\d{1,2}(:\d{2})?\s?[ap]m$/,
-    'my time',
+    'here',
   ]) {
     await openAndClose(name);
   }

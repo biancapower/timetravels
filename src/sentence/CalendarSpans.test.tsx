@@ -171,7 +171,7 @@ test('a skipped landing doesn’t also count the day’s hours', () => {
 });
 
 test('a change only in the answer’s place doesn’t count the hours', () => {
-  // The day is counted in London, "my time", where nothing changes; the
+  // The day is counted in London, "here", where nothing changes; the
   // change is Sydney's.
   show(
     saturdayEvening,

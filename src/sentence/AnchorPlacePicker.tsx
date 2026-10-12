@@ -20,7 +20,7 @@ interface AnchorPlacePickerProps {
 }
 
 /**
- * Whose time the chosen time is: "my time", say "London time" for the
+ * Whose time the chosen time is: "here", say "in London" for the
  * picked place, or another place's, found with the same search as the
  * place slot.
  */

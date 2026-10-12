@@ -90,7 +90,7 @@ export function App({
   const question: Question = {
     when,
     duration,
-    // With no place picked there is only one place, so "my time" is the only reading.
+    // With no place picked there is only one place, so "here" is the only reading.
     anchor: place ? anchor : { ...anchor, whose: 'mine' },
     answerZone: place?.zone ?? zone,
     deviceZone: zone,

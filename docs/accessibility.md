@@ -13,7 +13,7 @@ The question is the page's main heading. Each slot is a button inside it, named 
 | The time ("right now", "from now", "ago", "after", "before") | "Choose when" menu of radio items | Menu with radio items |
 | The duration ("1 hour") | "Choose how long" dialog with a text field and common durations | Dialog with a form |
 | The chosen time ("3 pm") | "Choose a time" dialog with a time field and a day choice | Dialog with a form |
-| Whose time ("my time", "London time", "Tokyo time") | "Whose time" menu of radio items, then an "another place…" item | Menu with radio items and one plain item |
+| Whose time ("here", "in London", "in Tokyo") | "Whose time" menu of radio items, then an "another place…" item | Menu with radio items and one plain item |
 | "another place…" in the Whose time menu | "Choose a place" dialog, opened against the slot once the menu has closed, with a search combobox and a listbox of cities; picking one closes it and returns focus to the slot | WAI-ARIA combobox inside a dialog |
 
 Errors in the duration and time pickers and the named-place form appear in an alert region that is always present, so they are announced when they appear.

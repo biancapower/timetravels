@@ -175,7 +175,7 @@ test('"ago" across a change back reads later than counting back', () => {
   ).toBeInTheDocument();
 });
 
-test('a change only in the answer’s place, after my time, speaks of the answer', () => {
+test('a change only in the answer’s place, after a time here, speaks of the answer', () => {
   // Noon in London is 10 pm in Sydney; 10 hours on crosses Sydney's 2 am.
   show(
     '2026-10-03T11:00:00Z',

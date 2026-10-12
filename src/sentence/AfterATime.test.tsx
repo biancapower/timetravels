@@ -45,13 +45,13 @@ test('choosing "after a time" anchors on the next whole hour', async () => {
   ).toBeInTheDocument();
 });
 
-test('with a place, "my time" switches to the place’s time and changes the answer', async () => {
+test('with a place, "here" switches to the place’s time and changes the answer', async () => {
   pickLondon();
   render(<App zone="Australia/Sydney" locale="en" />);
   await choose('right now', 'after a time');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time will it be in London 1 hour after 10 AM my time?'),
+      name: named('What time will it be in London 1 hour after 10 AM here?'),
     }),
   ).toBeInTheDocument();
   // 11 am in Sydney is 1 am in London (BST, UTC+1).
@@ -59,10 +59,10 @@ test('with a place, "my time" switches to the place’s time and changes the ans
     screen.getByText(/^tomorrow, Saturday 1:00\sam$/i),
   ).toBeInTheDocument();
 
-  await choose('my time', 'London time');
+  await choose('here', 'in London');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time was it in London 1 hour after 10 AM London time?'),
+      name: named('What time was it in London 1 hour after 10 AM in London?'),
     }),
   ).toBeInTheDocument();
   // "Today" is London's Friday, so 10 AM plus an hour is already past.
@@ -100,7 +100,7 @@ test('the verb is "was it" when the answer is in the past', async () => {
 });
 
 async function chooseAnotherPlace(search: string, city: string) {
-  fireEvent.click(within(heading()).getByRole('button', { name: /time$/ }));
+  fireEvent.click(within(heading()).getByRole('button', { name: 'here' }));
   fireEvent.click(
     await screen.findByRole('menuitem', { name: 'another place…' }),
   );
@@ -122,7 +122,7 @@ test('another place’s time is judged by its own today, and is remembered', asy
   expect(
     await screen.findByRole('heading', {
       name: named(
-        'What time was it in London 1 hour after 10 AM Los Angeles time?',
+        'What time was it in London 1 hour after 10 AM in Los Angeles?',
       ),
     }),
   ).toBeInTheDocument();
@@ -131,10 +131,10 @@ test('another place’s time is judged by its own today, and is remembered', asy
     JSON.parse(localStorage.getItem('timetravels.anchorPlace') ?? 'null'),
   ).toEqual({ city: 'Los Angeles', zone: 'America/Los_Angeles' });
 
-  await choose('Los Angeles time', 'my time');
+  await choose('in Los Angeles', 'here');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time will it be in London 1 hour after 10 AM my time?'),
+      name: named('What time will it be in London 1 hour after 10 AM here?'),
     }),
   ).toBeInTheDocument();
   expect(localStorage.getItem('timetravels.anchorPlace')).toBeNull();
@@ -144,7 +144,7 @@ test.each([
   ['unreadable', '{not json'],
   ['no longer offered', JSON.stringify({ city: 'Atlantis', zone: 'X/Y' })],
 ])(
-  'a remembered third place that is %s falls back to my time',
+  'a remembered third place that is %s falls back to here',
   async (_, stored) => {
     pickLondon();
     localStorage.setItem('timetravels.anchorPlace', stored);
@@ -152,9 +152,7 @@ test.each([
     await choose('right now', 'after a time');
     expect(
       await screen.findByRole('heading', {
-        name: named(
-          'What time will it be in London 1 hour after 10 AM my time?',
-        ),
+        name: named('What time will it be in London 1 hour after 10 AM here?'),
       }),
     ).toBeInTheDocument();
   },
@@ -185,7 +183,7 @@ test('a remembered third place reads in the sentence, and its skipped time names
   expect(
     await screen.findByRole('heading', {
       name: named(
-        'What time will it be in Tokyo 1 hour after 2:30 AM tomorrow Sydney time?',
+        'What time will it be in Tokyo 1 hour after 2:30 AM tomorrow in Sydney?',
       ),
     }),
   ).toBeInTheDocument();
