@@ -131,6 +131,7 @@ test('another place’s time, picked by keyboard', async ({ page }) => {
   await expect(
     page.getByRole('dialog', { name: 'Choose a place' }),
   ).toBeVisible();
+  await page.keyboard.type('par');
   await page.keyboard.press('Escape');
   await expect(
     page.getByRole('dialog', { name: 'Choose a place' }),
