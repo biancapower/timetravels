@@ -15,8 +15,8 @@ import type { When } from './DirectionPicker';
 export interface AnchorSetting {
   time: Temporal.PlainTime;
   day: AnchorDay;
-  /** The picked place's time rather than the device's. */
-  inPlace: boolean;
+  /** Whose time it is: the device's, or the picked place's. */
+  whose: 'mine' | 'theirs';
 }
 
 export interface Question {
@@ -56,7 +56,7 @@ export function resolveAnswer(
       landing: calendarLanding(today, duration, when) ?? undefined,
     };
   }
-  const anchorZone = anchor.inPlace ? answerZone : deviceZone;
+  const anchorZone = anchor.whose === 'theirs' ? answerZone : deviceZone;
   const anchored = anchorAt(now, anchorZone, anchor.time, anchor.day);
   const direction = when === 'after' ? 'later' : 'earlier';
   const moment = shift(anchored.moment, duration, direction);

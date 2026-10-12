@@ -48,7 +48,7 @@ export function App({
   const [duration, setDuration] = useState<Duration>({ hours: 1, minutes: 0 });
   const [anchor, setAnchor] = useState<AnchorSetting>(() => ({
     ...nextWholeHour(Temporal.Now.instant(), zone),
-    inPlace: false,
+    whose: 'mine',
   }));
 
   const { route, open, close } = useRoute();
@@ -84,7 +84,7 @@ export function App({
     when,
     duration,
     // With no place picked there is only one place, so "my time" is the only reading.
-    anchor: place ? anchor : { ...anchor, inPlace: false },
+    anchor: place ? anchor : { ...anchor, whose: 'mine' },
     answerZone: place?.zone ?? zone,
     deviceZone: zone,
   };
@@ -119,7 +119,9 @@ export function App({
             question={question}
             city={place?.city ?? cityOf(zone)}
             where={where}
-            anchorCity={question.anchor.inPlace ? place?.city : cityOf(zone)}
+            anchorCity={
+              question.anchor.whose === 'theirs' ? place?.city : cityOf(zone)
+            }
           />
         </main>
         {/* After the sentence in reading order, though it sits in the top corner. */}

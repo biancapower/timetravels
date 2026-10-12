@@ -10,7 +10,7 @@ export function question(
   return {
     when: 'now',
     duration: { hours: 1, minutes: 0 },
-    anchor: { time: Temporal.PlainTime.from('15:00'), day: 0, inPlace: false },
+    anchor: { time: Temporal.PlainTime.from('15:00'), day: 0, whose: 'mine' },
     answerZone: zone,
     deviceZone: zone,
     ...overrides,

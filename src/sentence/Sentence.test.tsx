@@ -29,7 +29,7 @@ test('the sentence follows the message, so a translation can reorder the slots',
         anchor={{
           time: Temporal.PlainTime.from('15:00'),
           day: 0,
-          inPlace: false,
+          whose: 'mine',
         }}
         tense="future"
         onAnchorChange={vi.fn()}
@@ -67,7 +67,7 @@ for (const when of ['now', 'later', 'earlier', 'after', 'before'] as const) {
             anchor={{
               time: Temporal.PlainTime.from('15:00'),
               day: 0,
-              inPlace: false,
+              whose: 'mine',
             }}
             tense="future"
             onAnchorChange={vi.fn()}
@@ -127,7 +127,7 @@ for (const [when, atMark, atHome] of wording) {
           anchor={{
             time: Temporal.PlainTime.from('15:00'),
             day: 0,
-            inPlace: false,
+            whose: 'mine',
           }}
           tense="future"
           onAnchorChange={vi.fn()}

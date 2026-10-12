@@ -103,7 +103,7 @@ test('a change only in the chosen time’s place names that place', () => {
       anchor: {
         time: Temporal.PlainTime.from('22:00'),
         day: 0,
-        inPlace: false,
+        whose: 'mine',
       },
     },
     { city: 'Sydney', anchorCity: 'London' },
@@ -150,7 +150,7 @@ test('"before a time" across a change counts back', () => {
       anchor: {
         time: Temporal.PlainTime.from('10:00'),
         day: 1,
-        inPlace: false,
+        whose: 'mine',
       },
     },
     { city: 'Sydney' },
@@ -187,7 +187,7 @@ test('a change only in the answer’s place, after my time, speaks of the answer
       anchor: {
         time: Temporal.PlainTime.from('12:00'),
         day: 0,
-        inPlace: false,
+        whose: 'mine',
       },
     },
     { city: 'Sydney', anchorCity: 'London' },

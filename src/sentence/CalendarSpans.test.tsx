@@ -83,7 +83,7 @@ test('a day after a chosen time says how long after it is', () => {
   show(saturdayEvening, 'Australia/Sydney', {
     when: 'after',
     duration: day,
-    anchor: { time: Temporal.PlainTime.from('22:00'), day: 0, inPlace: false },
+    anchor: { time: Temporal.PlainTime.from('22:00'), day: 0, whose: 'mine' },
   });
   expect(
     screen.getByText(
@@ -183,7 +183,7 @@ test('a change only in the answer’s place doesn’t count the hours', () => {
       anchor: {
         time: Temporal.PlainTime.from('12:00'),
         day: 0,
-        inPlace: false,
+        whose: 'mine',
       },
     },
     { city: 'Sydney', anchorCity: 'London' },
@@ -202,7 +202,7 @@ test('months after a skipped chosen time don’t claim the same time of day', ()
   show(saturdayEvening, 'Australia/Sydney', {
     when: 'after',
     duration: { months: 7, hours: 0, minutes: 0 },
-    anchor: { time: Temporal.PlainTime.from('02:30'), day: 1, inPlace: false },
+    anchor: { time: Temporal.PlainTime.from('02:30'), day: 1, whose: 'mine' },
   });
   expect(screen.getByText(/go back an hour at 3 am/)).toBeInTheDocument();
   expect(screen.queryByText(/keep the clock time/)).not.toBeInTheDocument();

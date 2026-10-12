@@ -109,7 +109,7 @@ function renderAnswer(now: string, time: string, zoneDay = 0) {
           anchor: {
             time: Temporal.PlainTime.from(time),
             day: zoneDay as -1 | 0 | 1,
-            inPlace: false,
+            whose: 'mine',
           },
         })}
         anchorCity="Sydney"

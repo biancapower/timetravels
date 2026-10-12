@@ -65,12 +65,13 @@ export function Sentence({
     { id: anchorDayMessage[anchor.day] },
     { time: formatClockTime(anchor.time, { locale: intl.locale }) },
   );
-  const anchorPlaceText = anchor.inPlace
-    ? intl.formatMessage(
-        { id: 'anchorPlace.theirs' },
-        { city: where?.place.city },
-      )
-    : intl.formatMessage({ id: 'anchorPlace.mine' });
+  const anchorPlaceText =
+    anchor.whose === 'theirs'
+      ? intl.formatMessage(
+          { id: 'anchorPlace.theirs' },
+          { city: where?.place.city },
+        )
+      : intl.formatMessage({ id: 'anchorPlace.mine' });
 
   return (
     <h1 className={styles.sentence}>
@@ -119,10 +120,10 @@ export function Sentence({
           ),
           anchorPlace: (chunks: ReactNode[]) => (
             <AnchorPlacePicker
-              inPlace={anchor.inPlace}
+              whose={anchor.whose}
               city={where?.place.city ?? ''}
-              onChange={(inPlace) => {
-                onAnchorChange({ ...anchor, inPlace });
+              onChange={(whose) => {
+                onAnchorChange({ ...anchor, whose });
               }}
               className={styles.slot}
             >

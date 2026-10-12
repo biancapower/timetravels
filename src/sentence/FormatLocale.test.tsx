@@ -46,7 +46,7 @@ test('the sentence’s chosen time follows the interface’s locale', () => {
         anchor={{
           time: Temporal.PlainTime.from('15:00'),
           day: 0,
-          inPlace: false,
+          whose: 'mine',
         }}
         tense="future"
         onAnchorChange={vi.fn()}

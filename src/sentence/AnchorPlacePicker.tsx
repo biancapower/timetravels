@@ -2,12 +2,12 @@ import { Menu } from '@base-ui/react/menu';
 import type { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import styles from './Picker.module.css';
+import type { AnchorSetting } from './resolveAnswer';
 
 interface AnchorPlacePickerProps {
-  /** The chosen time is the picked place's time rather than the device's. */
-  inPlace: boolean;
+  whose: AnchorSetting['whose'];
   city: string;
-  onChange: (inPlace: boolean) => void;
+  onChange: (whose: AnchorSetting['whose']) => void;
   className?: string;
   /** The slot's text, from the sentence's message. */
   children: ReactNode;
@@ -15,7 +15,7 @@ interface AnchorPlacePickerProps {
 
 /** Whose time the chosen time is: "my time" or, say, "London time". */
 export function AnchorPlacePicker({
-  inPlace,
+  whose,
   city,
   onChange,
   className,
@@ -31,12 +31,7 @@ export function AnchorPlacePicker({
             className={styles.popup}
             aria-label={intl.formatMessage({ id: 'anchorPlacePicker.label' })}
           >
-            <Menu.RadioGroup
-              value={inPlace ? 'theirs' : 'mine'}
-              onValueChange={(value: 'mine' | 'theirs') => {
-                onChange(value === 'theirs');
-              }}
-            >
+            <Menu.RadioGroup value={whose} onValueChange={onChange}>
               <Menu.RadioItem value="mine" closeOnClick className={styles.item}>
                 {intl.formatMessage({ id: 'anchorPlace.mine' })}
               </Menu.RadioItem>
