@@ -194,20 +194,21 @@ for (const colorScheme of ['light', 'dark'] as const) {
 test('no field holds raw data, and hidden fields are hidden from assistive technology', async ({
   page,
 }) => {
-  const expectPlainFields = async () => {
-    const fields = await page.locator('input').evaluateAll((inputs) =>
-      inputs.map((input) => ({
-        value: (input as HTMLInputElement).value,
-        hidden:
-          (input as HTMLInputElement).type === 'hidden' ||
-          input.getAttribute('aria-hidden') === 'true',
-        visible: input.getBoundingClientRect().width > 1,
-      })),
-    );
-    expect(fields.filter((field) => /^[{[]/.test(field.value))).toEqual([]);
-    expect(fields.filter((field) => !field.visible && !field.hidden)).toEqual(
-      [],
-    );
+  // The pickers keep a hidden form field each, out of the Tab order; a screen
+  // reader must not land on it, and it must hold a name, not stored data.
+  const expectPlainFields = async (hiddenValues: string[]) => {
+    const values = await page
+      .locator('input')
+      .evaluateAll((inputs) =>
+        inputs.map((input) => (input as HTMLInputElement).value),
+      );
+    expect(values.filter((value) => /^[{[]/.test(value))).toEqual([]);
+    const hidden = page.locator('input[tabindex="-1"]');
+    await expect(hidden).toHaveCount(hiddenValues.length);
+    for (const [i, value] of hiddenValues.entries()) {
+      await expect(hidden.nth(i)).toHaveAttribute('aria-hidden', 'true');
+      await expect(hidden.nth(i)).toHaveValue(value);
+    }
   };
 
   await page.goto('/');
@@ -218,16 +219,16 @@ test('no field holds raw data, and hidden fields are hidden from assistive techn
     );
   });
   await page.reload();
-  await expectPlainFields();
+  await expectPlainFields(['London']);
 
   await slot(page, 'London').click();
   await expect(page.getByRole('combobox')).toBeVisible();
-  await expectPlainFields();
+  await expectPlainFields(['London']);
   await page.getByRole('option', { name: /^Home/ }).click();
   await expect(
     page.getByRole('dialog', { name: 'Where is home?' }),
   ).toBeVisible();
-  await expectPlainFields();
+  await expectPlainFields(['London', 'Sydney']);
   await page.keyboard.press('Escape');
 
   await slot(page, 'right now').click();
@@ -237,5 +238,5 @@ test('no field holds raw data, and hidden fields are hidden from assistive techn
   await expect(
     page.getByRole('dialog', { name: 'Choose a place' }),
   ).toBeVisible();
-  await expectPlainFields();
+  await expectPlainFields(['London', '']);
 });
