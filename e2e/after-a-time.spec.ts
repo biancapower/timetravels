@@ -28,14 +28,14 @@ test('10 hours after 3 pm today, here and then in London', async ({
   await press(heading.getByRole('button', { name: 'right now' }));
   await press(page.getByRole('menuitemradio', { name: 'after a time' }));
   await expect(heading).toHaveAccessibleName(
-    sentence('What time will it be in London 1 hour after 10 am here?'),
+    sentence('What time will it be in London 1 hour after it’s 10 am here?'),
   );
 
   await press(heading.getByRole('button', { name: '1 hour' }));
   await page.getByRole('textbox', { name: 'Type a duration' }).fill('10');
   await page.keyboard.press('Enter');
   await expect(heading).toHaveAccessibleName(
-    sentence('What time will it be in London 10 hours after 10 am here?'),
+    sentence('What time will it be in London 10 hours after it’s 10 am here?'),
   );
 
   await press(heading.getByRole('button', { name: '10 am' }));
@@ -44,7 +44,7 @@ test('10 hours after 3 pm today, here and then in London', async ({
   await expect(dialog.getByRole('radio', { name: 'Today' })).toBeChecked();
   await press(dialog.getByRole('button', { name: 'Set' }));
   await expect(heading).toHaveAccessibleName(
-    sentence('What time will it be in London 10 hours after 3 pm here?'),
+    sentence('What time will it be in London 10 hours after it’s 3 pm here?'),
   );
   // 3 pm in Sydney is 5 am in London; ten hours on is 3 pm.
   await expect(page.getByText(/^tomorrow, Saturday 3:00\spm$/)).toBeVisible();
@@ -75,7 +75,9 @@ test('another place’s time, picked by tap or click, and remembered', async ({
   await press(search.getByRole('option', { name: 'Tokyo' }));
 
   await expect(heading).toHaveAccessibleName(
-    sentence('What time will it be in London 1 hour after 10 am in Tokyo?'),
+    sentence(
+      'What time will it be in London 1 hour after it’s 10 am in Tokyo?',
+    ),
   );
   await expect(heading.getByRole('button', { name: 'in Tokyo' })).toBeFocused();
   // Today is Tokyo's Saturday: 10 am there is 2 am in London; an hour on is 3 am.
@@ -85,7 +87,9 @@ test('another place’s time, picked by tap or click, and remembered', async ({
   await press(heading.getByRole('button', { name: 'right now' }));
   await press(page.getByRole('menuitemradio', { name: 'after a time' }));
   await expect(heading).toHaveAccessibleName(
-    sentence('What time will it be in London 1 hour after 10 am in Tokyo?'),
+    sentence(
+      'What time will it be in London 1 hour after it’s 10 am in Tokyo?',
+    ),
   );
 });
 
@@ -113,7 +117,9 @@ test('another place’s time, picked by keyboard', async ({ page }) => {
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect(heading).toHaveAccessibleName(
-    sentence('What time will it be in London 1 hour after 10 am in Tokyo?'),
+    sentence(
+      'What time will it be in London 1 hour after it’s 10 am in Tokyo?',
+    ),
   );
   await expect(heading.getByRole('button', { name: 'in Tokyo' })).toBeFocused();
 

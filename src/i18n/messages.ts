@@ -17,13 +17,13 @@ const en = {
   'sentence.earlierIn':
     'What time was it {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>ago</direction>?',
   'sentence.afterHere':
-    '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <duration>{length}</duration> <direction>after</direction> <anchor>{anchorText}</anchor>?',
+    '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <duration>{length}</duration> <direction>after</direction> {anchorTense, select, past {} other {it’s }}<anchor>{anchorText}</anchor>?',
   'sentence.afterIn':
-    '{tense, select, past {What time was it} other {What time will it be}} {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>after</direction> <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
+    '{tense, select, past {What time was it} other {What time will it be}} {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>after</direction> {anchorTense, select, past {} other {it’s }}<anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
   'sentence.beforeHere':
-    '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <duration>{length}</duration> <direction>before</direction> <anchor>{anchorText}</anchor>?',
+    '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <duration>{length}</duration> <direction>before</direction> {anchorTense, select, past {} other {it’s }}<anchor>{anchorText}</anchor>?',
   'sentence.beforeIn':
-    '{tense, select, past {What time was it} other {What time will it be}} {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>before</direction> <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
+    '{tense, select, past {What time was it} other {What time will it be}} {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>before</direction> {anchorTense, select, past {} other {it’s }}<anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
   'answer.relativeDay': '{relativeDay}, {time}',
   'answer.named': '{name} ({city}, {offset})',
   'answer.transition':
@@ -125,7 +125,8 @@ const en = {
   'help.question2': 'What time is it in London right now?',
   'help.question3': 'What time will it be in London 10 hours from now?',
   'help.question4': 'What time was it in London 8 hours ago?',
-  'help.question5': 'What time will it be in London 10 hours after 3 pm here?',
+  'help.question5':
+    'What time will it be in London 10 hours after it’s 3 pm here?',
   'help.clocks':
     'If the clocks change during the time you ask about, a note under the answer says so.',
   'help.offline':

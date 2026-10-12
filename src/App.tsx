@@ -26,7 +26,7 @@ import {
   type Question,
 } from './sentence/resolveAnswer';
 import { Sentence } from './sentence/Sentence';
-import { isPast, nextWholeHour, type Duration } from './time';
+import { isPast, nextWholeHour, type Duration, type Moment } from './time';
 import { UpdateNotice } from './UpdateNotice';
 
 interface AppProps {
@@ -95,9 +95,10 @@ export function App({
     answerZone: place?.zone ?? zone,
     deviceZone: zone,
   };
-  // Sentence 5's verb follows whether its answer is past. It is worked out
-  // whenever the app renders, which is on any choice, not on the minute tick.
-  const tense = tenseOf(question);
+  // Sentence 5's verb follows whether its answer is past, and "it's" before
+  // the chosen time whether that time is. Both are worked out whenever the
+  // app renders, which is on any choice, not on the minute tick.
+  const { tense, anchorTense } = tensesOf(question);
 
   return (
     <IntlProvider
@@ -116,6 +117,7 @@ export function App({
             homeDefault={homeDefault}
             anchor={question.anchor}
             tense={tense}
+            anchorTense={anchorTense}
             onWhenChange={setWhen}
             onDurationChange={setDuration}
             onPlaceChange={choosePlace}
@@ -150,8 +152,15 @@ function anchorCityOf(
   return whose === 'theirs' ? place?.city : whose.city;
 }
 
-function tenseOf(question: Question): 'past' | 'future' {
-  if (question.when !== 'after' && question.when !== 'before') return 'future';
+type Tense = 'past' | 'future';
+
+/** Whether sentence 5's answer and its chosen time are past. */
+function tensesOf(question: Question): { tense: Tense; anchorTense: Tense } {
+  if (question.when !== 'after' && question.when !== 'before')
+    return { tense: 'future', anchorTense: 'future' };
   const now = Temporal.Now.instant();
-  return isPast(resolveAnswer(now, question).moment, now) ? 'past' : 'future';
+  const { moment, anchored } = resolveAnswer(now, question);
+  const tenseOf = (of: Moment | undefined): Tense =>
+    of && isPast(of, now) ? 'past' : 'future';
+  return { tense: tenseOf(moment), anchorTense: tenseOf(anchored?.moment) };
 }

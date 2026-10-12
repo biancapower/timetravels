@@ -45,6 +45,7 @@ test('renders the sentence with its two slots', () => {
           whose: 'mine',
         }}
         tense="future"
+        anchorTense="future"
         onAnchorChange={vi.fn()}
       />
     </IntlProvider>,

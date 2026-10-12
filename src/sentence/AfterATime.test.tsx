@@ -40,7 +40,7 @@ test('choosing "after a time" anchors on the next whole hour', async () => {
   await choose('right now', 'after a time');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time will it be here 1 hour after 10 AM?'),
+      name: named('What time will it be here 1 hour after it’s 10 AM?'),
     }),
   ).toBeInTheDocument();
 });
@@ -51,7 +51,9 @@ test('with a place, "here" switches to the place’s time and changes the answer
   await choose('right now', 'after a time');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time will it be in London 1 hour after 10 AM here?'),
+      name: named(
+        'What time will it be in London 1 hour after it’s 10 AM here?',
+      ),
     }),
   ).toBeInTheDocument();
   // 11 am in Sydney is 1 am in London (BST, UTC+1).
@@ -82,7 +84,7 @@ test('the dialog sets the time and the day', async () => {
   fireEvent.click(within(dialog).getByRole('button', { name: 'Set' }));
   expect(
     await screen.findByRole('heading', {
-      name: named('What time will it be here 1 hour after 3 PM tomorrow?'),
+      name: named('What time will it be here 1 hour after it’s 3 PM tomorrow?'),
     }),
   ).toBeInTheDocument();
   expect(screen.getByText(/^tomorrow, Sunday 4:00\spm$/i)).toBeInTheDocument();
@@ -93,7 +95,7 @@ test('the verb is "was it" when the answer is in the past', async () => {
   await choose('right now', 'before a time');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time was it here 1 hour before 10 AM?'),
+      name: named('What time was it here 1 hour before it’s 10 AM?'),
     }),
   ).toBeInTheDocument();
   expect(screen.getByText(/^Saturday 9:00\sam$/i)).toBeInTheDocument();
@@ -134,7 +136,9 @@ test('another place’s time is judged by its own today, and is remembered', asy
   await choose('in Los Angeles', 'here');
   expect(
     await screen.findByRole('heading', {
-      name: named('What time will it be in London 1 hour after 10 AM here?'),
+      name: named(
+        'What time will it be in London 1 hour after it’s 10 AM here?',
+      ),
     }),
   ).toBeInTheDocument();
   expect(localStorage.getItem('timetravels.anchorPlace')).toBeNull();
@@ -152,7 +156,9 @@ test.each([
     await choose('right now', 'after a time');
     expect(
       await screen.findByRole('heading', {
-        name: named('What time will it be in London 1 hour after 10 AM here?'),
+        name: named(
+          'What time will it be in London 1 hour after it’s 10 AM here?',
+        ),
       }),
     ).toBeInTheDocument();
   },
@@ -183,7 +189,7 @@ test('a remembered third place reads in the sentence, and its skipped time names
   expect(
     await screen.findByRole('heading', {
       name: named(
-        'What time will it be in Tokyo 1 hour after 2:30 AM tomorrow in Sydney?',
+        'What time will it be in Tokyo 1 hour after it’s 2:30 AM tomorrow in Sydney?',
       ),
     }),
   ).toBeInTheDocument();
@@ -223,15 +229,32 @@ test('a chosen time the clocks repeated gets a note', () => {
   expect(note).toHaveTextContent(/GMT\+11/);
 });
 
-test('the verb is set by choices, not by the clock passing the answer', async () => {
+test('a chosen time that has passed drops “it’s”, whatever the answer’s tense', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
   await choose('right now', 'after a time');
-  const future = named('What time will it be here 1 hour after 10 AM?');
+  fireEvent.click(within(heading()).getByRole('button', { name: '10 AM' }));
+  const dialog = await screen.findByRole('dialog', { name: 'Choose a time' });
+  fireEvent.change(within(dialog).getByLabelText('Time'), {
+    target: { value: '09:00' },
+  });
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Set' }));
+  // 9 AM has passed; an hour on, 10 AM, is still to come.
+  expect(
+    await screen.findByRole('heading', {
+      name: named('What time will it be here 1 hour after 9 AM?'),
+    }),
+  ).toBeInTheDocument();
+});
+
+test('the verb and “it’s” are set by choices, not by the clock passing them', async () => {
+  render(<App zone="Australia/Sydney" locale="en" />);
+  await choose('right now', 'after a time');
+  const future = named('What time will it be here 1 hour after it’s 10 AM?');
   expect(
     await screen.findByRole('heading', { name: future }),
   ).toBeInTheDocument();
 
-  // Noon: the answer, 11 am, is now past, but nothing was chosen.
+  // Noon: 10 am and the answer, 11 am, are now past, but nothing was chosen.
   vi.setSystemTime(new Date('2026-10-10T01:00:00Z'));
   act(() => {
     document.dispatchEvent(new Event('visibilitychange'));

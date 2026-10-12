@@ -32,6 +32,7 @@ test('the sentence follows the message, so a translation can reorder the slots',
           whose: 'mine',
         }}
         tense="future"
+        anchorTense="future"
         onAnchorChange={vi.fn()}
       />
     </IntlProvider>,
@@ -70,6 +71,7 @@ for (const when of ['now', 'later', 'earlier', 'after', 'before'] as const) {
               whose: 'mine',
             }}
             tense="future"
+            anchorTense="future"
             onAnchorChange={vi.fn()}
           />
         </IntlProvider>,
@@ -101,13 +103,13 @@ const wording = [
   ],
   [
     'after',
-    'What time will it be at Mark’s place 1 hour after 3 PM here?',
-    'What time will it be at home 1 hour after 3 PM here?',
+    'What time will it be at Mark’s place 1 hour after it’s 3 PM here?',
+    'What time will it be at home 1 hour after it’s 3 PM here?',
   ],
   [
     'before',
-    'What time will it be at Mark’s place 1 hour before 3 PM here?',
-    'What time will it be at home 1 hour before 3 PM here?',
+    'What time will it be at Mark’s place 1 hour before it’s 3 PM here?',
+    'What time will it be at home 1 hour before it’s 3 PM here?',
   ],
 ] as const;
 for (const [when, atMark, atHome] of wording) {
@@ -130,6 +132,7 @@ for (const [when, atMark, atHome] of wording) {
             whose: 'mine',
           }}
           tense="future"
+          anchorTense="future"
           onAnchorChange={vi.fn()}
         />
       </IntlProvider>
