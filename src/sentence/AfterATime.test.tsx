@@ -140,6 +140,26 @@ test('another place’s time is judged by its own today, and is remembered', asy
   expect(localStorage.getItem('timetravels.anchorPlace')).toBeNull();
 });
 
+test.each([
+  ['unreadable', '{not json'],
+  ['no longer offered', JSON.stringify({ city: 'Atlantis', zone: 'X/Y' })],
+])(
+  'a remembered third place that is %s falls back to my time',
+  async (_, stored) => {
+    pickLondon();
+    localStorage.setItem('timetravels.anchorPlace', stored);
+    render(<App zone="Australia/Sydney" locale="en" />);
+    await choose('right now', 'after a time');
+    expect(
+      await screen.findByRole('heading', {
+        name: named(
+          'What time will it be in London 1 hour after 10 AM my time?',
+        ),
+      }),
+    ).toBeInTheDocument();
+  },
+);
+
 test('a remembered third place reads in the sentence, and its skipped time names it', async () => {
   // 10 am on Saturday 3 October in Sydney; its clocks go forward at 2 am
   // tomorrow.
