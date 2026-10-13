@@ -190,3 +190,53 @@ for (const colorScheme of ['light', 'dark'] as const) {
     });
   });
 }
+
+test('no field holds raw data, and hidden fields are hidden from assistive technology', async ({
+  page,
+}) => {
+  // The pickers keep a hidden form field each, out of the Tab order; a screen
+  // reader must not land on it, and it must hold a name, not stored data.
+  const expectPlainFields = async (hiddenValues: string[]) => {
+    const values = await page
+      .locator('input')
+      .evaluateAll((inputs) =>
+        inputs.map((input) => (input as HTMLInputElement).value),
+      );
+    expect(values.filter((value) => /^[{[]/.test(value))).toEqual([]);
+    const hidden = page.locator('input[tabindex="-1"]');
+    await expect(hidden).toHaveCount(hiddenValues.length);
+    for (const [i, value] of hiddenValues.entries()) {
+      await expect(hidden.nth(i)).toHaveAttribute('aria-hidden', 'true');
+      await expect(hidden.nth(i)).toHaveValue(value);
+    }
+  };
+
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.setItem(
+      'timetravels.place',
+      JSON.stringify({ city: 'London', zone: 'Europe/London' }),
+    );
+  });
+  await page.reload();
+  await expectPlainFields(['London']);
+
+  await slot(page, 'London').click();
+  await expect(page.getByRole('combobox')).toBeVisible();
+  await expectPlainFields(['London']);
+  await page.getByRole('option', { name: /^Home/ }).click();
+  await expect(
+    page.getByRole('dialog', { name: 'Where is home?' }),
+  ).toBeVisible();
+  await expectPlainFields(['London', 'Sydney']);
+  await page.keyboard.press('Escape');
+
+  await slot(page, 'right now').click();
+  await page.getByRole('menuitemradio', { name: 'after a time' }).click();
+  await slot(page, 'here').click();
+  await page.getByRole('menuitem', { name: 'another place…' }).click();
+  await expect(
+    page.getByRole('dialog', { name: 'Choose a place' }),
+  ).toBeVisible();
+  await expectPlainFields(['London', '']);
+});
