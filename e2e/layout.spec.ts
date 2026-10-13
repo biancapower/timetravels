@@ -100,7 +100,7 @@ test('choosing a place by tapping leaves the slot unhighlighted', async ({
   await expect(slot).not.toHaveCSS('background-color', 'rgb(59, 91, 219)');
 });
 
-test('choosing a place by keyboard keeps the focus highlight', async ({
+test('choosing a place by keyboard leaves a straight underline, not a fill', async ({
   page,
 }) => {
   await page.emulateMedia({ colorScheme: 'light' });
@@ -113,5 +113,36 @@ test('choosing a place by keyboard keeps the focus highlight', async ({
   await page.keyboard.press('Enter');
   const slot = heading.getByRole('button', { name: 'London' });
   await expect(slot).toBeFocused();
-  await expect(slot).toHaveCSS('background-color', 'rgb(59, 91, 219)');
+  await expect(slot).toHaveCSS('text-decoration-style', 'solid');
+  await expect(slot).not.toHaveCSS('background-color', 'rgb(59, 91, 219)');
+});
+
+test('the open slot’s fill keeps a gap to the word before it', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.setItem(
+      'timetravels.place',
+      JSON.stringify({ city: 'London', zone: 'Europe/London' }),
+    );
+  });
+  await page.reload();
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'right now' }).click();
+  await page.getByRole('menuitemradio', { name: 'after a time' }).click();
+  const here = heading.getByRole('button', { name: 'here' });
+  await here.click();
+  await expect(here).toHaveAttribute('aria-expanded', 'true');
+  const before = await heading
+    .getByRole('button', { name: /pm$/ })
+    .boundingBox();
+  const fill = await here.boundingBox();
+  if (!before || !fill) throw new Error('nothing to measure');
+  const fontSize = await here.evaluate((element) =>
+    parseFloat(getComputedStyle(element).fontSize),
+  );
+  // A space in this font is about a quarter of the font size; most of it
+  // stays clear.
+  expect(fill.x - (before.x + before.width)).toBeGreaterThan(fontSize * 0.16);
 });

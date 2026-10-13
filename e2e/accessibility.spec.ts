@@ -64,7 +64,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await expectNoViolations(page);
     });
 
-    test('a focused slot, filled with the accent', async ({ page }) => {
+    test('a focused slot, underlined in the accent', async ({ page }) => {
       await page.goto('/');
       await slot(page, 'here').focus();
       await page.keyboard.press('Tab');
