@@ -83,7 +83,7 @@ test('the slot whose picker is open is filled with the accent', async ({
   await expect(slot).toHaveCSS('background-color', 'rgb(59, 91, 219)');
 });
 
-test('choosing a place by tapping leaves the slot unhighlighted', async ({
+test('choosing a place by tapping leaves the slot as it was', async ({
   page,
 }) => {
   await page.emulateMedia({ colorScheme: 'light' });
@@ -98,6 +98,7 @@ test('choosing a place by tapping leaves the slot unhighlighted', async ({
   const slot = heading.getByRole('button', { name: 'London' });
   await expect(slot).toBeFocused();
   await expect(slot).not.toHaveCSS('background-color', 'rgb(59, 91, 219)');
+  await expect(slot).toHaveCSS('text-decoration-style', 'wavy');
 });
 
 test('choosing a place by keyboard leaves a straight underline, not a fill', async ({
