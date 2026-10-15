@@ -116,6 +116,12 @@ test('choosing a place by keyboard leaves a straight underline, not a fill', asy
   await expect(slot).toBeFocused();
   await expect(slot).toHaveCSS('text-decoration-style', 'solid');
   await expect(slot).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  // The line is drawn in the slot's text colour, whose contrast axe checks.
+  const { color, line } = await slot.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.color, line: style.textDecorationColor };
+  });
+  expect(line).toBe(color);
 });
 
 test('the open slot’s fill keeps a gap to the word before it', async ({
