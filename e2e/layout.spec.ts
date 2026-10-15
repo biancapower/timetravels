@@ -120,6 +120,8 @@ test('choosing a place by keyboard leaves a straight underline, not a fill', asy
 test('the open slot’s fill keeps a gap to the word before it', async ({
   page,
 }) => {
+  // 09:41 in Sydney, so the chosen time before the open slot is 10 am.
+  await page.clock.install({ time: new Date('2026-10-09T22:41:00Z') });
   await page.goto('/');
   await page.evaluate(() => {
     localStorage.setItem(
@@ -135,14 +137,23 @@ test('the open slot’s fill keeps a gap to the word before it', async ({
   await here.click();
   await expect(here).toHaveAttribute('aria-expanded', 'true');
   const before = await heading
-    .getByRole('button', { name: /pm$/ })
-    .boundingBox();
-  const fill = await here.boundingBox();
-  if (!before || !fill) throw new Error('nothing to measure');
-  const fontSize = await here.evaluate((element) =>
-    parseFloat(getComputedStyle(element).fontSize),
-  );
-  // A space in this font is about a quarter of the font size; most of it
-  // stays clear.
-  expect(fill.x - (before.x + before.width)).toBeGreaterThan(fontSize * 0.16);
+    .getByRole('button', { name: '10 am' })
+    .elementHandle();
+  const { space, gap } = await here.evaluate((fill, previous) => {
+    const probe = document.createElement('span');
+    probe.style.whiteSpace = 'pre';
+    probe.textContent = ' ';
+    fill.parentElement?.append(probe);
+    const width = probe.getBoundingClientRect().width;
+    probe.remove();
+    return {
+      space: width,
+      gap:
+        fill.getBoundingClientRect().left -
+        previous.getBoundingClientRect().right,
+    };
+  }, before);
+  expect(space).toBeGreaterThan(0);
+  // Most of the space between the words stays clear of the fill.
+  expect(gap).toBeGreaterThan(space * 0.7);
 });
