@@ -97,7 +97,7 @@ test('choosing a place by tapping leaves the slot as it was', async ({
     .click();
   const slot = heading.getByRole('button', { name: 'London' });
   await expect(slot).toBeFocused();
-  await expect(slot).not.toHaveCSS('background-color', 'rgb(59, 91, 219)');
+  await expect(slot).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   await expect(slot).toHaveCSS('text-decoration-style', 'wavy');
 });
 
@@ -115,7 +115,7 @@ test('choosing a place by keyboard leaves a straight underline, not a fill', asy
   const slot = heading.getByRole('button', { name: 'London' });
   await expect(slot).toBeFocused();
   await expect(slot).toHaveCSS('text-decoration-style', 'solid');
-  await expect(slot).not.toHaveCSS('background-color', 'rgb(59, 91, 219)');
+  await expect(slot).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
 });
 
 test('the open slot’s fill keeps a gap to the word before it', async ({
