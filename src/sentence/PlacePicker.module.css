@@ -40,8 +40,17 @@
   color: var(--surface);
 }
 
-.item[data-selected] {
-  font-weight: var(--font-weight-6);
+/* The current choice is ticked, in a gutter every row keeps so the labels
+   line up. */
+.item:not(.edit) {
+  position: relative;
+  padding-inline-start: calc(var(--size-3) + 1.25em);
+}
+
+.item[data-selected]::after {
+  content: '\2713' / '';
+  position: absolute;
+  inset-inline-start: var(--size-3);
 }
 
 .empty:not(:empty) {

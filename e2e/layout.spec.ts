@@ -164,3 +164,60 @@ test('the open slot’s fill keeps a gap to the word before it', async ({
   // Most of the space between the words stays clear of the fill.
   expect(gap).toBeGreaterThan(space * 0.7);
 });
+
+test('every picker ticks its current choice, and says which it is', async ({
+  page,
+}) => {
+  const ticked = (item: ReturnType<typeof page.getByRole>) =>
+    item.evaluate((element) =>
+      getComputedStyle(element, '::after').content.includes('✓'),
+    );
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.setItem(
+      'timetravels.place',
+      JSON.stringify({ city: 'London', zone: 'Europe/London' }),
+    );
+  });
+  await page.reload();
+  const heading = page.getByRole('heading', { level: 1 });
+
+  await heading.getByRole('button', { name: 'right now' }).click();
+  const now = page.getByRole('menuitemradio', { name: 'right now' });
+  await expect(now).toBeChecked();
+  expect(await ticked(now)).toBe(true);
+  const later = page.getByRole('menuitemradio', { name: 'from now' });
+  await expect(later).not.toBeChecked();
+  expect(await ticked(later)).toBe(false);
+  await later.click();
+
+  await heading.getByRole('button', { name: '1 hour' }).click();
+  const durations = page.getByRole('group', { name: 'Common durations' });
+  const hour = durations.getByRole('button', { name: '1 hour' });
+  await expect(hour).toHaveAttribute('aria-current', 'true');
+  expect(await ticked(hour)).toBe(true);
+  const halfHour = durations.getByRole('button', { name: '30 minutes' });
+  await expect(halfHour).not.toHaveAttribute('aria-current');
+  expect(await ticked(halfHour)).toBe(false);
+  await page.getByRole('textbox', { name: 'Type a duration' }).fill('90m');
+  await page.keyboard.press('Enter');
+  await heading.getByRole('button', { name: '1 hour 30 minutes' }).click();
+  await expect(durations.locator('[aria-current]')).toHaveCount(0);
+  await page.keyboard.press('Escape');
+
+  await heading.getByRole('button', { name: 'London' }).click();
+  const london = page.getByRole('option', { name: 'London' });
+  await expect(london).toHaveAttribute('aria-selected', 'true');
+  expect(await ticked(london)).toBe(true);
+  await page.keyboard.press('Escape');
+
+  await heading.getByRole('button', { name: 'from now' }).click();
+  await page.getByRole('menuitemradio', { name: 'after a time' }).click();
+  await heading.getByRole('button', { name: 'here' }).click();
+  const here = page.getByRole('menuitemradio', { name: 'here' });
+  await expect(here).toBeChecked();
+  expect(await ticked(here)).toBe(true);
+  expect(
+    await ticked(page.getByRole('menuitem', { name: 'another place…' })),
+  ).toBe(false);
+});

@@ -14,6 +14,7 @@ const common: readonly Duration[] = [
 ];
 
 interface DurationPickerProps {
+  value: Duration;
   onChange: (duration: Duration) => void;
   className?: string;
   /** The slot's text, from the sentence's message. */
@@ -22,6 +23,7 @@ interface DurationPickerProps {
 
 /** The duration slot: type a duration, or pick a common one. */
 export function DurationPicker({
+  value,
   onChange,
   className,
   children,
@@ -99,6 +101,7 @@ export function DurationPicker({
                   className={styles.choice}
                   type="button"
                   tabIndex={0}
+                  aria-current={sameDuration(duration, value) || undefined}
                   onClick={() => {
                     choose(duration);
                   }}
@@ -112,4 +115,16 @@ export function DurationPicker({
       </Popover.Portal>
     </Popover.Root>
   );
+}
+
+function sameDuration(a: Duration, b: Duration): boolean {
+  const units = [
+    'years',
+    'months',
+    'weeks',
+    'days',
+    'hours',
+    'minutes',
+  ] as const;
+  return units.every((unit) => (a[unit] ?? 0) === (b[unit] ?? 0));
 }
