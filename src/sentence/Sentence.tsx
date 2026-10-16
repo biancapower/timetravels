@@ -95,7 +95,11 @@ export function Sentence({
             </DirectionPicker>
           ),
           duration: (chunks: ReactNode[]) => (
-            <DurationPicker onChange={onDurationChange} className={styles.slot}>
+            <DurationPicker
+              value={duration}
+              onChange={onDurationChange}
+              className={styles.slot}
+            >
               {chunks}
             </DurationPicker>
           ),

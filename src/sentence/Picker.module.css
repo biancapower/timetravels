@@ -9,11 +9,16 @@
   box-shadow: var(--shadow-3);
 }
 
+/* The current choice is ticked, in a gutter every row keeps so the labels
+   line up. */
 .item,
 .choice {
+  --inset: var(--size-3);
+  position: relative;
   display: block;
   width: 100%;
-  padding: var(--size-2) var(--size-3);
+  padding-block: var(--size-2);
+  padding-inline: calc(var(--inset) + 1.25em) var(--inset);
   border: 0;
   border-radius: var(--radius-1);
   background: none;
@@ -31,8 +36,17 @@
   outline: none;
 }
 
-.item[data-checked] {
-  font-weight: var(--font-weight-6);
+/* Two common durations share a row, so on a 320 px phone a wider inset
+   wraps "30 minutes". */
+.choice {
+  --inset: var(--size-2);
+}
+
+.item[data-checked]::after,
+.choice[aria-current='true']::after {
+  content: '\2713' / '';
+  position: absolute;
+  inset-inline-start: var(--inset);
 }
 
 .form {

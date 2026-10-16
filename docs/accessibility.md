@@ -16,6 +16,8 @@ The question is the page's main heading. Each slot is a button inside it, named 
 | Whose time ("here", "in London", "in Tokyo") | "Whose time" menu of radio items, then an "another place…" item | Menu with radio items and one plain item |
 | "another place…" in the Whose time menu | "Choose a place" dialog, opened against the slot once the menu has closed, with a search combobox and a listbox of cities; picking one closes it and returns focus to the slot | WAI-ARIA combobox inside a dialog |
 
+Every picker ticks its current choice, and says so: the menus' radio items are checked, the place list's option is selected, and the common duration that matches the current one, when one does, is marked current (`aria-current`), since those are buttons that act at once rather than a choice to confirm. The time picker's Yesterday, Today and Tomorrow are plain radio buttons with their own checked mark, confirmed with Set, so they have no tick. The tick itself is hidden from screen readers. This is in `e2e/current-choice.spec.ts`.
+
 Errors in the duration and time pickers and the named-place form appear in an alert region that is always present, so they are announced when they appear.
 
 ## Checks and results
@@ -59,5 +61,5 @@ Made earlier, while building the sentences:
 Automated checks cannot judge how the sentence sounds. Nobody has listened to TimeTravels through a screen reader yet: the checks below are tracked in [issue #42](https://github.com/biancapower/timetravels/issues/42), which isn't tied to a release.
 
 1. **TalkBack on Android** (the maintainer's Pixel). Swipe through the sentence: does it read as one question, with each slot announced as a button with its value? Open each slot, choose something, and check the new answer is read out once. Base UI, the picker library, publishes no screen-reader test results ([decision 0008](decisions/0008-headless-component-library.md)), so this matters.
-2. **VoiceOver on an iPad** (iPadOS 18.7.5), standing in for an iPhone. The same, with swipes.
+2. **VoiceOver on an iPad** (iPadOS 18.7.5), standing in for an iPhone. The same, with swipes. In the duration picker, is the common duration that matches the current one announced as current? If not, the choices become radios, announced as checked like the menus' items.
 3. **VoiceOver with Safari on a Mac.** The same, with the keyboard only, including the Help button and the Help and About pages.

@@ -164,3 +164,19 @@ test('the open slot’s fill keeps a gap to the word before it', async ({
   // Most of the space between the words stays clear of the fill.
   expect(gap).toBeGreaterThan(space * 0.7);
 });
+
+test('each common duration fits on one line at 320 px', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto('/');
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'right now' }).click();
+  await page.getByRole('menuitemradio', { name: 'from now' }).click();
+  await heading.getByRole('button', { name: '1 hour' }).click();
+  const heights = await page
+    .getByRole('group', { name: 'Common durations' })
+    .getByRole('button')
+    .evaluateAll((buttons) =>
+      buttons.map((button) => button.getBoundingClientRect().height),
+    );
+  expect(new Set(heights).size).toBe(1);
+});
