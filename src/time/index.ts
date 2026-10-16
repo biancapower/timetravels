@@ -154,29 +154,61 @@ const part = String.raw`(\d+(?:\.\d+)?)\s*([a-z]+)`;
 const separator = String.raw`(?:\s*,\s*|\s+and\s+|\s*)`;
 const listPattern = new RegExp(`^${part}(?:${separator}${part})*$`);
 
+/** Why a typed duration couldn't be used. */
+export type DurationProblem =
+  | { problem: 'unreadable' }
+  | { problem: 'zero' }
+  | {
+      problem: 'tooLong';
+      unit: 'hours' | (typeof calendarUnits)[number];
+      limit: number;
+    };
+
+const tooManyHours: DurationProblem = {
+  problem: 'tooLong',
+  unit: 'hours',
+  limit: longestMinutes / 60,
+};
+
 /**
  * Reads a typed duration such as "10", "1.5h", "90m", "1h30", "1:30",
- * "3d", "6 months" or "1 day 2 hours". Returns null for anything else,
- * for zero, for 1000 hours or more of exact time, and for a calendar unit
- * at or over its limit.
+ * "3d", "6 months" or "1 day 2 hours", or says why it can't: it isn't a
+ * duration, it's zero, or it reaches 1000 hours of exact time or a
+ * calendar unit's limit.
  */
-export function parseDuration(text: string): Duration | null {
+export function readDuration(
+  text: string,
+): { duration: Duration } | DurationProblem {
   const input = text.trim().toLowerCase();
   for (const [pattern, toMinutes] of durationPatterns) {
     const match = pattern.exec(input);
     if (!match) continue;
     return exact(Math.round(toMinutes(match)));
   }
-  return listPattern.test(input) ? parseParts(input) : null;
+  return listPattern.test(input)
+    ? parseParts(input)
+    : { problem: 'unreadable' };
 }
 
-function exact(totalMinutes: number): Duration | null {
-  if (totalMinutes <= 0 || totalMinutes >= longestMinutes) return null;
-  return { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
+/** A typed duration, or null when `readDuration` finds a problem. */
+export function parseDuration(text: string): Duration | null {
+  const read = readDuration(text);
+  return 'duration' in read ? read.duration : null;
+}
+
+function exact(totalMinutes: number): { duration: Duration } | DurationProblem {
+  if (totalMinutes <= 0) return { problem: 'zero' };
+  if (totalMinutes >= longestMinutes) return tooManyHours;
+  return {
+    duration: {
+      hours: Math.floor(totalMinutes / 60),
+      minutes: totalMinutes % 60,
+    },
+  };
 }
 
 /** "1 year, 6 months", "1d2h": each unit at most once, in any order. */
-function parseParts(input: string): Duration | null {
+function parseParts(input: string): { duration: Duration } | DurationProblem {
   const seen = new Set<keyof Duration>();
   const calendar: Partial<Record<(typeof calendarUnits)[number], number>> = {};
   let minutes = 0;
@@ -184,21 +216,28 @@ function parseParts(input: string): Duration | null {
     new RegExp(part, 'g'),
   )) {
     const unit = unitNames[name];
-    if (!unit || seen.has(unit)) return null;
+    if (!unit || seen.has(unit)) return { problem: 'unreadable' };
     seen.add(unit);
     const value = Number(amount);
     if (unit === 'hours') minutes += value * 60;
     else if (unit === 'minutes') minutes += value;
-    else if (!Number.isInteger(value) || value >= calendarLimits[unit]) {
-      return null;
+    else if (!Number.isInteger(value)) return { problem: 'unreadable' };
+    else if (value >= calendarLimits[unit]) {
+      return { problem: 'tooLong', unit, limit: calendarLimits[unit] };
     } else if (value > 0) {
       calendar[unit] = value;
     }
   }
   const total = Math.round(minutes);
-  if (total >= longestMinutes) return null;
+  if (total >= longestMinutes) return tooManyHours;
   if (Object.keys(calendar).length === 0) return exact(total);
-  return { ...calendar, hours: Math.floor(total / 60), minutes: total % 60 };
+  return {
+    duration: {
+      ...calendar,
+      hours: Math.floor(total / 60),
+      minutes: total % 60,
+    },
+  };
 }
 
 /**
