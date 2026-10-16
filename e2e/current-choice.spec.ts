@@ -50,6 +50,14 @@ test('the duration picker ticks the common duration that matches, and marks it c
   await page.keyboard.press('Enter');
   await heading.getByRole('button', { name: '1 hour 30 minutes' }).click();
   await expect(durations.locator('[aria-current]')).toHaveCount(0);
+
+  await page.getByRole('textbox', { name: 'Type a duration' }).fill('24h');
+  await page.keyboard.press('Enter');
+  await heading.getByRole('button', { name: '24 hours' }).click();
+  await expect(
+    durations.getByRole('button', { name: '24 hours' }),
+  ).toHaveAttribute('aria-current', 'true');
+  await expect(durations.locator('[aria-current]')).toHaveCount(1);
 });
 
 test('the place list ticks the current place, and selects it', async ({
