@@ -24,7 +24,7 @@ Errors in the duration and time pickers and the named-place form appear in an al
 
 **Hidden form fields.** The place pickers each keep a hidden form field. A check in the same file, on the sentence and with the place picker, the home form and the "another place" search open, finds every such field hidden from assistive technology and holding a place's name, or nothing, never the place as it is stored.
 
-**Keyboard.** Tab reaches every slot in reading order; Enter opens each slot, Escape closes it, and focus returns to the slot, in every sentence. These are in `e2e/keyboard.spec.ts`. The named-place form opens from the list by keyboard with focus in its name field for a new place, or on the form itself for home or an edit, so a phone's keyboard stays down until a field is chosen; and Escape returns focus to the place slot without saving; tabbing or tapping away saves a change, or keeps the form open with the reason it cannot be saved yet (`e2e/named-places.spec.ts`). Every button sets `tabindex="0"`, because Safari's default Tab order (with "Press Tab to highlight each item" off) skips buttons without one; the picker library's slot buttons already set it, so without it Tab reached the slots but not the Help button.
+**Keyboard.** Tab reaches every slot in reading order; Enter opens each slot, Escape closes it, and focus returns to the slot, in every sentence. These are in `e2e/keyboard.spec.ts`. A focused slot's wavy underline turns thick and straight, and only the slot whose picker is open is filled, so returning focus to a slot doesn't make it look open (`e2e/layout.spec.ts`). The line is set close enough to the text to stay inside its own line when the sentence wraps; that was checked in screenshots in Chrome on a phone and a desktop, not by a test, since where the line falls depends on each system's font. The named-place form opens from the list by keyboard with focus in its name field for a new place, or on the form itself for home or an edit, so a phone's keyboard stays down until a field is chosen; and Escape returns focus to the place slot without saving; tabbing or tapping away saves a change, or keeps the form open with the reason it cannot be saved yet (`e2e/named-places.spec.ts`). Every button sets `tabindex="0"`, because Safari's default Tab order (with "Press Tab to highlight each item" off) skips buttons without one; the picker library's slot buttons already set it, so without it Tab reached the slots but not the Help button.
 
 **Help and About.** The Help button comes after the sentence in reading order. Help ends with links to About and to its Privacy section. Each page opens with focus on its title, or on the Privacy heading from the Privacy link, and changes the page title. Close, Escape and the browser's Back button each go back one page, and back on the sentence, it is as it was, with focus on the Help button. These are in `e2e/pages.spec.ts` and `src/pages/Pages.test.tsx`.
 
@@ -33,7 +33,8 @@ Errors in the duration and time pickers and the named-place form appear in an al
 | Element | Light | Dark |
 |---|---|---|
 | Slot text and underline on the ground | 5.4 | 8.4 |
-| Focus highlight, and the slot text on it | 5.4 | 8.4 |
+| Focus underline on the ground, drawn in the slot text's colour | 5.4 | 8.4 |
+| Open slot's fill, and the slot text on it | 5.4 | 8.4 |
 | Popup, input and note borders | 8.2 | 8.5 |
 | Note accent bar | 5.7 | 7.7 |
 | Highlighted list item, and Set, Update and Save buttons | 5.7 | 7.7 |

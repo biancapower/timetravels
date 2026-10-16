@@ -23,29 +23,34 @@ button.slot {
   cursor: pointer;
 }
 
-/* Focus, and the slot whose picker is open, fill the slot with the accent
-   instead of drawing a ring, which on wrapped lines ran into the words above
-   and below. The inline padding is taken back by the margin so the sentence
-   doesn't shift. */
-button.slot:focus-visible,
-button.slot[aria-expanded='true'] {
+/* Keyboard focus swaps the wavy underline for a thick straight one, set
+   close enough to the text to stay inside its own line, so it can't run into
+   wrapped lines the way a focus ring did. */
+button.slot:focus-visible {
   outline: none;
-  padding-inline: 0.12em;
-  margin-inline: -0.12em;
+  text-decoration-style: solid;
+  text-decoration-thickness: max(3px, 0.1em);
+  text-underline-offset: 0.12em;
+}
+
+/* Only the slot whose picker is open is filled. The fill reaches a little
+   past the word, taken back by the margin so the sentence doesn't shift, but
+   not so far that it closes the gap to the next word. */
+button.slot[aria-expanded='true'] {
+  padding-inline: 0.04em;
+  margin-inline: -0.04em;
   background: var(--accent);
   color: var(--ground);
   text-decoration-color: transparent;
   border-radius: var(--radius-2);
 }
 
-/* A slot given focus back after a tap, not a key, shows no highlight. */
+/* A slot given focus back after a tap, not a key, shows no focus mark. */
 :global(html[data-input='pointer'])
   button.slot:focus-visible:not([aria-expanded='true']) {
-  padding-inline: 0;
-  margin-inline: 0;
-  background: none;
-  color: var(--accent);
-  text-decoration-color: currentColor;
+  text-decoration-style: wavy;
+  text-decoration-thickness: max(2px, 0.05em);
+  text-underline-offset: 0.22em;
 }
 
 /* No break between the last slot and the closing punctuation. The slot's

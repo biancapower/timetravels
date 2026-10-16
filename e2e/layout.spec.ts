@@ -83,7 +83,7 @@ test('the slot whose picker is open is filled with the accent', async ({
   await expect(slot).toHaveCSS('background-color', 'rgb(59, 91, 219)');
 });
 
-test('choosing a place by tapping leaves the slot unhighlighted', async ({
+test('choosing a place by tapping leaves the slot as it was', async ({
   page,
 }) => {
   await page.emulateMedia({ colorScheme: 'light' });
@@ -97,10 +97,11 @@ test('choosing a place by tapping leaves the slot unhighlighted', async ({
     .click();
   const slot = heading.getByRole('button', { name: 'London' });
   await expect(slot).toBeFocused();
-  await expect(slot).not.toHaveCSS('background-color', 'rgb(59, 91, 219)');
+  await expect(slot).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await expect(slot).toHaveCSS('text-decoration-style', 'wavy');
 });
 
-test('choosing a place by keyboard keeps the focus highlight', async ({
+test('choosing a place by keyboard leaves a straight underline, not a fill', async ({
   page,
 }) => {
   await page.emulateMedia({ colorScheme: 'light' });
@@ -113,5 +114,53 @@ test('choosing a place by keyboard keeps the focus highlight', async ({
   await page.keyboard.press('Enter');
   const slot = heading.getByRole('button', { name: 'London' });
   await expect(slot).toBeFocused();
-  await expect(slot).toHaveCSS('background-color', 'rgb(59, 91, 219)');
+  await expect(slot).toHaveCSS('text-decoration-style', 'solid');
+  await expect(slot).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  // The line is drawn in the slot's text colour, whose contrast axe checks.
+  const { color, line } = await slot.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.color, line: style.textDecorationColor };
+  });
+  expect(line).toBe(color);
+});
+
+test('the open slot’s fill keeps a gap to the word before it', async ({
+  page,
+}) => {
+  // 09:41 in Sydney, so the chosen time before the open slot is 10 am.
+  await page.clock.install({ time: new Date('2026-10-09T22:41:00Z') });
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.setItem(
+      'timetravels.place',
+      JSON.stringify({ city: 'London', zone: 'Europe/London' }),
+    );
+  });
+  await page.reload();
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'right now' }).click();
+  await page.getByRole('menuitemradio', { name: 'after a time' }).click();
+  const here = heading.getByRole('button', { name: 'here' });
+  await here.click();
+  await expect(here).toHaveAttribute('aria-expanded', 'true');
+  const before = await heading
+    .getByRole('button', { name: '10 am' })
+    .elementHandle();
+  const { space, gap } = await here.evaluate((fill, previous) => {
+    const probe = document.createElement('span');
+    probe.style.whiteSpace = 'pre';
+    probe.textContent = ' ';
+    fill.parentElement?.append(probe);
+    const width = probe.getBoundingClientRect().width;
+    probe.remove();
+    return {
+      space: width,
+      gap:
+        fill.getBoundingClientRect().left -
+        previous.getBoundingClientRect().right,
+    };
+  }, before);
+  expect(space).toBeGreaterThan(0);
+  // Most of the space between the words stays clear of the fill.
+  expect(gap).toBeGreaterThan(space * 0.7);
 });
