@@ -16,7 +16,7 @@ The question is the page's main heading. Each slot is a button inside it, named 
 | Whose time ("here", "in London", "in Tokyo") | "Whose time" menu of radio items, then an "another place…" item | Menu with radio items and one plain item |
 | "another place…" in the Whose time menu | "Choose a place" dialog, opened against the slot once the menu has closed, with a search combobox and a listbox of cities; picking one closes it and returns focus to the slot | WAI-ARIA combobox inside a dialog |
 
-Every picker ticks its current choice, and says so: the menus' radio items are checked, the place list's option is selected, and the common duration that matches the current one, when one does, is marked current (`aria-current`), since those are buttons that act at once rather than a choice to confirm. The tick itself is hidden from screen readers. This is in `e2e/layout.spec.ts`.
+Every picker ticks its current choice, and says so: the menus' radio items are checked, the place list's option is selected, and the common duration that matches the current one, when one does, is marked current (`aria-current`), since those are buttons that act at once rather than a choice to confirm. The tick itself is hidden from screen readers. This is in `e2e/current-choice.spec.ts`.
 
 Errors in the duration and time pickers and the named-place form appear in an alert region that is always present, so they are announced when they appear.
 
