@@ -1,7 +1,7 @@
 import { Popover } from '@base-ui/react/popover';
 import { useId, useState, type ReactNode, type SubmitEvent } from 'react';
 import { useIntl } from 'react-intl';
-import { parseDuration, type Duration } from '../time';
+import { readDuration, type Duration, type DurationProblem } from '../time';
 import { formatDuration } from './formatDuration';
 import styles from './Picker.module.css';
 
@@ -32,7 +32,7 @@ export function DurationPicker({
   const errorId = useId();
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
-  const [invalid, setInvalid] = useState(false);
+  const [problem, setProblem] = useState<DurationProblem | null>(null);
 
   const choose = (duration: Duration) => {
     onChange(duration);
@@ -40,9 +40,9 @@ export function DurationPicker({
   };
   const submit = (event: SubmitEvent) => {
     event.preventDefault();
-    const duration = parseDuration(text);
-    if (duration) choose(duration);
-    else setInvalid(true);
+    const read = readDuration(text);
+    if ('duration' in read) choose(read.duration);
+    else setProblem(read);
   };
 
   return (
@@ -52,7 +52,7 @@ export function DurationPicker({
         setOpen(next);
         if (next) {
           setText('');
-          setInvalid(false);
+          setProblem(null);
         }
       }}
     >
@@ -69,14 +69,14 @@ export function DurationPicker({
                 value={text}
                 onChange={(event) => {
                   setText(event.target.value);
-                  setInvalid(false);
+                  setProblem(null);
                 }}
                 aria-label={intl.formatMessage({ id: 'durationPicker.input' })}
                 placeholder={intl.formatMessage({
                   id: 'durationPicker.placeholder',
                 })}
-                aria-invalid={invalid}
-                aria-describedby={invalid ? errorId : undefined}
+                aria-invalid={problem !== null}
+                aria-describedby={problem ? errorId : undefined}
                 autoComplete="off"
               />
               {/* tabIndex puts it in Safari's default Tab order, like the slots. */}
@@ -86,8 +86,13 @@ export function DurationPicker({
             </form>
             {/* Always present, so screen readers announce the text when it appears. */}
             <p id={errorId} className={styles.error} role="alert">
-              {invalid
-                ? intl.formatMessage({ id: 'durationPicker.invalid' })
+              {problem
+                ? intl.formatMessage(
+                    { id: `durationPicker.${problem.problem}` },
+                    problem.problem === 'tooLong'
+                      ? { unit: problem.unit, limit: problem.limit }
+                      : undefined,
+                  )
                 : null}
             </p>
             <div

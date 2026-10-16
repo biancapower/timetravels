@@ -71,21 +71,30 @@ test('a typed duration sets the slot', async () => {
   ).toBeInTheDocument();
 });
 
-test('a duration that cannot be read says so and leaves the slot alone', async () => {
-  render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('right now', 'from now');
-  fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
-  const input = await screen.findByRole('textbox', { name: 'Type a duration' });
-  fireEvent.change(input, { target: { value: 'soon' } });
-  fireEvent.submit(input);
-  expect(await screen.findByRole('alert')).toHaveTextContent(
-    'Couldn’t read that duration',
-  );
-  expect(input).toHaveAttribute('aria-invalid', 'true');
-  expect(
-    within(heading()).getByRole('button', { name: '1 hour' }),
-  ).toBeInTheDocument();
-});
+test.each([
+  ['banana', 'Couldn’t read that. Try 90m, 2h30 or 3 days.'],
+  ['0', 'That’s no time at all. Try 1m or more.'],
+  ['1000', 'That’s too long. Keep it under 1,000 hours.'],
+  ['100 years', 'That’s too long. Keep it under 100 years.'],
+  ['36500 days', 'That’s too long. Keep it under 36,500 days.'],
+])(
+  '"%s" says why it can’t be used and leaves the slot alone',
+  async (typed, message) => {
+    render(<App zone="Australia/Sydney" locale="en" />);
+    await chooseWhen('right now', 'from now');
+    fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
+    const input = await screen.findByRole('textbox', {
+      name: 'Type a duration',
+    });
+    fireEvent.change(input, { target: { value: typed } });
+    fireEvent.submit(input);
+    expect(await screen.findByRole('alert')).toHaveTextContent(message);
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(
+      within(heading()).getByRole('button', { name: '1 hour' }),
+    ).toBeInTheDocument();
+  },
+);
 
 test('a common duration can be picked with one tap', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
