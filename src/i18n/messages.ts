@@ -16,6 +16,10 @@ const en = {
     'What time was it <place>here</place> <duration>{length}</duration> <direction>ago</direction>?',
   'sentence.earlierIn':
     'What time was it {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>ago</direction>?',
+  'sentence.atHere':
+    '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <direction>when</direction> {anchorTense, select, past {it was} other {it’s}} <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
+  'sentence.atIn':
+    '{tense, select, past {What time was it} other {What time will it be}} {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <direction>when</direction> {anchorTense, select, past {it was} other {it’s}} <anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
   'sentence.afterHere':
     '{tense, select, past {What time was it} other {What time will it be}} <place>here</place> <duration>{length}</duration> <direction>after</direction> {anchorTense, select, past {} other {it’s }}<anchor>{anchorText}</anchor>?',
   'sentence.afterIn':
@@ -38,9 +42,9 @@ const en = {
   'answer.landingRepeated':
     '{time} {tense, select, past {happened} other {happens}} twice in {city} on {date}, when the clocks {tense, select, past {went} other {go}} back. This counts from the first, at {offset}.',
   'answer.skipped':
-    'There was no {time} in {city} that day: the clocks went forward. This counts from {actual}.',
+    'There was no {time} in {city} that day: the clocks went forward. {counts, select, no {This uses {actual}.} other {This counts from {actual}.}}',
   'answer.repeated':
-    '{time} happened twice in {city} that day, when the clocks went back. This counts from the first, at {offset}.',
+    '{time} happened twice in {city} that day, when the clocks went back. {counts, select, no {This uses the first, at {offset}.} other {This counts from the first, at {offset}.}}',
   'anchor.today': '{time}',
   'anchor.tomorrow': '{time} tomorrow',
   'anchor.yesterday': '{time} yesterday',
@@ -66,6 +70,7 @@ const en = {
   'directionPicker.now': 'right now',
   'directionPicker.later': 'from now',
   'directionPicker.earlier': 'ago',
+  'directionPicker.at': 'at a time',
   'directionPicker.after': 'after a time',
   'directionPicker.before': 'before a time',
   'durationPicker.label': 'Choose how long',
@@ -119,13 +124,13 @@ const en = {
   'help.named':
     '<b>Your own places</b>, in the same list: set up “Home”, or use “Name a place” to give a place a name of your own, such as “Mark’s place”, so the question reads “at Mark’s place”. Use Edit beside one to rename it, move it or remove it.',
   'help.direction':
-    '<b>When</b>, “right now” at first: choose “from now” or “ago” to count a length of time from now, or “after a time” or “before a time” to count from a time you choose.',
+    '<b>When</b>, “right now” at first: choose “from now” or “ago” to count a length of time from now, “at a time” to ask about a time you choose, or “after a time” or “before a time” to count from a time you choose.',
   'help.duration':
     '<b>How long</b>, once you choose “from now”, “ago”, “after a time” or “before a time”: pick a common length or type one, such as 10 (hours), 1.5h, 90m, 1h30, 1:30, 3d, 2 weeks, 6 months or 1y. Hours and minutes are exact; days and longer keep the clock time, so 1 day from now is this time tomorrow even if the clocks change. In “1 day 2 hours”, the day comes first, then the hours.',
   'help.anchor':
-    '<b>The time to count from</b>, such as “3 pm”, with “after a time” or “before a time”: set a time and whether it is yesterday, today or tomorrow.',
+    '<b>The time you choose</b>, such as “3 pm”, with “at a time”, “after a time” or “before a time”: set a time and whether it is yesterday, today or tomorrow.',
   'help.anchorPlace':
-    '<b>Whose time</b>, “here” at first: with a place chosen, say whether that time is yours, the place’s, or another place’s, such as “3 pm in Tokyo”.',
+    '<b>Whose time</b>, “here” at first: say whether that time is yours, the place’s, or another place’s, such as “3 pm in Tokyo”. With “here” as the place, only “at a time” can take another place’s time.',
   'help.questionsTitle': 'Questions it can answer',
   'help.question1': 'What time is it here right now?',
   'help.question2': 'What time is it in London right now?',
@@ -133,6 +138,7 @@ const en = {
   'help.question4': 'What time was it in London 8 hours ago?',
   'help.question5':
     'What time will it be in London 10 hours after it’s 3 pm here?',
+  'help.question6': 'What time will it be here when it’s 10 am in London?',
   'help.clocks':
     'If the clocks change during the time you ask about, a note under the answer says so.',
   'help.offline':

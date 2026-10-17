@@ -52,6 +52,25 @@ test('Tab reaches every slot of sentence 5 in reading order', async ({
   ]);
 });
 
+test('Tab reaches every slot of “at a time” here in reading order', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const heading = page.getByRole('heading', { level: 1 });
+  await heading.getByRole('button', { name: 'right now' }).focus();
+  await page.keyboard.press('Enter');
+  await page.getByRole('menuitemradio', { name: 'at a time' }).press('Enter');
+  await expect(heading.getByRole('button', { name: 'when' })).toBeVisible();
+
+  await heading.getByRole('button', { name: 'here' }).first().focus();
+  const order = await tabOrder(page, 3);
+  expect(order.map((name) => name.replace(/\s/g, ' '))).toEqual([
+    'when',
+    expect.stringMatching(/^\d{1,2}(:\d{2})? [ap]m$/) as unknown as string,
+    'here',
+  ]);
+});
+
 test('every slot opens with Enter and closes with Escape, returning focus', async ({
   page,
 }) => {

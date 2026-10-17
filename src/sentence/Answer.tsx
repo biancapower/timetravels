@@ -47,7 +47,9 @@ export function Answer({
     now,
     question,
   );
-  const calendar = isCalendar(question.duration);
+  // "At a time" counts nothing, so the duration left from another choice
+  // doesn't apply.
+  const calendar = question.when !== 'at' && isCalendar(question.duration);
   const cityFor = (zone: string) =>
     (zone === question.answerZone ? city : undefined) ??
     (anchored && zone === anchored.moment.timeZoneId
@@ -217,6 +219,7 @@ export function Answer({
             {
               time: chosen,
               city: anchorCity,
+              counts: question.when === 'at' ? 'no' : 'yes',
               actual: formatClockTime(anchored.moment.toPlainTime(), {
                 locale,
               }),
@@ -231,6 +234,7 @@ export function Answer({
             {
               time: chosen,
               city: anchorCity,
+              counts: question.when === 'at' ? 'no' : 'yes',
               offset: formatOffset(anchored.moment, { locale }),
             },
           )}

@@ -19,7 +19,7 @@ import {
   savePlace,
   saveSavedPlaces,
 } from './places/storage';
-import type { When } from './sentence/DirectionPicker';
+import { counts, isAnchored, type When } from './sentence/DirectionPicker';
 import { readAddress, writeAddress } from './sentence/address';
 import { LiveAnswer } from './sentence/LiveAnswer';
 import {
@@ -79,7 +79,16 @@ export function App({
   // Each change to the question is a step for Back. Tidying the address the
   // page opened at, or one reached by Back or Forward, replaces its entry
   // rather than adding one.
-  const address = writeAddress({ where, when, duration, anchor }, zone);
+  // With no place picked, the chosen time is here's, except that "at a
+  // time" can take another place's.
+  const anchorShown =
+    place || (when === 'at' && typeof anchor.whose === 'object')
+      ? anchor
+      : { ...anchor, whose: 'mine' as const };
+  const address = writeAddress(
+    { where, when, duration, anchor: anchorShown },
+    zone,
+  );
   const replaceNext = useRef(true);
   useEffect(() => {
     if (location.search !== address) {
@@ -110,7 +119,7 @@ export function App({
       replaceNext.current = true;
       setWhere(asked.where);
       setWhen(asked.when);
-      if (asked.when !== 'now') setDuration(asked.duration);
+      if (counts(asked.when)) setDuration(asked.duration);
       if (isAnchored(asked.when)) setAnchor(asked.anchor);
     };
     addEventListener('popstate', back);
@@ -156,13 +165,12 @@ export function App({
   const question: Question = {
     when,
     duration,
-    // With no place picked there is only one place, so "here" is the only reading.
-    anchor: place ? anchor : { ...anchor, whose: 'mine' },
+    anchor: anchorShown,
     answerZone: place?.zone ?? zone,
     deviceZone: zone,
   };
-  // Sentence 5's verb follows whether its answer is past, and "it's" before
-  // the chosen time whether that time or the answer is. Both are worked out
+  // With a chosen time, the verb follows whether the answer is past, and
+  // "it's" before the chosen time whether that time or the answer is. Both are worked out
   // whenever the app renders, which is on any choice, not on the minute tick.
   const { tense, anchorTense } = tensesOf(question);
 
@@ -209,10 +217,6 @@ export function App({
   );
 }
 
-function isAnchored(when: When): boolean {
-  return when === 'after' || when === 'before';
-}
-
 function anchorCityOf(
   whose: AnchorSetting['whose'],
   place: Place | undefined,
@@ -225,11 +229,11 @@ function anchorCityOf(
 type Tense = 'past' | 'future';
 
 /**
- * Whether sentence 5's answer is past, and whether its chosen time reads as
- * past: "was it … before it's 10 am" clashes, so a past answer makes it so.
+ * Whether a sentence with a chosen time has a past answer, and whether its
+ * chosen time reads as past: "was it … before it's 10 am" clashes, so a past answer makes it so.
  */
 function tensesOf(question: Question): { tense: Tense; anchorTense: Tense } {
-  if (question.when !== 'after' && question.when !== 'before')
+  if (!isAnchored(question.when))
     return { tense: 'future', anchorTense: 'future' };
   const now = Temporal.Now.instant();
   const { moment, anchored } = resolveAnswer(now, question);

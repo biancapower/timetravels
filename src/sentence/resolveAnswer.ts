@@ -12,7 +12,7 @@ import {
 import type { Place } from '../places/places';
 import type { When } from './DirectionPicker';
 
-/** The chosen time in sentence 5: a time of day, which day, and whose time. */
+/** The chosen time for "at", "after" or "before" a time: a time of day, which day, and whose time. */
 export interface AnchorSetting {
   time: Temporal.PlainTime;
   day: AnchorDay;
@@ -33,7 +33,7 @@ export interface Resolved {
   /** Now, where the answer is asked about. */
   today: Moment;
   moment: Moment;
-  /** The chosen time, for sentence 5 only. */
+  /** The chosen time, for "at", "after" and "before" a time. */
   anchored?: Anchored;
   /** Where the span starts and the places it involves, when there is a span. */
   span?: { start: Moment; zones: string[] };
@@ -64,6 +64,12 @@ export function resolveAnswer(
         ? answerZone
         : anchor.whose.zone;
   const anchored = anchorAt(now, anchorZone, anchor.time, anchor.day);
+  if (when === 'at')
+    return {
+      today,
+      moment: anchored.moment.withTimeZone(answerZone),
+      anchored,
+    };
   const direction = when === 'after' ? 'later' : 'earlier';
   const moment = shift(anchored.moment, duration, direction);
   return {

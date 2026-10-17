@@ -22,7 +22,7 @@ interface AnchorPickerProps {
   children: ReactNode;
 }
 
-/** The chosen-time slot in sentence 5: a time of day, and today, tomorrow or yesterday. */
+/** The chosen-time slot: a time of day, and today, tomorrow or yesterday. */
 export function AnchorPicker({
   time,
   day,

@@ -4,10 +4,30 @@ import { useIntl } from 'react-intl';
 import type { Direction } from '../time';
 import styles from './Picker.module.css';
 
-/** Whether the sentence asks about now, a time from now or ago, or a time after or before a chosen time. */
-export type When = 'now' | Direction | 'after' | 'before';
+/**
+ * Whether the sentence asks about now, a time from now or ago, a chosen
+ * time, or a time after or before a chosen time.
+ */
+export type When = 'now' | Direction | 'at' | 'after' | 'before';
 
-const choices: readonly When[] = ['now', 'later', 'earlier', 'after', 'before'];
+const choices: readonly When[] = [
+  'now',
+  'later',
+  'earlier',
+  'at',
+  'after',
+  'before',
+];
+
+/** Whether the sentence has a chosen time, and whose time it is. */
+export function isAnchored(when: When): boolean {
+  return when === 'at' || when === 'after' || when === 'before';
+}
+
+/** Whether the sentence counts a length of time. */
+export function counts(when: When): boolean {
+  return when !== 'now' && when !== 'at';
+}
 
 interface DirectionPickerProps {
   value: When;

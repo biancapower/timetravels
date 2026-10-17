@@ -79,6 +79,11 @@ test.each([
     }),
     '?in=Europe/London&when=after&for=1h&at=15:00&day=yesterday&at-in=Asia/Tokyo',
   ],
+  [
+    'here, at 3 pm in Tokyo, with no length',
+    asked({ when: 'at', anchor: { ...at3pm, whose: tokyo } }),
+    '?in=Australia/Sydney&when=at&at=15:00&at-in=Asia/Tokyo',
+  ],
 ])('%s is written as its address, and reads back', (_, question, search) => {
   expect(writeAddress(question, deviceZone)).toBe(search);
   expect(read(search)).toEqual(question);
