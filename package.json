@@ -57,6 +57,7 @@
     "test:e2e": "playwright test",
     "check:full": "pnpm check && pnpm test:e2e",
     "browsers": "playwright install chromium",
-    "test:hooks": "scripts/test-hooks.sh"
+    "test:hooks": "scripts/test-hooks.sh",
+    "places-data": "node scripts/places-data.js"
   }
 }
