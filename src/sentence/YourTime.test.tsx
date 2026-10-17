@@ -86,3 +86,11 @@ test('your date gives its year when only yours is in the next one', () => {
     screen.getByText(/^Friday 1 January 2027 at 10:00\sam your time$/),
   ).toBeInTheDocument();
 });
+
+test('after a time of yours, your time is that time plus the span', () => {
+  // 3 pm today in Sydney, plus an hour, is 6 am in London, where it's still
+  // Friday, so London's "tomorrow" is your today.
+  renderAnswer('Europe/London', { when: 'after' });
+  expect(screen.getByText(/^tomorrow, Saturday 6:00\sam$/)).toBeInTheDocument();
+  expect(screen.getByText(/^4:00\spm your time$/)).toBeInTheDocument();
+});
