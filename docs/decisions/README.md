@@ -19,3 +19,4 @@ Short records of decisions with their reasons, written when they were made. Form
 | [0013](0013-plain-language-tagline.md) | The tagline: plain words, not one sentence | Approved 2026-10-11 |
 | [0014](0014-screen-reader-checks-unscheduled.md) | Screen-reader checks are not tied to a release; supersedes 0008's timing | Approved 2026-10-11 |
 | [0015](0015-production-branch.md) | Production deploys from a `production` branch the maintainer moves at a release; supersedes 0011 on what `main` deploys | Approved 2026-10-11 |
+| [0016](0016-unreleased-changelog.md) | Each pull request with a change a user would notice adds to an Unreleased changelog section | Approved 2026-10-17 |
