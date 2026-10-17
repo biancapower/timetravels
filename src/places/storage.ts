@@ -30,14 +30,15 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 /**
  * A stored place, if it is still one of the places offered. A place whose
- * city name has changed since it was saved is found by its zone.
+ * city name has changed since it was saved is found by its zone, as a city
+ * rather than a country or state there.
  */
 function findPlace(places: readonly Place[], stored: unknown): Place | null {
   if (!isObject(stored)) return null;
   const { city, zone } = stored;
   return (
     places.find((place) => place.city === city && place.zone === zone) ??
-    places.find((place) => place.zone === zone) ??
+    places.find((place) => place.zone === zone && !place.searchOnly) ??
     null
   );
 }

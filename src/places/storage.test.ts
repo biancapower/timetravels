@@ -73,7 +73,12 @@ test('a saved place whose city has since been renamed is found by its zone', () 
     JSON.stringify({ city: 'Calcutta', zone: 'Asia/Calcutta' }),
   );
   const kolkata: Place = { city: 'Kolkata', zone: 'Asia/Calcutta' };
-  expect(loadPlace([kolkata], noSavedPlaces)).toEqual({
+  const india: Place = {
+    city: 'India',
+    zone: 'Asia/Calcutta',
+    searchOnly: true,
+  };
+  expect(loadPlace([india, kolkata], noSavedPlaces)).toEqual({
     kind: 'city',
     place: kolkata,
   });
