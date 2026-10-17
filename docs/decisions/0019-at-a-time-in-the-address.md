@@ -5,14 +5,14 @@
 **Decision.** This extends 0017; nothing in it changes.
 
 - `when=at` asks about a chosen time. It takes `at`, `day` and `at-in` as `after` and `before` do, and no `for`; a `for` in such an address is ignored.
-- With `when=at` and no `day`, the chosen time is the next one in that place: today's if it is still to come there, otherwise tomorrow's. `day=tomorrow` and `day=yesterday` mean what they do for `after` and `before`.
+- `day` means what it does for `after` and `before`: no `day` is today in the chosen time's place, even when that time has passed there, and the question then reads in the past ("when it was 6:00").
 
 For example, `timetravels.dev/?in=Australia/Sydney&when=at&at=10:00&at-in=Europe/London`.
 
-**Alternatives.** No `day` meaning today in that place, as for `after` and `before`: consistent, but someone asking "when it's 10 am in London" almost always means the coming one, and today's may already have passed there. A separate parameter for the time, such as `when-its=10:00`: it would duplicate `at`.
+**Alternatives.** No `day` meaning the next such time, today's or tomorrow's: closer to what "when it's 10 am in London" usually means, but the time picker still showed "Today" while the answer used tomorrow, so the screen contradicted itself. Presetting "Tomorrow" when a place is picked whose time has passed: visible, but the app would then choose the day itself depending on the clock. A separate parameter for the time, such as `when-its=10:00`: it would duplicate `at`.
 
-**Reasons.** Reusing `at`, `day` and `at-in` keeps one way to write a chosen time. Taking the next occurrence follows what the question means in everyday speech, while `day` still allows a particular day.
+**Reasons.** Reusing `at`, `day` and `at-in`, with the same meanings, keeps one way to write a chosen time. The sentence, the time picker and the answer always agree, and the sentence's tense says whether the time has passed.
 
 **Consequences.** Existing addresses keep their meaning. An "at" address opened later can give a different day, as "10 hours from now" does: the address holds the question, not a moment.
 
-**Status.** Proposed by Claude; approved by @biancapower, 2026-10-18.
+**Status.** Proposed by Claude, first with no `day` meaning the next such time. The maintainer found that contradicted the time picker while testing, and chose today; approved by @biancapower, 2026-10-18.
