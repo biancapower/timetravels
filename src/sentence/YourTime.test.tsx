@@ -9,6 +9,11 @@ import type { Question } from './resolveAnswer';
 // 9:41 am on Saturday 10 October 2026 in Sydney (GMT+11).
 const now = Temporal.Instant.from('2026-10-09T22:41:00Z');
 
+/** The line with your time, whose time is in an element of its own. */
+function yourLine() {
+  return screen.getByText(/your time$/);
+}
+
 function renderAnswer(
   answerZone: string,
   overrides: Partial<Question> = {},
@@ -31,19 +36,19 @@ function renderAnswer(
 test('another place’s answer gives your time, without the day when it’s the same', () => {
   renderAnswer('Asia/Tokyo');
   expect(screen.getByText(/^Saturday 7:41\sam$/)).toBeInTheDocument();
-  expect(screen.getByText(/^9:41\sam your time$/)).toBeInTheDocument();
+  expect(yourLine()).toHaveTextContent(/^9:41\sam your time$/);
 });
 
 test('your day is named when it differs from the place’s', () => {
   renderAnswer('Europe/London');
   expect(screen.getByText(/^Friday 11:41\spm$/)).toBeInTheDocument();
-  expect(screen.getByText(/^Saturday 9:41\sam your time$/)).toBeInTheDocument();
+  expect(yourLine()).toHaveTextContent(/^Saturday 9:41\sam your time$/);
 });
 
 test('a place ahead of you gives your earlier time, on your day', () => {
   // 9:41 am in Sydney is 11:41 am in Auckland (GMT+13).
   renderAnswer('Pacific/Auckland');
-  expect(screen.getByText(/^9:41\sam your time$/)).toBeInTheDocument();
+  expect(yourLine()).toHaveTextContent(/^9:41\sam your time$/);
 });
 
 test.each([
@@ -61,14 +66,14 @@ test('a dated answer gives your date, at your offset then', () => {
     when: 'later',
     duration: { months: 6, hours: 0, minutes: 0 },
   });
-  expect(
-    screen.getByText(/^Saturday 10 April 2027 at 8:41\sam your time$/),
-  ).toBeInTheDocument();
+  expect(yourLine()).toHaveTextContent(
+    /^Saturday 10 April 2027 at 8:41\sam your time$/,
+  );
 });
 
 test('your time follows the locale’s clock', () => {
   renderAnswer('Asia/Tokyo', {}, { locale: 'en-GB' });
-  expect(screen.getByText(/^09:41 your time$/)).toBeInTheDocument();
+  expect(yourLine()).toHaveTextContent(/^09:41 your time$/);
 });
 
 test('your date gives its year when only yours is in the next one', () => {
@@ -82,9 +87,9 @@ test('your date gives its year when only yours is in the next one', () => {
   expect(
     screen.getByText(/^Thursday 31 December at 11:00\spm$/),
   ).toBeInTheDocument();
-  expect(
-    screen.getByText(/^Friday 1 January 2027 at 10:00\sam your time$/),
-  ).toBeInTheDocument();
+  expect(yourLine()).toHaveTextContent(
+    /^Friday 1 January 2027 at 10:00\sam your time$/,
+  );
 });
 
 test('after a time of yours, your time is that time plus the span', () => {
@@ -92,5 +97,5 @@ test('after a time of yours, your time is that time plus the span', () => {
   // Friday, so London's "tomorrow" is your today.
   renderAnswer('Europe/London', { when: 'after' });
   expect(screen.getByText(/^tomorrow, Saturday 6:00\sam$/)).toBeInTheDocument();
-  expect(screen.getByText(/^4:00\spm your time$/)).toBeInTheDocument();
+  expect(yourLine()).toHaveTextContent(/^4:00\spm your time$/);
 });

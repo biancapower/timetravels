@@ -121,7 +121,9 @@ test('another place’s answer gives your own time, and here’s doesn’t', asy
   await page.getByRole('combobox', { name: 'Search for a city' }).fill('lond');
   await page.getByRole('option', { name: 'London', exact: true }).click();
   await expect(page.getByText(/^Friday 11:41\spm$/i)).toBeVisible();
-  await expect(page.getByText(/^Saturday 9:41\sam your time$/i)).toBeVisible();
+  const yours = page.getByText(/^Saturday 9:41\sam your time$/i);
+  await expect(yours).toBeVisible();
+  await expect(yours).toHaveCSS('font-style', 'italic');
 
   await slot(page, 'London').click();
   await page.getByRole('option', { name: 'Here', exact: true }).click();

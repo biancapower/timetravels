@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import type { Where } from '../places/named';
 import { cityOf } from '../places/places';
@@ -114,10 +115,13 @@ export function Answer({
       </p>
       <p className={styles.zone}>{label}</p>
       {yours && (
-        <p className={styles.zone}>
+        <p className={styles.yours}>
           {intl.formatMessage(
             { id: 'answer.yourTime' },
             {
+              clock: (chunks: ReactNode[]) => (
+                <span className={styles.yourClock}>{chunks}</span>
+              ),
               time: yourClock(
                 yours.moment,
                 yours.otherDay,

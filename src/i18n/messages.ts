@@ -26,7 +26,7 @@ const en = {
     '{tense, select, past {What time was it} other {What time will it be}} {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>before</direction> {anchorTense, select, past {} other {it’s }}<anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
   'answer.relativeDay': '{relativeDay}, {time}',
   'answer.named': '{name} ({city}, {offset})',
-  'answer.yourTime': '{time} your time',
+  'answer.yourTime': '<clock>{time}</clock> your time',
   'answer.transition':
     '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}, so {whose, select, answer {the answer} other {the time in {city}}} is {amount, plural, =60 {an hour} other {# minutes}} {shift, select, later {later} other {earlier}} than counting {count, select, back {back on} other {on}} the clock gives.',
   'answer.transitionCalendar':

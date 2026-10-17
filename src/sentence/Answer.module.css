@@ -40,6 +40,19 @@
   margin: 0;
 }
 
+/* Your own time, set apart from the place's details by italics, with the
+   time itself in the text colour. */
+.answer > .yours {
+  margin-block-start: var(--size-3);
+  color: var(--muted);
+  font-size: var(--font-size-3);
+  font-style: italic;
+}
+
+.yourClock {
+  color: var(--text);
+}
+
 .note {
   margin-block-start: var(--size-3);
   padding: var(--size-3) var(--size-4);
