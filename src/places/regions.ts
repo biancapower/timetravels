@@ -18,11 +18,11 @@ export function regionPlaces(
   taken: readonly Place[],
 ): Place[] {
   const known = knownZones(supported);
-  const countryNames = new Intl.DisplayNames(locale, { type: 'region' });
-  const countryName = (code: string) => {
-    const name = countryNames.of(code);
-    return name && name !== code ? name : undefined;
-  };
+  const countryNames = new Intl.DisplayNames(locale, {
+    type: 'region',
+    fallback: 'none',
+  });
+  const countryName = (code: string) => countryNames.of(code);
   const places: Place[] = [];
   const cityZones = new Map<string, string>();
   for (const place of taken) cityZones.set(fold(place.city), place.zone);

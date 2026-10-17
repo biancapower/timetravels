@@ -90,7 +90,8 @@ for (const line of lines('admin1CodesASCII.txt')) {
 }
 regions.sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]));
 
-// One entry per line, so an update's diff shows what changed.
+// One entry per line, so an update's diff shows what changed. The app reads
+// only the countries and regions; the versions record what they came from.
 const entries = (list) => list.map((entry) => `    ${entry}`).join(',\n');
 writeFileSync(
   'src/places/regions.json',
