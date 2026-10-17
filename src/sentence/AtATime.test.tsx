@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { App } from '../App';
 import { named } from '../testing/named';
@@ -113,4 +113,42 @@ test('a length chosen before doesn’t apply, so a month’s date isn’t shown'
   ).toBeInTheDocument();
   expect(screen.getByText(/^Saturday 10:00\sAM$/i)).toBeInTheDocument();
   expect(location.search).not.toContain('for=');
+});
+
+test('Back to an “at” question leaves the length chosen before', async () => {
+  open('/?in=Australia/Sydney&when=from-now&for=2h');
+  history.pushState(
+    null,
+    '',
+    '/?in=Australia/Sydney&when=at&at=10:00&day=tomorrow&at-in=Europe/London',
+  );
+  act(() => {
+    dispatchEvent(new PopStateEvent('popstate'));
+  });
+  expect(
+    screen.getByRole('heading', {
+      name: named(
+        'What time will it be here when it’s 10 AM tomorrow in London?',
+      ),
+    }),
+  ).toBeInTheDocument();
+
+  await choose('when', 'from now');
+  expect(
+    await screen.findByRole('heading', {
+      name: named('What time will it be here 2 hours from now?'),
+    }),
+  ).toBeInTheDocument();
+});
+
+test('a length in an “at” address is ignored, and tidied away', () => {
+  open('/?in=Australia/Sydney&when=at&for=6mo&at=10:00&at-in=Europe/London');
+  expect(
+    screen.getByRole('heading', {
+      name: named('What time was it here when it was 10 AM in London?'),
+    }),
+  ).toBeInTheDocument();
+  expect(location.search).toBe(
+    '?in=Australia/Sydney&when=at&at=10:00&at-in=Europe/London',
+  );
 });
