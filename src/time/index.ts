@@ -255,6 +255,22 @@ export function dayRelation(reference: Moment, moment: Moment): DayRelation {
   return 'further';
 }
 
+/**
+ * The same moment on another zone's clock, and whether it falls on another
+ * date there; null when the two clocks read the same at that moment.
+ */
+export function yourTime(
+  moment: Moment,
+  zone: string,
+): { moment: Moment; otherDay: boolean } | null {
+  const yours = moment.withTimeZone(zone);
+  if (yours.offsetNanoseconds === moment.offsetNanoseconds) return null;
+  return {
+    moment: yours,
+    otherDay: !yours.toPlainDate().equals(moment.toPlainDate()),
+  };
+}
+
 export interface DateTimeOptions extends FormatOptions {
   /** Today; the year is shown when the moment falls in another year. */
   reference?: Moment;
