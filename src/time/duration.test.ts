@@ -76,7 +76,7 @@ test('a duration that reads gives the duration', () => {
 });
 
 test.each(['0', '0m', '0h', '0d', '0.2m', '0 days 0 hours'])(
-  '"%s" is no time at all',
+  '"%s" is under a minute',
   (text) => {
     expect(readDuration(text)).toEqual({ problem: 'zero' });
   },
