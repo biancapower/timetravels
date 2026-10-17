@@ -13,6 +13,7 @@ What changed in each release of TimeTravels, newest first. Versions follow [sema
 - **Your own time** under another place's answer: "Saturday 9:41 am your time", naming your day only when it differs from the place's. There's no line when both clocks read the same.
 - **The question is kept in the page's address,** so it can be bookmarked or sent to someone, Back and Forward step through your changes, and a reload keeps the whole question. About's privacy section says what the address holds.
 - **Search by country and state:** "Japan" or "Tasmania" finds its time, and a country or state across several zones offers each, such as "Australia: Perth". The names of states come from GeoNames, credited in About.
+- **A time somewhere else:** "What time will it be here when it's 10 am in London?", by choosing "at a time".
 
 ### Changed
 
