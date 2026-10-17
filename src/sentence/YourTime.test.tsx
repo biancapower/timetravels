@@ -9,16 +9,20 @@ import type { Question } from './resolveAnswer';
 // 9:41 am on Saturday 10 October 2026 in Sydney (GMT+11).
 const now = Temporal.Instant.from('2026-10-09T22:41:00Z');
 
-function renderAnswer(answerZone: string, overrides: Partial<Question> = {}) {
+function renderAnswer(
+  answerZone: string,
+  overrides: Partial<Question> = {},
+  { at = now, locale = 'en-AU' } = {},
+) {
   render(
     <IntlProvider locale="en" messages={catalogues.en}>
       <Answer
-        now={now}
+        now={at}
         question={question(answerZone, {
           deviceZone: 'Australia/Sydney',
           ...overrides,
         })}
-        locale="en-AU"
+        locale={locale}
       />
     </IntlProvider>,
   );
@@ -59,5 +63,26 @@ test('a dated answer gives your date, at your offset then', () => {
   });
   expect(
     screen.getByText(/^Saturday 10 April 2027 at 8:41\sam your time$/),
+  ).toBeInTheDocument();
+});
+
+test('your time follows the locale’s clock', () => {
+  renderAnswer('Asia/Tokyo', {}, { locale: 'en-GB' });
+  expect(screen.getByText(/^09:41 your time$/)).toBeInTheDocument();
+});
+
+test('your date gives its year when only yours is in the next one', () => {
+  // 10 am on Friday 25 December 2026 in Sydney is 11 pm on the 24th in
+  // London, so a week on is New Year's Eve there and New Year's Day here.
+  renderAnswer(
+    'Europe/London',
+    { when: 'later', duration: { weeks: 1, hours: 0, minutes: 0 } },
+    { at: Temporal.Instant.from('2026-12-24T23:00:00Z') },
+  );
+  expect(
+    screen.getByText(/^Thursday 31 December at 11:00\spm$/),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(/^Friday 1 January 2027 at 10:00\sam your time$/),
   ).toBeInTheDocument();
 });

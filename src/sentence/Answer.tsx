@@ -276,8 +276,7 @@ function yourClock(
   locale: string,
   withDate: boolean,
 ): string {
-  if (!otherDay)
-    return yours.toLocaleString(locale, { hour: 'numeric', minute: '2-digit' });
+  if (!otherDay) return yours.toLocaleString(locale, { timeStyle: 'short' });
   return withDate
     ? formatDateTime(yours, { locale, reference: today })
     : formatTime(yours, { locale });
