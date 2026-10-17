@@ -142,3 +142,35 @@ test('a third place that is unreadable or not in the list is ignored', () => {
   );
   expect(loadAnchorPlace(places)).toBeNull();
 });
+
+test('a country or state is saved as its name and zone, and found in the list again', () => {
+  const tasmania: Place = {
+    city: 'Tasmania',
+    zone: 'Australia/Hobart',
+    searchOnly: true,
+  };
+  const withStates = [...places, tasmania];
+  savePlace({ kind: 'city', place: tasmania });
+  saveSavedPlaces({
+    home: tasmania,
+    named: [{ name: 'Work', place: tasmania }],
+  });
+  saveAnchorPlace(tasmania);
+
+  for (const key of [
+    'timetravels.place',
+    'timetravels.savedPlaces',
+    'timetravels.anchorPlace',
+  ])
+    expect(localStorage.getItem(key)).not.toContain('searchOnly');
+  const loaded = loadSavedPlaces(withStates);
+  expect(loaded).toEqual({
+    home: tasmania,
+    named: [{ name: 'Work', place: tasmania }],
+  });
+  expect(loadPlace(withStates, loaded)).toEqual({
+    kind: 'city',
+    place: tasmania,
+  });
+  expect(loadAnchorPlace(withStates)).toEqual(tasmania);
+});

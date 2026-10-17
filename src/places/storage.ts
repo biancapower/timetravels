@@ -43,6 +43,11 @@ function findPlace(places: readonly Place[], stored: unknown): Place | null {
   );
 }
 
+// Only what identifies a place is kept; the rest comes from the list again.
+function stored({ city, zone }: Place) {
+  return { city, zone };
+}
+
 /** The saved home and named places, leaving out any whose zone this browser doesn't know. */
 export function loadSavedPlaces(places: readonly Place[]): SavedPlaces {
   const stored = read(savedKey);
@@ -59,7 +64,13 @@ export function loadSavedPlaces(places: readonly Place[]): SavedPlaces {
 }
 
 export function saveSavedPlaces(saved: SavedPlaces): void {
-  write(savedKey, saved);
+  write(savedKey, {
+    home: saved.home && stored(saved.home),
+    named: saved.named.map(({ name, place }) => ({
+      name,
+      place: stored(place),
+    })),
+  });
 }
 
 /** The place the sentence was last asked about, if it still exists. */
@@ -84,7 +95,7 @@ export function savePlace(where: Where | null): void {
   write(
     key,
     where?.kind === 'city'
-      ? where.place
+      ? stored(where.place)
       : where?.kind === 'home'
         ? { home: true }
         : where?.kind === 'named'
@@ -100,5 +111,5 @@ export function loadAnchorPlace(places: readonly Place[]): Place | null {
 
 /** Saves the third place, or clears it when the time is mine or the picked place's. */
 export function saveAnchorPlace(place: Place | null): void {
-  write(anchorKey, place);
+  write(anchorKey, place && stored(place));
 }
