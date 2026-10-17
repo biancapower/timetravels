@@ -6,7 +6,7 @@ import {
   writeDuration,
   type Duration,
 } from '../time';
-import type { When } from './DirectionPicker';
+import { counts, isAnchored, type When } from './DirectionPicker';
 import type { AnchorSetting } from './resolveAnswer';
 
 /** The parts of the question the address holds. */
@@ -21,6 +21,7 @@ const whenWords: Record<When, string | null> = {
   now: null,
   later: 'from-now',
   earlier: 'ago',
+  at: 'at',
   after: 'after',
   before: 'before',
 };
@@ -40,8 +41,8 @@ export function writeAddress(asked: Asked, deviceZone: string): string {
     ['in', placeZone],
     ['when', whenWords[when]],
   ];
-  if (when !== 'now') parts.push(['for', writeDuration(duration)]);
-  if (when === 'after' || when === 'before') {
+  if (counts(when)) parts.push(['for', writeDuration(duration)]);
+  if (isAnchored(when)) {
     const whose =
       anchor.whose === 'mine'
         ? deviceZone

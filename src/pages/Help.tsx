@@ -18,6 +18,7 @@ const questions: MessageId[] = [
   'help.question3',
   'help.question4',
   'help.question5',
+  'help.question6',
 ];
 
 const bold = { b: (chunks: ReactNode[]) => <strong>{chunks}</strong> };

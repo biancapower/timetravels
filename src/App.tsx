@@ -19,7 +19,7 @@ import {
   savePlace,
   saveSavedPlaces,
 } from './places/storage';
-import type { When } from './sentence/DirectionPicker';
+import { counts, isAnchored, type When } from './sentence/DirectionPicker';
 import { readAddress, writeAddress } from './sentence/address';
 import { LiveAnswer } from './sentence/LiveAnswer';
 import {
@@ -110,7 +110,7 @@ export function App({
       replaceNext.current = true;
       setWhere(asked.where);
       setWhen(asked.when);
-      if (asked.when !== 'now') setDuration(asked.duration);
+      if (counts(asked.when)) setDuration(asked.duration);
       if (isAnchored(asked.when)) setAnchor(asked.anchor);
     };
     addEventListener('popstate', back);
@@ -156,8 +156,12 @@ export function App({
   const question: Question = {
     when,
     duration,
-    // With no place picked there is only one place, so "here" is the only reading.
-    anchor: place ? anchor : { ...anchor, whose: 'mine' },
+    // With no place picked, the chosen time is here's, except that "at a
+    // time" can take another place's.
+    anchor:
+      place || (when === 'at' && typeof anchor.whose === 'object')
+        ? anchor
+        : { ...anchor, whose: 'mine' },
     answerZone: place?.zone ?? zone,
     deviceZone: zone,
   };
@@ -209,10 +213,6 @@ export function App({
   );
 }
 
-function isAnchored(when: When): boolean {
-  return when === 'after' || when === 'before';
-}
-
 function anchorCityOf(
   whose: AnchorSetting['whose'],
   place: Place | undefined,
@@ -229,7 +229,7 @@ type Tense = 'past' | 'future';
  * past: "was it … before it's 10 am" clashes, so a past answer makes it so.
  */
 function tensesOf(question: Question): { tense: Tense; anchorTense: Tense } {
-  if (question.when !== 'after' && question.when !== 'before')
+  if (!isAnchored(question.when))
     return { tense: 'future', anchorTense: 'future' };
   const now = Temporal.Now.instant();
   const { moment, anchored } = resolveAnswer(now, question);

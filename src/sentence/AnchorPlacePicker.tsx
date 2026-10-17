@@ -10,7 +10,8 @@ import type { AnchorSetting } from './resolveAnswer';
 
 interface AnchorPlacePickerProps {
   whose: AnchorSetting['whose'];
-  city: string;
+  /** The picked place's city, or nothing when the place is here. */
+  city?: string;
   /** The places another place is searched from. */
   places: readonly Place[];
   onChange: (whose: AnchorSetting['whose']) => void;
@@ -21,7 +22,7 @@ interface AnchorPlacePickerProps {
 
 /**
  * Whose time the chosen time is: "here", say "in London" for the
- * picked place, or another place's, found with the same search as the
+ * picked place when there is one, or another place's, found with the same search as the
  * place slot.
  */
 export function AnchorPlacePicker({
@@ -78,13 +79,15 @@ export function AnchorPlacePicker({
                 >
                   {intl.formatMessage({ id: 'anchorPlace.mine' })}
                 </Menu.RadioItem>
-                <Menu.RadioItem
-                  value="theirs"
-                  closeOnClick
-                  className={styles.item}
-                >
-                  {intl.formatMessage({ id: 'anchorPlace.theirs' }, { city })}
-                </Menu.RadioItem>
+                {city && (
+                  <Menu.RadioItem
+                    value="theirs"
+                    closeOnClick
+                    className={styles.item}
+                  >
+                    {intl.formatMessage({ id: 'anchorPlace.theirs' }, { city })}
+                  </Menu.RadioItem>
+                )}
                 {other && (
                   <Menu.RadioItem
                     value="other"
