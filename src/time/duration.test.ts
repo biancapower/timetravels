@@ -95,9 +95,16 @@ test.each([
   expect(readDuration(text)).toEqual({ problem: 'tooLong', unit, limit });
 });
 
-test.each(['', 'soon', 'banana', '-2h', '1:75', '1.5 days', '1 day 1 day'])(
+test.each(['', 'soon', 'banana', '-2h', '1:75', '1 day 1 day'])(
   '"%s" is unreadable',
   (text) => {
     expect(readDuration(text)).toEqual({ problem: 'unreadable' });
+  },
+);
+
+test.each(['1.5 days', '0.5 months', '1.5w', '2 hours 1.5 years'])(
+  '"%s" has a calendar unit that isn’t whole',
+  (text) => {
+    expect(readDuration(text)).toEqual({ problem: 'notWhole' });
   },
 );

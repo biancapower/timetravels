@@ -157,6 +157,7 @@ const listPattern = new RegExp(`^${part}(?:${separator}${part})*$`);
 /** Why a typed duration couldn't be used. */
 export type DurationProblem =
   | { problem: 'unreadable' }
+  | { problem: 'notWhole' }
   | { problem: 'zero' }
   | {
       problem: 'tooLong';
@@ -173,8 +174,8 @@ const tooManyHours: DurationProblem = {
 /**
  * Reads a typed duration such as "10", "1.5h", "90m", "1h30", "1:30",
  * "3d", "6 months" or "1 day 2 hours", or says why it can't: it isn't a
- * duration, it's zero, or it reaches 1000 hours of exact time or a
- * calendar unit's limit.
+ * duration, a calendar unit isn't whole, it's zero, or it reaches 1000
+ * hours of exact time or a calendar unit's limit.
  */
 export function readDuration(
   text: string,
@@ -215,7 +216,7 @@ function parseParts(input: string): { duration: Duration } | DurationProblem {
     const value = Number(amount);
     if (unit === 'hours') minutes += value * 60;
     else if (unit === 'minutes') minutes += value;
-    else if (!Number.isInteger(value)) return { problem: 'unreadable' };
+    else if (!Number.isInteger(value)) return { problem: 'notWhole' };
     else if (value >= calendarLimits[unit]) {
       return { problem: 'tooLong', unit, limit: calendarLimits[unit] };
     } else if (value > 0) {
