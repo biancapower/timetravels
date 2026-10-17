@@ -20,6 +20,6 @@ A release is a version number in `package.json`, an entry in `CHANGELOG.md`, the
 4. **Release review, on staging.** A fresh Claude session reviews the release with the maintainer. It writes nothing. Anything it finds is fixed as in step 3.
 5. **Go live.** The maintainer moves `production` to the release commit: the exact commit the user test and review ran against, which may not be the head of `main` if Dependabot has merged since. They check timetravels.dev shows the new version on its About page, then tag that commit `v` plus the version (for example `v0.1.0`) and publish the release notes on GitHub. If that happens on a later day than the changelog says, the date in `CHANGELOG.md` is corrected in the next pull request.
 
-A fix that can't wait for the next release is a patch release: the same steps, with a short changelog entry.
+A fix that can't wait for the next release is a patch release: the same steps, with a short changelog entry. Its entry takes only the lines for what it ships out of Unreleased; the rest stay there.
 
 Claude never moves `production`, tags or publishes a release; the guard hook in `.claude/settings.json` blocks each of them.
