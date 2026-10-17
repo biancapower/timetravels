@@ -154,7 +154,7 @@ const en = {
   'about.privacyStorage':
     'There are no accounts. The places you choose, your home and the places you name are saved in your browser on this device. Your browser also keeps a copy of the app itself, so it works offline.',
   'about.privacyAddress':
-    'The question you’re asking is also kept in the page’s address, so you can bookmark it or send it to someone: the places in it, as cities, the time you chose, and how long. Your home and the names you give places are never in it. Cloudflare, which hosts the site, receives the address when the page loads from the internet rather than from the copy your browser keeps.',
+    'The question you’re asking is also kept in the page’s address, so you can bookmark it or send it to someone. It holds the time zones of the places in it, including your own and your home’s, the time you chose, and how long. The names you give places are never in it. Cloudflare, which hosts the site, receives the address when the page loads from the internet rather than from the copy your browser keeps.',
   'about.privacyAnalytics':
     'The site uses Cloudflare Web Analytics to count page views and measure page speed. It sets no cookies, and Cloudflare says it does not collect or use visitors’ personal data.',
   'about.creditsTitle': 'Credits',
