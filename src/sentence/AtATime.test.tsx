@@ -62,13 +62,14 @@ test('"at a time" asks the time here when it’s a time in another place', async
   );
   fireEvent.click(within(dialog).getByRole('option', { name: 'London' }));
 
-  // London's today is Friday, so its 10 am has passed: 8 pm Friday here.
+  // London's Friday 10 am has passed, so it's the next one, on Saturday:
+  // 8 pm Saturday here.
   expect(
     await screen.findByRole('heading', {
-      name: named('What time was it here when it was 10 AM in London?'),
+      name: named('What time will it be here when it’s 10 AM in London?'),
     }),
   ).toBeInTheDocument();
-  expect(screen.getByText(/^yesterday, Friday 8:00\sPM$/i)).toBeInTheDocument();
+  expect(screen.getByText(/^Saturday 8:00\sPM$/i)).toBeInTheDocument();
   expect(location.search).toBe(
     '?in=Australia/Sydney&when=at&at=10:00&at-in=Europe/London',
   );
@@ -145,7 +146,7 @@ test('a length in an “at” address is ignored, and tidied away', () => {
   open('/?in=Australia/Sydney&when=at&for=6mo&at=10:00&at-in=Europe/London');
   expect(
     screen.getByRole('heading', {
-      name: named('What time was it here when it was 10 AM in London?'),
+      name: named('What time will it be here when it’s 10 AM in London?'),
     }),
   ).toBeInTheDocument();
   expect(location.search).toBe(
@@ -174,5 +175,18 @@ test('a time that happens twice says which is used, without counting from it', (
     screen.getByText(
       '1:30 AM happened twice in London that day, when the clocks went back. This uses the first, at GMT+1.',
     ),
+  ).toBeInTheDocument();
+});
+
+test('a time chosen for yesterday is past, and reads so', () => {
+  open(
+    '/?in=Australia/Sydney&when=at&at=10:00&day=yesterday&at-in=Europe/London',
+  );
+  expect(
+    screen.getByRole('heading', {
+      name: named(
+        'What time was it here when it was 10 AM yesterday in London?',
+      ),
+    }),
   ).toBeInTheDocument();
 });

@@ -1,6 +1,7 @@
 import {
   anchorAt,
   calendarLanding,
+  isPast,
   nowIn,
   shift,
   type AnchorDay,
@@ -64,12 +65,18 @@ export function resolveAnswer(
         ? answerZone
         : anchor.whose.zone;
   const anchored = anchorAt(now, anchorZone, anchor.time, anchor.day);
-  if (when === 'at')
+  if (when === 'at') {
+    // "When it's 10 am" with no day means the next 10 am there.
+    const next =
+      anchor.day === 0 && isPast(anchored.moment, now)
+        ? anchorAt(now, anchorZone, anchor.time, 1)
+        : anchored;
     return {
       today,
-      moment: anchored.moment.withTimeZone(answerZone),
-      anchored,
+      moment: next.moment.withTimeZone(answerZone),
+      anchored: next,
     };
+  }
   const direction = when === 'after' ? 'later' : 'earlier';
   const moment = shift(anchored.moment, duration, direction);
   return {
