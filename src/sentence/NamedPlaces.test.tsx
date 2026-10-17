@@ -1,9 +1,20 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { afterEach, expect, test } from 'vitest';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { App } from '../App';
 import { named } from '../testing/named';
 
+// The full list of over 400 cities is slow to render under jsdom, enough to
+// time a test out on a busy machine, and these tests need only a few of them.
+beforeEach(() => {
+  vi.spyOn(Intl, 'supportedValuesOf').mockReturnValue([
+    'Asia/Tokyo',
+    'Australia/Sydney',
+    'Europe/London',
+  ]);
+});
+
 afterEach(() => {
+  vi.restoreAllMocks();
   localStorage.clear();
 });
 
