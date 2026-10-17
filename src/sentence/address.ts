@@ -80,7 +80,10 @@ export function readAddress(
     places: readonly Place[];
     deviceZone: string;
     now: Temporal.Instant;
-    /** The place to fall back to: the one saved on this device. */
+    /**
+     * The place saved on this device: it's used when the address's place
+     * can't be read, and kept, with its name, when it's in the same zone.
+     */
     where: Where | null;
   },
 ): Asked | null {
@@ -93,9 +96,11 @@ export function readAddress(
   const where: Where | null =
     place === null
       ? options.where
-      : sameZone(place.zone, deviceZone)
-        ? null
-        : { kind: 'city', place };
+      : options.where && sameZone(place.zone, options.where.place.zone)
+        ? options.where
+        : sameZone(place.zone, deviceZone)
+          ? null
+          : { kind: 'city', place };
 
   const when =
     (Object.keys(whenWords) as When[]).find(

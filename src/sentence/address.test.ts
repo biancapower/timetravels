@@ -136,3 +136,19 @@ test('each part that can’t be read falls back, and the rest still applies', ()
     anchor: nextHour,
   });
 });
+
+test('a place in the same zone as the one saved here reads as the saved one', () => {
+  const home = { kind: 'home' as const, place: london };
+  expect(read('?in=Europe/London', home)?.where).toEqual(home);
+  // Home here, in the device's own zone, stays home rather than "here".
+  const homeHere = {
+    kind: 'home' as const,
+    place: { city: 'Sydney', zone: 'Australia/Sydney' },
+  };
+  expect(read('?in=Australia/Sydney', homeHere)?.where).toEqual(homeHere);
+  // Another zone is just its city.
+  expect(read('?in=Asia/Tokyo', home)?.where).toEqual({
+    kind: 'city',
+    place: tokyo,
+  });
+});

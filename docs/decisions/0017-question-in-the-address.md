@@ -17,7 +17,7 @@ For example, `timetravels.dev/?in=Europe/London&when=after&for=10h&at=15:00&at-i
 
 - **No "here" or "my time".** Those mean whoever is looking, so the address names the zone instead, and a zone that matches the device reads as "here" again on opening.
 - **Places as time-zone ids,** which are unambiguous and which the time-zone database keeps working when it renames one. A city that shares another's zone, such as Canberra with Sydney, opens as the zone's own city.
-- **Home and named places as their city.** They exist only on the device that saved them.
+- **Home and named places as their city.** They exist only on the device that saved them. On that device, an address in the same zone as the saved place keeps it, so a reload or your own link still reads "at home".
 - **The question, not a moment.** "10 hours from now" counts from when the address is opened.
 - **A part that can't be read falls back** to that part's default, and the rest still applies.
 - **Opening an address doesn't change what is saved.** The remembered place changes only when the person picks one.
