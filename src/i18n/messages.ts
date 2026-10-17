@@ -42,9 +42,9 @@ const en = {
   'answer.landingRepeated':
     '{time} {tense, select, past {happened} other {happens}} twice in {city} on {date}, when the clocks {tense, select, past {went} other {go}} back. This counts from the first, at {offset}.',
   'answer.skipped':
-    'There was no {time} in {city} that day: the clocks went forward. This counts from {actual}.',
+    'There was no {time} in {city} that day: the clocks went forward. {counts, select, no {This uses {actual}.} other {This counts from {actual}.}}',
   'answer.repeated':
-    '{time} happened twice in {city} that day, when the clocks went back. This counts from the first, at {offset}.',
+    '{time} happened twice in {city} that day, when the clocks went back. {counts, select, no {This uses the first, at {offset}.} other {This counts from the first, at {offset}.}}',
   'anchor.today': '{time}',
   'anchor.tomorrow': '{time} tomorrow',
   'anchor.yesterday': '{time} yesterday',

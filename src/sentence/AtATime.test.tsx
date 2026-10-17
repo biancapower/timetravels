@@ -163,3 +163,16 @@ test('another place’s time, once left for “after a time” with no place, le
   ).toBeInTheDocument();
   expect(location.search).toContain('at-in=Australia/Sydney');
 });
+
+test('a time that happens twice says which is used, without counting from it', () => {
+  // Saturday 24 October 2026; London's clocks go back early on the 25th.
+  vi.setSystemTime(new Date('2026-10-24T12:00:00Z'));
+  open(
+    '/?in=Australia/Sydney&when=at&at=01:30&day=tomorrow&at-in=Europe/London',
+  );
+  expect(
+    screen.getByText(
+      '1:30 AM happened twice in London that day, when the clocks went back. This uses the first, at GMT+1.',
+    ),
+  ).toBeInTheDocument();
+});

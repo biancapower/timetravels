@@ -219,6 +219,7 @@ export function Answer({
             {
               time: chosen,
               city: anchorCity,
+              counts: question.when === 'at' ? 'no' : 'yes',
               actual: formatClockTime(anchored.moment.toPlainTime(), {
                 locale,
               }),
@@ -233,6 +234,7 @@ export function Answer({
             {
               time: chosen,
               city: anchorCity,
+              counts: question.when === 'at' ? 'no' : 'yes',
               offset: formatOffset(anchored.moment, { locale }),
             },
           )}
