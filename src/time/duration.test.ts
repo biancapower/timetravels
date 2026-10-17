@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { parseDuration } from './index';
+import { readDuration } from './index';
 
 test.each([
   ['10', { hours: 10, minutes: 0 }],
@@ -37,7 +37,7 @@ test.each([
   ['1d 90m', { days: 1, hours: 1, minutes: 30 }],
   ['2h 3d', { days: 3, hours: 2, minutes: 0 }],
 ])('"%s" reads as %o', (text, expected) => {
-  expect(parseDuration(text)).toEqual(expected);
+  expect(readDuration(text)).toEqual({ duration: expected });
 });
 
 test.each([
@@ -66,5 +66,45 @@ test.each([
   '36500 days',
   '1d 1000h',
 ])('"%s" is not a duration', (text) => {
-  expect(parseDuration(text)).toBeNull();
+  expect(readDuration(text)).not.toHaveProperty('duration');
 });
+
+test('a duration that reads gives the duration', () => {
+  expect(readDuration('90m')).toEqual({
+    duration: { hours: 1, minutes: 30 },
+  });
+});
+
+test.each(['0', '0m', '0h', '0d', '0.2m', '0 days 0 hours'])(
+  '"%s" is under a minute',
+  (text) => {
+    expect(readDuration(text)).toEqual({ problem: 'zero' });
+  },
+);
+
+test.each([
+  ['1000', 'hours', 1000],
+  ['60000m', 'hours', 1000],
+  ['99999999999999999999', 'hours', 1000],
+  ['1d 1000h', 'hours', 1000],
+  ['100 years', 'years', 100],
+  ['1200 months', 'months', 1200],
+  ['5200 weeks', 'weeks', 5200],
+  ['36500 days', 'days', 36500],
+] as const)('"%s" is too long: under %s %s', (text, unit, limit) => {
+  expect(readDuration(text)).toEqual({ problem: 'tooLong', unit, limit });
+});
+
+test.each(['', 'soon', 'banana', '-2h', '1:75', '1 day 1 day'])(
+  '"%s" is unreadable',
+  (text) => {
+    expect(readDuration(text)).toEqual({ problem: 'unreadable' });
+  },
+);
+
+test.each(['1.5 days', '0.5 months', '1.5w', '2 hours 1.5 years'])(
+  '"%s" has a calendar unit that isn’t whole',
+  (text) => {
+    expect(readDuration(text)).toEqual({ problem: 'notWhole' });
+  },
+);

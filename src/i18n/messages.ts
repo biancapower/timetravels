@@ -71,7 +71,12 @@ const en = {
   'durationPicker.input': 'Type a duration',
   'durationPicker.placeholder': 'e.g. 90m, 1h30 or 6mo',
   'durationPicker.set': 'Set',
-  'durationPicker.invalid': 'Couldn’t read that duration',
+  'durationPicker.unreadable': 'Couldn’t read that. Try 90m, 1h30 or 6mo.',
+  'durationPicker.notWhole':
+    'Days, weeks, months and years take whole numbers, such as 2 days.',
+  'durationPicker.zero': 'Make it at least 1 minute.',
+  'durationPicker.tooLong':
+    'That’s too long. Keep it under {limit, number} {unit, select, years {years} months {months} weeks {weeks} days {days} other {hours}}.',
   'durationPicker.quick': 'Common durations',
   'update.available': 'A new version of TimeTravels is ready.',
   'update.reload': 'Update now',

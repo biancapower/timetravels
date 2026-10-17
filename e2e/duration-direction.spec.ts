@@ -67,7 +67,7 @@ test('a duration that cannot be read is reported', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Type a duration' }).fill('soon');
   await page.keyboard.press('Enter');
   await expect(page.getByRole('alert')).toHaveText(
-    'Couldn’t read that duration',
+    'Couldn’t read that. Try 90m, 1h30 or 6mo.',
   );
 });
 

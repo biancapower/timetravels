@@ -71,21 +71,35 @@ test('a typed duration sets the slot', async () => {
   ).toBeInTheDocument();
 });
 
-test('a duration that cannot be read says so and leaves the slot alone', async () => {
-  render(<App zone="Australia/Sydney" locale="en" />);
-  await chooseWhen('right now', 'from now');
-  fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
-  const input = await screen.findByRole('textbox', { name: 'Type a duration' });
-  fireEvent.change(input, { target: { value: 'soon' } });
-  fireEvent.submit(input);
-  expect(await screen.findByRole('alert')).toHaveTextContent(
-    'Couldn’t read that duration',
-  );
-  expect(input).toHaveAttribute('aria-invalid', 'true');
-  expect(
-    within(heading()).getByRole('button', { name: '1 hour' }),
-  ).toBeInTheDocument();
-});
+test.each([
+  ['banana', 'Couldn’t read that. Try 90m, 1h30 or 6mo.'],
+  [
+    '1.5 days',
+    'Days, weeks, months and years take whole numbers, such as 2 days.',
+  ],
+  ['0', 'Make it at least 1 minute.'],
+  ['0.2m', 'Make it at least 1 minute.'],
+  ['1000', 'That’s too long. Keep it under 1,000 hours.'],
+  ['100 years', 'That’s too long. Keep it under 100 years.'],
+  ['36500 days', 'That’s too long. Keep it under 36,500 days.'],
+])(
+  '"%s" says why it can’t be used and leaves the slot alone',
+  async (typed, message) => {
+    render(<App zone="Australia/Sydney" locale="en" />);
+    await chooseWhen('right now', 'from now');
+    fireEvent.click(within(heading()).getByRole('button', { name: '1 hour' }));
+    const input = await screen.findByRole('textbox', {
+      name: 'Type a duration',
+    });
+    fireEvent.change(input, { target: { value: typed } });
+    fireEvent.submit(input);
+    expect(await screen.findByRole('alert')).toHaveTextContent(message);
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(
+      within(heading()).getByRole('button', { name: '1 hour' }),
+    ).toBeInTheDocument();
+  },
+);
 
 test('a common duration can be picked with one tap', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
