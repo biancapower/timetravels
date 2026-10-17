@@ -1,30 +1,40 @@
 // Writes src/places/regions.json: which time zones each country uses, and
 // the states, provinces and territories of countries with several zones,
-// each with the zones its people use. Run by hand to update it, as with a
-// time-zone database update; it downloads its inputs to .cache/.
+// each with the zones its people use. Run by hand with `pnpm places-data`
+// to update it, as with a time-zone database update; it downloads the
+// latest of its inputs to .cache/ each time.
 //
 // Countries come from the time-zone database's zone.tab (public domain).
 // States come from GeoNames (CC BY 4.0): its admin1 names, with each
 // state's zones taken from the populations of its cities in cities1000,
 // keeping any zone with at least 1% of the state's people.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const cache = '.cache/places-data';
 const share = 0.01;
 
 mkdirSync(cache, { recursive: true });
+// Downloads to a temporary name first, so a failed download leaves nothing
+// that looks complete. Returns the file's path and its Last-Modified date.
 function download(url, file) {
   const path = join(cache, file);
-  if (!existsSync(path)) execFileSync('curl', ['-sSfL', '-o', path, url]);
-  return path;
+  const headers = `${path}.headers`;
+  execFileSync('curl', ['-sSfL', '-D', headers, '-o', `${path}.part`, url]);
+  renameSync(`${path}.part`, path);
+  const modified = readFileSync(headers, 'utf8')
+    .split(/\r?\n/)
+    .findLast((line) => /^last-modified:/i.test(line))
+    ?.replace(/^last-modified:\s*/i, '')
+    .trim();
+  return { path, modified };
 }
 
 const tzdata = download(
   'https://data.iana.org/time-zones/tzdata-latest.tar.gz',
   'tzdata.tar.gz',
-);
+).path;
 execFileSync('tar', ['-xzf', tzdata, '-C', cache, 'zone.tab', 'version']);
 const tzVersion = readFileSync(join(cache, 'version'), 'utf8').trim();
 
@@ -36,16 +46,10 @@ const cities = download(
   'https://download.geonames.org/export/dump/cities1000.zip',
   'cities1000.zip',
 );
-execFileSync('unzip', ['-o', '-q', cities, '-d', cache]);
-const geonamesDate = execFileSync(
-  'curl',
-  ['-sSfI', 'https://download.geonames.org/export/dump/cities1000.zip'],
-  { encoding: 'utf8' },
-)
-  .split('\n')
-  .find((line) => /^last-modified:/i.test(line))
-  ?.replace(/^last-modified:\s*/i, '')
-  .trim();
+execFileSync('unzip', ['-o', '-q', cities.path, '-d', cache]);
+// The date records which GeoNames export the file was made from.
+const geonamesDate = cities.modified;
+if (!geonamesDate) throw new Error('GeoNames sent no Last-Modified date');
 
 const lines = (file) =>
   readFileSync(join(cache, file), 'utf8')
@@ -109,5 +113,5 @@ writeFileSync(
   ].join('\n'),
 );
 console.log(
-  `${String(Object.keys(countries).length)} countries, ${String(regions.length)} states, tzdata ${tzVersion}, GeoNames ${String(geonamesDate)}`,
+  `${String(Object.keys(countries).length)} countries, ${String(regions.length)} states, tzdata ${tzVersion}, GeoNames ${geonamesDate}`,
 );
