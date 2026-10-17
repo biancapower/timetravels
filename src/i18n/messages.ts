@@ -158,6 +158,8 @@ const en = {
   'about.creditsTitle': 'Credits',
   'about.credits':
     'Built with React, react-intl, Base UI, temporal-polyfill and Open Props. The CSS reset is <reset>A (more) modern CSS reset</reset> by Andy Bell, under <licence>CC BY 3.0</licence>.',
+  'about.creditsPlaces':
+    'Countries and their time zones come from the <tz>time zone database</tz>, which is in the public domain. The names of states, provinces and territories, and the time zones their people use, come from <geonames>GeoNames</geonames> under <licence>CC BY 4.0</licence>, reduced to what TimeTravels needs. GeoNames provides its data as is, without warranty.',
   'about.licences':
     '<link>Licences for all the code TimeTravels includes</link>',
 } as const;
