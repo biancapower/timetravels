@@ -4,7 +4,8 @@ import { App } from '../App';
 import { named } from '../testing/named';
 
 // The full list of over 400 cities is slow to render under jsdom, enough to
-// time a test out on a busy machine, and these tests need only a few of them.
+// time a test out when the suite runs in parallel; these tests need only a
+// few zones.
 beforeEach(() => {
   vi.spyOn(Intl, 'supportedValuesOf').mockReturnValue([
     'Asia/Tokyo',
