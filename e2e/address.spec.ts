@@ -54,3 +54,34 @@ test('a reload keeps the whole question', async ({ page }) => {
     /^What time was it here 1 hour ago ?\?$/,
   );
 });
+
+test('Help sits between questions in Back, and closing it keeps the question', async ({
+  page,
+}) => {
+  await page.goto('/?in=Europe/London');
+  await heading(page).getByRole('button', { name: 'right now' }).click();
+  await page.getByRole('menuitemradio', { name: 'from now' }).click();
+  await page.getByRole('button', { name: 'Help' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'How TimeTravels works' }),
+  ).toBeVisible();
+  await expect(page).toHaveURL(
+    /\?in=Europe\/London&when=from-now&for=1h#help$/,
+  );
+
+  await page.goBack();
+  await expect(heading(page)).toHaveAccessibleName(
+    /^What time will it be in London 1 hour from now ?\?$/,
+  );
+  await page.goBack();
+  await expect(heading(page)).toHaveAccessibleName(
+    /^What time is it in London right now ?\?$/,
+  );
+
+  await page.goto('/?in=Asia/Tokyo#help');
+  await page.getByRole('button', { name: 'Close' }).click();
+  await expect(heading(page)).toHaveAccessibleName(
+    /^What time is it in Tokyo right now ?\?$/,
+  );
+  await expect(page).toHaveURL(/\?in=Asia\/Tokyo$/);
+});
