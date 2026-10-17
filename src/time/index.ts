@@ -190,12 +190,6 @@ export function readDuration(
     : { problem: 'unreadable' };
 }
 
-/** A typed duration, or null when `readDuration` finds a problem. */
-export function parseDuration(text: string): Duration | null {
-  const read = readDuration(text);
-  return 'duration' in read ? read.duration : null;
-}
-
 function exact(totalMinutes: number): { duration: Duration } | DurationProblem {
   if (totalMinutes <= 0) return { problem: 'zero' };
   if (totalMinutes >= longestMinutes) return tooManyHours;

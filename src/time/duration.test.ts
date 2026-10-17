@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { parseDuration, readDuration } from './index';
+import { readDuration } from './index';
 
 test.each([
   ['10', { hours: 10, minutes: 0 }],
@@ -37,7 +37,7 @@ test.each([
   ['1d 90m', { days: 1, hours: 1, minutes: 30 }],
   ['2h 3d', { days: 3, hours: 2, minutes: 0 }],
 ])('"%s" reads as %o', (text, expected) => {
-  expect(parseDuration(text)).toEqual(expected);
+  expect(readDuration(text)).toEqual({ duration: expected });
 });
 
 test.each([
@@ -66,7 +66,7 @@ test.each([
   '36500 days',
   '1d 1000h',
 ])('"%s" is not a duration', (text) => {
-  expect(parseDuration(text)).toBeNull();
+  expect(readDuration(text)).not.toHaveProperty('duration');
 });
 
 test('a duration that reads gives the duration', () => {
