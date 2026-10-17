@@ -152,6 +152,21 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await expectNoViolations(page);
     });
 
+    test('“at a time” here: the sentence, and whose time with no place of its own', async ({
+      page,
+    }) => {
+      await page.goto('/');
+      await slot(page, 'right now').click();
+      await page.getByRole('menuitemradio', { name: 'at a time' }).click();
+      await expect(slot(page, 'when')).toBeVisible();
+      await expectNoViolations(page);
+      await slot(page, 'here').nth(1).click();
+      await expect(
+        page.getByRole('menuitem', { name: 'another place…' }),
+      ).toBeVisible();
+      await expectNoViolations(page);
+    });
+
     test('sentence 5 with a place: whose time, and the time picker with an error', async ({
       page,
     }) => {
