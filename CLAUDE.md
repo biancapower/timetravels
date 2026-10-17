@@ -47,6 +47,7 @@ One check entrypoint: `pnpm check` (typecheck, lint, format check, unit tests, g
 ## Commits
 
 - One logical change per commit, in dependency order. The test: if this commit were reverted, would the codebase still be coherent?
+- Commit only when the check itself succeeded: `if pnpm check > check.log 2>&1; then git commit …; fi`. Chaining the commit with `;`, or after a `grep` or `tail` of the check's output, commits even when the check failed, because the exit status is the filter's.
 - Subject under 50 characters, present tense, saying why; the body carries the reasoning. No WIP commits. Never amend after pushing. Stage files by name. Never `--no-verify`.
 - Commits Claude wrote or co-wrote end with `Co-Authored-By: Claude <model> <noreply@anthropic.com>`. That trailer is the audit trail. No session links: commits carry no `Claude-Session:` trailer, and pull request descriptions carry no claude.ai session URL, even when tooling suggests one.
 - Branch names start with the number of the issue they address, a slash, then a few words: `2/time-logic`.
