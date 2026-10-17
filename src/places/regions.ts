@@ -8,8 +8,8 @@ import { cityOf, fold, type Place } from './places';
  * Countries, and the states of countries with several zones, as places:
  * "Japan", "Tasmania". One with several zones gives a place for each,
  * "Australia: Perth", so the list and the sentence say which part is meant.
- * A state named like a country, or like a place in another zone, gets its
- * country: "Georgia, United States". Country names follow the locale; only
+ * A state named like a country, a city in another zone or another state
+ * gets its country: "Georgia, United States", "La Rioja, Spain". Country names follow the locale; only
  * zones this browser knows are kept.
  */
 export function regionPlaces(
@@ -24,8 +24,9 @@ export function regionPlaces(
     return name && name !== code ? name : undefined;
   };
   const places: Place[] = [];
-  const named = new Map<string, string>();
-  for (const place of taken) named.set(fold(place.city), place.zone);
+  const cityZones = new Map<string, string>();
+  for (const place of taken) cityZones.set(fold(place.city), place.zone);
+  const named = new Map(cityZones);
   const add = (name: string, zones: string[]) => {
     for (const zone of zones) {
       const city = zones.length > 1 ? `${name}: ${zoneCity(zone)}` : name;
@@ -44,13 +45,19 @@ export function regionPlaces(
     countries.add(fold(name));
     add(name, keep(zones));
   }
-  for (const [name, code, ...rest] of data.regions) {
+  const states = data.regions.flatMap(([name, code, ...rest]) => {
     const zones = keep(rest);
-    if (!name || !code || zones.length === 0) continue;
-    const other = named.get(fold(name));
+    return name && code && zones.length > 0 ? [{ name, code, zones }] : [];
+  });
+  const stateNames = new Map<string, number>();
+  for (const { name } of states)
+    stateNames.set(fold(name), (stateNames.get(fold(name)) ?? 0) + 1);
+  for (const { name, code, zones } of states) {
+    const city = cityZones.get(fold(name));
     const clash =
       countries.has(fold(name)) ||
-      (other !== undefined && !zones.includes(other));
+      (stateNames.get(fold(name)) ?? 0) > 1 ||
+      (city !== undefined && !zones.includes(city));
     add(clash ? `${name}, ${countryName(code) ?? code}` : name, zones);
   }
   return places;

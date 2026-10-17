@@ -44,9 +44,17 @@ test('a state across several zones offers each', () => {
   ).toBeGreaterThan(1);
 });
 
-test('a state named like a country, or like a place in another zone, names its country', () => {
+test('a state named like a country, or like a city in another zone, names its country', () => {
   expect(zoneOf('Georgia')).toEqual(['Asia/Tbilisi']);
   expect(zoneOf('Georgia, United States')).toEqual(['America/New_York']);
+});
+
+test('states that share a name each name their country', () => {
+  expect(zoneOf('La Rioja')).toEqual([]);
+  expect(zoneOf('La Rioja, Spain')).toEqual(['Europe/Madrid']);
+  expect(
+    all.filter((place) => place.city === 'La Rioja, Argentina'),
+  ).toHaveLength(1);
 });
 
 test('a name already in the list for the same zone isn’t repeated', () => {
