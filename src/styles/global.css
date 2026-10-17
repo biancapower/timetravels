@@ -27,6 +27,9 @@
 
 body {
   margin: 0;
+  /* The reset's 100vh is taller than a phone's window while its address bar
+     shows; dvh tracks the window. */
+  min-height: 100dvh;
   font-family: var(--font-system-ui);
   background: var(--ground);
   color: var(--text);
