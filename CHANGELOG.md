@@ -22,7 +22,6 @@ What changed in each release of TimeTravels, newest first. Versions follow [sema
 ### Fixed
 
 - **The page no longer scrolls** when everything fits on the screen.
-- **The place pickers' hidden form fields** hold a place's name, not its stored data, and screen readers skip them.
 
 ## 0.1.0, 2026-10-11
 
