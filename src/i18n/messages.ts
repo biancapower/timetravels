@@ -115,7 +115,7 @@ const en = {
     'Your question is written as an everyday sentence, the way you’d say it out loud. The underlined words are the parts you can change: tap one, pick something else, and the answer updates straight away.',
   'help.choicesTitle': 'What you can change',
   'help.place':
-    '<b>The place</b>, “here” at first: search for a city to ask about its time. The answer gives your own time too, when the clocks differ. Your choice is remembered on this device.',
+    '<b>The place</b>, “here” at first: search for a city, country, state or province to ask about its time. The answer gives your own time too, when the clocks differ. Your choice is remembered on this device.',
   'help.named':
     '<b>Your own places</b>, in the same list: set up “Home”, or use “Name a place” to give a place a name of your own, such as “Mark’s place”, so the question reads “at Mark’s place”. Use Edit beside one to rename it, move it or remove it.',
   'help.direction':
@@ -160,6 +160,8 @@ const en = {
   'about.creditsTitle': 'Credits',
   'about.credits':
     'Built with React, react-intl, Base UI, temporal-polyfill and Open Props. The CSS reset is <reset>A (more) modern CSS reset</reset> by Andy Bell, under <licence>CC BY 3.0</licence>.',
+  'about.creditsPlaces':
+    'Countries and their time zones come from the <tz>time zone database</tz>, which is in the public domain. The names of states, provinces and territories come from <geonames>GeoNames</geonames> under <licence>CC BY 4.0</licence>, and TimeTravels works out the time zones their people use from the populations of their cities in GeoNames. GeoNames provides its data as is, without warranty.',
   'about.licences':
     '<link>Licences for all the code TimeTravels includes</link>',
 } as const;

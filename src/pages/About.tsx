@@ -68,6 +68,16 @@ export function About({ section, onClose }: AboutProps) {
       </p>
       <p>
         {intl.formatMessage(
+          { id: 'about.creditsPlaces' },
+          {
+            tz: linkTo('https://www.iana.org/time-zones'),
+            geonames: linkTo('https://www.geonames.org/'),
+            licence: linkTo('https://creativecommons.org/licenses/by/4.0/'),
+          },
+        )}
+      </p>
+      <p>
+        {intl.formatMessage(
           { id: 'about.licences' },
           { link: linkTo('third-party-licences.txt') },
         )}

@@ -3,6 +3,8 @@
 export interface Place {
   city: string;
   zone: string;
+  /** A country or state, offered once something is typed rather than in the list a picker opens with. */
+  searchOnly?: true;
 }
 
 // Zone data keeps some old spellings as the canonical id.
@@ -43,17 +45,25 @@ export function fold(text: string): string {
   return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 }
 
-/** Places whose city or zone id contains the query; cities starting with it first. */
+/**
+ * Places whose city or zone id contains the query: one named exactly first,
+ * then cities starting with it, then countries and states starting with it,
+ * then the rest. With nothing typed, the places a picker opens with.
+ */
 export function filterPlaces(places: readonly Place[], query: string): Place[] {
   const wanted = fold(query.trim());
-  if (!wanted) return [...places];
-  const starts: Place[] = [];
+  if (!wanted) return places.filter((place) => !place.searchOnly);
+  const exact: Place[] = [];
+  const cities: Place[] = [];
+  const regions: Place[] = [];
   const contains: Place[] = [];
   for (const place of places) {
     const city = fold(place.city);
-    if (city.startsWith(wanted)) starts.push(place);
+    if (city === wanted) exact.push(place);
+    else if (city.startsWith(wanted))
+      (place.searchOnly ? regions : cities).push(place);
     else if (city.includes(wanted) || fold(place.zone).includes(wanted))
       contains.push(place);
   }
-  return [...starts, ...contains];
+  return [...exact, ...cities, ...regions, ...contains];
 }

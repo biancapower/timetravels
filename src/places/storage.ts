@@ -30,16 +30,22 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 /**
  * A stored place, if it is still one of the places offered. A place whose
- * city name has changed since it was saved is found by its zone.
+ * city name has changed since it was saved is found by its zone, as a city
+ * rather than a country or state there.
  */
 function findPlace(places: readonly Place[], stored: unknown): Place | null {
   if (!isObject(stored)) return null;
   const { city, zone } = stored;
   return (
     places.find((place) => place.city === city && place.zone === zone) ??
-    places.find((place) => place.zone === zone) ??
+    places.find((place) => place.zone === zone && !place.searchOnly) ??
     null
   );
+}
+
+// Only what identifies a place is kept; the rest comes from the list again.
+function stored({ city, zone }: Place) {
+  return { city, zone };
 }
 
 /** The saved home and named places, leaving out any whose zone this browser doesn't know. */
@@ -58,7 +64,13 @@ export function loadSavedPlaces(places: readonly Place[]): SavedPlaces {
 }
 
 export function saveSavedPlaces(saved: SavedPlaces): void {
-  write(savedKey, saved);
+  write(savedKey, {
+    home: saved.home && stored(saved.home),
+    named: saved.named.map(({ name, place }) => ({
+      name,
+      place: stored(place),
+    })),
+  });
 }
 
 /** The place the sentence was last asked about, if it still exists. */
@@ -83,7 +95,7 @@ export function savePlace(where: Where | null): void {
   write(
     key,
     where?.kind === 'city'
-      ? where.place
+      ? stored(where.place)
       : where?.kind === 'home'
         ? { home: true }
         : where?.kind === 'named'
@@ -99,5 +111,5 @@ export function loadAnchorPlace(places: readonly Place[]): Place | null {
 
 /** Saves the third place, or clears it when the time is mine or the picked place's. */
 export function saveAnchorPlace(place: Place | null): void {
-  write(anchorKey, place);
+  write(anchorKey, place && stored(place));
 }

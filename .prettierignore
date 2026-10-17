@@ -1,2 +1,4 @@
 pnpm-lock.yaml
 *.md
+# Written by scripts/places-data.js, one entry per line.
+src/places/regions.json

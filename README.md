@@ -24,7 +24,7 @@ pnpm check:full  # the above plus Playwright browser tests
 
 Before the first `pnpm check:full`, install the browser once with `pnpm browsers`.
 
-The dev server does not run the service worker. To try installing the app or using it offline, build it and serve the build with `pnpm build` then `pnpm preview`. After changing the icon's SVG in `public/icons/`, regenerate its PNG sizes with `node scripts/render-icons.js`.
+The dev server does not run the service worker. To try installing the app or using it offline, build it and serve the build with `pnpm build` then `pnpm preview`. After changing the icon's SVG in `public/icons/`, regenerate its PNG sizes with `node scripts/render-icons.js`. After a time-zone database or GeoNames update, regenerate the country and state data in `src/places/regions.json` with `pnpm places-data`; it downloads the latest of both, and needs `curl`, `tar` and `unzip`.
 
 ## Stack
 

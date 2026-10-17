@@ -129,3 +129,28 @@ test('another place’s answer gives your own time, and here’s doesn’t', asy
   await page.getByRole('option', { name: 'Here', exact: true }).click();
   await expect(page.getByText(/your time$/)).toBeHidden();
 });
+
+test('a state is found by its name and reads naturally', async ({ page }) => {
+  await page.goto('/');
+  await slot(page, 'here').click();
+  await page.getByRole('combobox', { name: 'Search for a city' }).fill('tas');
+  await page.getByRole('option', { name: 'Tasmania', exact: true }).click();
+  await expect(
+    page.getByRole('heading', { name: sentenceIn('Tasmania') }),
+  ).toBeVisible();
+  await expect(page.getByText(/^Tasmania \(GMT\+1[01]\)$/)).toBeVisible();
+});
+
+test('a country with several zones offers each by name', async ({ page }) => {
+  await page.goto('/');
+  await slot(page, 'here').click();
+  await page
+    .getByRole('combobox', { name: 'Search for a city' })
+    .fill('australia');
+  await page
+    .getByRole('option', { name: 'Australia: Perth', exact: true })
+    .click();
+  await expect(
+    page.getByRole('heading', { name: sentenceIn('Australia: Perth') }),
+  ).toBeVisible();
+});

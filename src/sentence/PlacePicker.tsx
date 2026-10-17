@@ -119,7 +119,10 @@ export function PlacePicker({
   );
   const shown = useMemo<Item[]>(() => {
     const typed = fold(query.trim());
-    if (!typed) return items;
+    if (!typed)
+      return items.filter(
+        (item) => item.kind !== 'city' || !item.place.searchOnly,
+      );
     const starts = (name: string) => fold(name).startsWith(typed);
     const found: Item[] = [];
     if (starts(hereLabel)) found.push({ kind: 'here' });

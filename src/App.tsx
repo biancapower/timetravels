@@ -10,6 +10,7 @@ import { useRoute } from './pages/useRoute';
 import { aliases } from './places/aliases';
 import type { SavedPlaces, Where } from './places/named';
 import { buildPlaces, cityOf, type Place } from './places/places';
+import { regionPlaces } from './places/regions';
 import {
   loadAnchorPlace,
   loadPlace,
@@ -41,9 +42,13 @@ export function App({
   zone = Temporal.Now.timeZoneId(),
   locale = pickLocale(navigator.languages),
 }: AppProps) {
-  const [places] = useState(() =>
-    buildPlaces(Intl.supportedValuesOf('timeZone'), aliases),
-  );
+  const [places] = useState(() => {
+    const zones = Intl.supportedValuesOf('timeZone');
+    const cities = buildPlaces(zones, aliases);
+    return [...cities, ...regionPlaces(zones, locale, cities)].sort((a, b) =>
+      a.city.localeCompare(b.city),
+    );
+  });
   const [saved, setSaved] = useState(() => loadSavedPlaces(places));
   // A question in the address wins over what's saved, without changing it.
   const [opened] = useState(() =>
