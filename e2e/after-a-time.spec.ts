@@ -83,7 +83,7 @@ test('another place’s time, picked by tap or click, and remembered', async ({
   // Today is Tokyo's Saturday: 10 am there is 2 am in London; an hour on is 3 am.
   await expect(page.getByText(/^tomorrow, Saturday 3:00\sam$/)).toBeVisible();
 
-  await page.reload();
+  await page.goto('/');
   await press(heading.getByRole('button', { name: 'right now' }));
   await press(page.getByRole('menuitemradio', { name: 'after a time' }));
   await expect(heading).toHaveAccessibleName(

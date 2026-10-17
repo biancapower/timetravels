@@ -31,7 +31,7 @@ test('Tab reaches every slot of sentence 5 in reading order', async ({
       JSON.stringify({ city: 'London', zone: 'Europe/London' }),
     );
   });
-  await page.reload();
+  await page.goto('/');
   const heading = page.getByRole('heading', { level: 1 });
   await heading.getByRole('button', { name: 'right now' }).focus();
   await page.keyboard.press('Enter');
@@ -80,7 +80,7 @@ test('every slot opens with Enter and closes with Escape, returning focus', asyn
       JSON.stringify({ city: 'London', zone: 'Europe/London' }),
     );
   });
-  await page.reload();
+  await page.goto('/');
   await heading.getByRole('button', { name: 'right now' }).focus();
   await page.keyboard.press('Enter');
   await page
