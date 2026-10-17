@@ -13,9 +13,10 @@ function openPicker(slotName: string) {
   return screen.getByRole('combobox', { name: 'Search for a city' });
 }
 
-// Opening the picker mounts an option per city, which is slow under jsdom when
-// the list is over 400 long. These tests are about the picker's behaviour, not
-// the list, so they use a few zones; the last test keeps the real list.
+// The full list of over 400 cities is slow to render under jsdom, enough to
+// time a test out when the suite runs in parallel; these tests need only a
+// few zones. The test of typing "He" keeps the real list, since it looks for
+// a city beyond them.
 describe('with a short city list', () => {
   beforeEach(() => {
     vi.spyOn(Intl, 'supportedValuesOf').mockReturnValue([
