@@ -34,10 +34,37 @@ const sections = packages.map(({ name, versions, license, paths }) =>
   ].join('\n'),
 );
 
+// Data the app includes, written by scripts/places-data.js.
+const data = [
+  [
+    'GeoNames: names of states, provinces and territories',
+    'Licence: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/',
+    '',
+    'Source: GeoNames, https://www.geonames.org/, from',
+    'https://download.geonames.org/export/dump/ (admin1CodesASCII.txt and',
+    'cities1000.zip).',
+    '',
+    'Changed: reduced to the states of countries with more than one time',
+    'zone, each with the time zones that at least 1% of its people use,',
+    'worked out from the populations of its cities.',
+    '',
+    'GeoNames provides the data "as is" without warranty or any',
+    'representation of accuracy, timeliness or completeness.',
+  ].join('\n'),
+  [
+    'Time zone database: zone.tab, which countries use which time zones',
+    'Licence: public domain',
+    '',
+    'Source: https://www.iana.org/time-zones',
+  ].join('\n'),
+];
+
 writeFileSync(
   'public/third-party-licences.txt',
   [
     'TimeTravels includes the following open-source software.',
     ...sections,
+    'TimeTravels includes the following data.',
+    ...data,
   ].join(`\n\n${'-'.repeat(72)}\n\n`) + '\n',
 );

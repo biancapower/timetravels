@@ -114,6 +114,28 @@ test('home can be anywhere, not only where the device is', async () => {
   expect(await screen.findByText(/^Home \(London, GMT/)).toBeInTheDocument();
 });
 
+test('home can be a state, and is still home after a reload', async () => {
+  vi.mocked(Intl.supportedValuesOf).mockReturnValue([
+    'Australia/Hobart',
+    'Australia/Sydney',
+  ]);
+  const first = render(<App zone="Australia/Sydney" locale="en" />);
+  openPicker('here');
+  const form = await openForm(/^Home/, 'Where is home?');
+  choosePlace(form, 'tasm', 'Tasmania');
+  fireEvent.click(within(form).getByRole('button', { name: 'Save' }));
+  expect(await screen.findByText(/^Home \(Tasmania, GMT/)).toBeInTheDocument();
+  first.unmount();
+
+  render(<App zone="Australia/Sydney" locale="en" />);
+  expect(
+    screen.getByRole('heading', {
+      name: named('What time is it at home right now?'),
+    }),
+  ).toBeInTheDocument();
+  expect(screen.getByText(/^Home \(Tasmania, GMT/)).toBeInTheDocument();
+});
+
 test('the place field keeps the chosen city, and typing over it unchooses it', async () => {
   render(<App zone="Australia/Sydney" locale="en" />);
   openPicker('here');
