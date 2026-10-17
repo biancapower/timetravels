@@ -21,7 +21,7 @@ interface SentenceProps {
   /** Where home starts when it is set up. */
   homeDefault?: Place;
   anchor: AnchorSetting;
-  /** Whether the answer is in the past, which sets the verb of sentence 5. */
+  /** Whether the answer is in the past, which sets the verb of a sentence with a chosen time. */
   tense: 'past' | 'future';
   /** Whether the chosen time, or the answer, is past, which drops "it's" before it or makes it "it was". */
   anchorTense: 'past' | 'future';

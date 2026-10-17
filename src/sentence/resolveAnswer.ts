@@ -12,7 +12,7 @@ import {
 import type { Place } from '../places/places';
 import type { When } from './DirectionPicker';
 
-/** The chosen time in sentence 5: a time of day, which day, and whose time. */
+/** The chosen time for "at", "after" or "before" a time: a time of day, which day, and whose time. */
 export interface AnchorSetting {
   time: Temporal.PlainTime;
   day: AnchorDay;
