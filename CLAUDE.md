@@ -55,6 +55,7 @@ One check entrypoint: `pnpm check` (typecheck, lint, format check, unit tests, g
 ## Docs
 
 - Docs describe the current state. No roadmap narration, no "to be written", no issue numbers in code comments.
+- `CHANGELOG.md` has an Unreleased section. A pull request with a change a user would notice adds a line to it, in plain words, under Keep a Changelog's headings (decision 0016); test-only, tooling, process and dependency changes don't.
 - `README.md` holds the docs index. `docs/decisions/` holds one record per decision: context, decision, alternatives, reasons, consequences, status, with the index in its README.
 - Stack gotchas, filled in as each one bites: Node 24; ESM only (`"type": "module"`); React 19; Vite; pnpm 12 refuses packages published within about a day, so pin a version older than that rather than adding an exclusion; typescript-eslint supports TypeScript below 6.1, so TypeScript stays on 6.x until it supports 7.
 - Emoji appear only as the two decision flags. Nowhere else in code, docs or commits.
