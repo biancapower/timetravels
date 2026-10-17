@@ -79,7 +79,16 @@ export function App({
   // Each change to the question is a step for Back. Tidying the address the
   // page opened at, or one reached by Back or Forward, replaces its entry
   // rather than adding one.
-  const address = writeAddress({ where, when, duration, anchor }, zone);
+  // With no place picked, the chosen time is here's, except that "at a
+  // time" can take another place's.
+  const anchorShown =
+    place || (when === 'at' && typeof anchor.whose === 'object')
+      ? anchor
+      : { ...anchor, whose: 'mine' as const };
+  const address = writeAddress(
+    { where, when, duration, anchor: anchorShown },
+    zone,
+  );
   const replaceNext = useRef(true);
   useEffect(() => {
     if (location.search !== address) {
@@ -156,12 +165,7 @@ export function App({
   const question: Question = {
     when,
     duration,
-    // With no place picked, the chosen time is here's, except that "at a
-    // time" can take another place's.
-    anchor:
-      place || (when === 'at' && typeof anchor.whose === 'object')
-        ? anchor
-        : { ...anchor, whose: 'mine' },
+    anchor: anchorShown,
     answerZone: place?.zone ?? zone,
     deviceZone: zone,
   };

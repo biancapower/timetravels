@@ -152,3 +152,14 @@ test('a length in an “at” address is ignored, and tidied away', () => {
     '?in=Australia/Sydney&when=at&at=10:00&at-in=Europe/London',
   );
 });
+
+test('another place’s time, once left for “after a time” with no place, leaves the address too', async () => {
+  open('/?in=Australia/Sydney&when=at&at=10:00&at-in=Europe/London');
+  await choose('when', 'after a time');
+  expect(
+    await screen.findByRole('heading', {
+      name: named('What time will it be here 1 hour after it’s 10 AM?'),
+    }),
+  ).toBeInTheDocument();
+  expect(location.search).toContain('at-in=Australia/Sydney');
+});
