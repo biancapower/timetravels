@@ -4,6 +4,10 @@ What changed in each release of TimeTravels, newest first. Versions follow [sema
 
 ## Unreleased
 
+## 0.2.0, 2026-10-18
+
+The place slot grows up: places by country, state or a name of your own, lengths of days to years, a time in a third place, and the question in the address.
+
 ### Added
 
 - **Days, weeks, months and years** in the duration. "6 months from now" moves the date and keeps the clock time, using the month's last day when that day doesn't exist; hours and minutes stay exact. The common durations now include a day, a week and a month.
@@ -26,6 +30,13 @@ What changed in each release of TimeTravels, newest first. Versions follow [sema
 ### Fixed
 
 - **The page no longer scrolls** when everything fits on the screen.
+
+### What it doesn't do yet
+
+- Questions whose answer is a length of time, such as "How long until…".
+- Places for someone who doesn't know where they are: a result doesn't show where in the world it is, continents such as "Africa" and parts of countries such as "England" aren't found, and there's no map ([issues #89](https://github.com/biancapower/timetravels/issues/89) and [#90](https://github.com/biancapower/timetravels/issues/90)).
+- Languages other than English.
+- Screen-reader listening checks ([issue #42](https://github.com/biancapower/timetravels/issues/42)).
 
 ## 0.1.0, 2026-10-11
 
