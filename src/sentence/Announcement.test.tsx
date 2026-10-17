@@ -44,7 +44,10 @@ test('choosing a place announces the answer there', async () => {
     },
   );
   fireEvent.click(await screen.findByRole('option', { name: 'Tokyo' }));
-  expect(announcement()).toHaveTextContent('Tokyo (GMT+9)');
+  // Each line ends with a stop, so a screen reader pauses between them.
+  expect(announcement()).toHaveTextContent(
+    /^Saturday 8:00\sPM\. Tokyo \(GMT\+9\)\. 10:00\sPM your time\.$/i,
+  );
 });
 
 test('the announcement clears soon after, so no stale copy stays on the page', () => {

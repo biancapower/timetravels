@@ -35,7 +35,12 @@ export function LiveAnswer({
     if (announcedChoices.current === choices) return;
     announcedChoices.current = choices;
     const lines = answer.current?.querySelectorAll('p') ?? [];
-    setAnnouncement(Array.from(lines, (line) => line.textContent).join(' '));
+    // Each line ends a sentence, so a screen reader pauses between them.
+    setAnnouncement(
+      Array.from(lines, ({ textContent: text }) =>
+        /[.!?]$/.test(text) ? text : `${text}.`,
+      ).join(' '),
+    );
     // Clear it once read, so no stale copy stays for screen readers to find.
     const clear = setTimeout(() => {
       setAnnouncement('');
