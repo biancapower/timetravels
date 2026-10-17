@@ -71,17 +71,18 @@ export function App({
         },
   );
 
-  // Each change to the question is a step for Back; the first address, or
-  // tidying one that was opened, replaces the entry rather than adding one.
+  // Each change to the question is a step for Back. Tidying the address the
+  // page opened at, or one reached by Back or Forward, replaces its entry
+  // rather than adding one.
   const address = writeAddress({ where, when, duration, anchor }, zone);
-  const addressed = useRef(false);
+  const replaceNext = useRef(true);
   useEffect(() => {
     if (location.search !== address) {
       const url = location.pathname + address + location.hash;
-      if (addressed.current) history.pushState(null, '', url);
-      else history.replaceState(history.state, '', url);
+      if (replaceNext.current) history.replaceState(history.state, '', url);
+      else history.pushState(null, '', url);
     }
-    addressed.current = true;
+    replaceNext.current = false;
   }, [address]);
   useEffect(() => {
     const back = () => {
@@ -93,6 +94,15 @@ export function App({
         where,
       });
       if (!asked) return;
+      if (writeAddress(asked, zone) === address) {
+        history.replaceState(
+          history.state,
+          '',
+          location.pathname + address + location.hash,
+        );
+        return;
+      }
+      replaceNext.current = true;
       setWhere(asked.where);
       setWhen(asked.when);
       if (asked.when !== 'now') setDuration(asked.duration);

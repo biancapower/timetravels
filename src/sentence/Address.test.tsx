@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { App } from '../App';
 import { named } from '../testing/named';
@@ -74,4 +74,21 @@ test('Help and About keep their own addresses after the question', () => {
     screen.getByRole('heading', { name: 'About TimeTravels' }),
   ).toBeInTheDocument();
   expect(location.hash).toBe('#about');
+});
+
+test('arriving at an address by Back tidies it without adding a step', () => {
+  open('/');
+  // An entry the app would write differently: 600m is written as 10h.
+  history.pushState(null, '', '/?in=Europe/London&when=from-now&for=600m');
+  const steps = history.length;
+  act(() => {
+    dispatchEvent(new PopStateEvent('popstate'));
+  });
+  expect(
+    screen.getByRole('heading', {
+      name: named('What time will it be in London 10 hours from now?'),
+    }),
+  ).toBeInTheDocument();
+  expect(location.search).toBe('?in=Europe/London&when=from-now&for=10h');
+  expect(history.length).toBe(steps);
 });
