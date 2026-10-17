@@ -21,9 +21,9 @@ interface AnchorPlacePickerProps {
 }
 
 /**
- * Whose time the chosen time is: "here", say "in London" for the
- * picked place when there is one, or another place's, found with the same search as the
- * place slot.
+ * Whose time the chosen time is: "here", say "in London" for the picked
+ * place when there is one, or another place's, found with the same search
+ * as the place slot.
  */
 export function AnchorPlacePicker({
   whose,

@@ -44,8 +44,8 @@ test('"at a time" asks the time here when it’s a time in another place', async
     }),
   ).toBeInTheDocument();
 
-  // With no place picked, "here" is the only one of the place's own.
-  // The second "here" is whose time it is.
+  // The first "here" is the place; the second is whose time it is, which
+  // offers no "in <place>" while the place is here.
   fireEvent.click(
     within(heading()).getAllByRole('button', { name: 'here' })[1] as Element,
   );
