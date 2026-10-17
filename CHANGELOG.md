@@ -10,6 +10,7 @@ What changed in each release of TimeTravels, newest first. Versions follow [sema
 - **Home and your own named places,** such as "Mark's place", set up from the place picker. The question reads "at home" or "at Mark's place", and the answer names the place before its city.
 - **Another place's time to count from:** "What time will it be in London 10 hours after 3 pm in Tokyo?"
 - **A tick** beside the current choice in every picker.
+- **Your own time** under another place's answer: "Saturday 9:41 am your time", naming your day only when it differs from the place's. There's no line when both clocks read the same.
 
 ### Changed
 
