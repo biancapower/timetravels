@@ -5,7 +5,7 @@ test.use({ timezoneId: 'Australia/Sydney', locale: 'en-AU' });
 const time = (page: Page) =>
   page.getByText(/^\p{L}+,? \d{1,2}:\d{2}(\s?[ap]m)?$/iu);
 
-test('the answer sits at the foot of the screen, below the sentence', async ({
+test('the answer sits at the foot of the screen, below the sentence, with no scroll', async ({
   page,
 }) => {
   await page.goto('/');
@@ -16,6 +16,10 @@ test('the answer sits at the foot of the screen, below the sentence', async ({
   expect(heading.y).toBeLessThan(viewport.height / 4);
   expect(answer.y).toBeGreaterThan(viewport.height / 2);
   expect(answer.y + answer.height).toBeLessThanOrEqual(viewport.height);
+  const height = await page.evaluate(
+    () => document.documentElement.scrollHeight,
+  );
+  expect(height).toBeLessThanOrEqual(viewport.height);
 });
 
 test('each slot has a wavy underline', async ({ page }) => {

@@ -26,6 +26,7 @@
 }
 
 body {
+  margin: 0;
   font-family: var(--font-system-ui);
   background: var(--ground);
   color: var(--text);
