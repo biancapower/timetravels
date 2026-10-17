@@ -72,7 +72,7 @@ test('a typed duration sets the slot', async () => {
 });
 
 test.each([
-  ['banana', 'Couldn’t read that. Try 90m, 2h30 or 3 days.'],
+  ['banana', 'Couldn’t read that. Try 90m, 1h30 or 6mo.'],
   [
     '1.5 days',
     'Days, weeks, months and years take whole numbers, such as 2 days.',

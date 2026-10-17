@@ -71,7 +71,7 @@ const en = {
   'durationPicker.input': 'Type a duration',
   'durationPicker.placeholder': 'e.g. 90m, 1h30 or 6mo',
   'durationPicker.set': 'Set',
-  'durationPicker.unreadable': 'Couldn’t read that. Try 90m, 2h30 or 3 days.',
+  'durationPicker.unreadable': 'Couldn’t read that. Try 90m, 1h30 or 6mo.',
   'durationPicker.notWhole':
     'Days, weeks, months and years take whole numbers, such as 2 days.',
   'durationPicker.zero': 'Make it at least 1 minute.',
