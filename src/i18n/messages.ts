@@ -26,6 +26,7 @@ const en = {
     '{tense, select, past {What time was it} other {What time will it be}} {kind, select, home {at <place>home</place>} named {at <place>{name}</place>} other {in <place>{city}</place>}} <duration>{length}</duration> <direction>before</direction> {anchorTense, select, past {} other {it’s }}<anchor>{anchorText}</anchor> <anchorPlace>{anchorPlaceText}</anchorPlace>?',
   'answer.relativeDay': '{relativeDay}, {time}',
   'answer.named': '{name} ({city}, {offset})',
+  'answer.yourTime': '<clock>{time}</clock> your time',
   'answer.transition':
     '{city}’s clocks {tense, select, past {went} other {go}} {direction, select, forward {forward} other {back}} {amount, plural, =60 {an hour} other {# minutes}} at {time} on {date}, so {whose, select, answer {the answer} other {the time in {city}}} is {amount, plural, =60 {an hour} other {# minutes}} {shift, select, later {later} other {earlier}} than counting {count, select, back {back on} other {on}} the clock gives.',
   'answer.transitionCalendar':
@@ -114,7 +115,7 @@ const en = {
     'Your question is written as an everyday sentence, the way you’d say it out loud. The underlined words are the parts you can change: tap one, pick something else, and the answer updates straight away.',
   'help.choicesTitle': 'What you can change',
   'help.place':
-    '<b>The place</b>, “here” at first: search for a city to ask about its time. Your choice is remembered on this device.',
+    '<b>The place</b>, “here” at first: search for a city to ask about its time. The answer gives your own time too, when the clocks differ. Your choice is remembered on this device.',
   'help.named':
     '<b>Your own places</b>, in the same list: set up “Home”, or use “Name a place” to give a place a name of your own, such as “Mark’s place”, so the question reads “at Mark’s place”. Use Edit beside one to rename it, move it or remove it.',
   'help.direction':

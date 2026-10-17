@@ -108,3 +108,24 @@ test('a letter typed on the closed place slot leaves the place unchanged', async
     await page.evaluate(() => localStorage.getItem('timetravels.place')),
   ).toBeNull();
 });
+
+test('another place’s answer gives your own time, and here’s doesn’t', async ({
+  page,
+}) => {
+  // 9:41 am on Saturday 10 October 2026 in Sydney: 11:41 pm Friday in London.
+  await page.clock.install({ time: new Date('2026-10-09T22:41:00Z') });
+  await page.goto('/');
+  await expect(page.getByText(/your time$/)).toBeHidden();
+
+  await slot(page, 'here').click();
+  await page.getByRole('combobox', { name: 'Search for a city' }).fill('lond');
+  await page.getByRole('option', { name: 'London', exact: true }).click();
+  await expect(page.getByText(/^Friday 11:41\spm$/i)).toBeVisible();
+  const yours = page.getByText(/^Saturday 9:41\sam your time$/i);
+  await expect(yours).toBeVisible();
+  await expect(yours).toHaveCSS('font-style', 'italic');
+
+  await slot(page, 'London').click();
+  await page.getByRole('option', { name: 'Here', exact: true }).click();
+  await expect(page.getByText(/your time$/)).toBeHidden();
+});

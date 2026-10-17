@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import type { Where } from '../places/named';
 import { cityOf } from '../places/places';
@@ -11,6 +12,7 @@ import {
   isCalendar,
   transitionsBetween,
   zoneLabel,
+  yourTime,
   type Duration,
   type Moment,
 } from '../time';
@@ -105,12 +107,32 @@ export function Answer({
         { name, city, offset: formatOffset(moment, { locale }) },
       )
     : zoneLabel(moment, { locale, city });
+  const yours = yourTime(moment, question.deviceZone);
   return (
     <div className={styles.answer}>
       <p className={styles.time}>
         {answerTime(today, moment, locale, intl, calendar)}
       </p>
       <p className={styles.zone}>{label}</p>
+      {yours && (
+        <p className={styles.yours}>
+          {intl.formatMessage(
+            { id: 'answer.yourTime' },
+            {
+              clock: (chunks: ReactNode[]) => (
+                <span className={styles.yourClock}>{chunks}</span>
+              ),
+              time: yourClock(
+                yours.moment,
+                yours.otherDay,
+                today,
+                locale,
+                calendar || dayRelation(today, moment) === 'further',
+              ),
+            },
+          )}
+        </p>
+      )}
       {changes.map((change) => (
         <p
           key={`${change.zone}:${change.instant.toString()}`}
@@ -245,6 +267,23 @@ function answerTime(
       time,
     },
   );
+}
+
+/**
+ * The asker's own time, with their day only when it differs from the
+ * answer's, and their date when the answer gives a date.
+ */
+function yourClock(
+  yours: Moment,
+  otherDay: boolean,
+  today: Moment,
+  locale: string,
+  withDate: boolean,
+): string {
+  if (!otherDay) return yours.toLocaleString(locale, { timeStyle: 'short' });
+  return withDate
+    ? formatDateTime(yours, { locale, reference: today })
+    : formatTime(yours, { locale });
 }
 
 /** A calendar span of a week or less, with no months or years. */
