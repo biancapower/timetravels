@@ -162,7 +162,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
           JSON.stringify({ city: 'London', zone: 'Europe/London' }),
         );
       });
-      await page.reload();
+      await page.goto('/');
       await slot(page, 'right now').click();
       await page.getByRole('menuitemradio', { name: 'after a time' }).click();
       await expect(slot(page, 'here')).toBeVisible();
@@ -218,7 +218,7 @@ test('no field holds raw data, and hidden fields are hidden from assistive techn
       JSON.stringify({ city: 'London', zone: 'Europe/London' }),
     );
   });
-  await page.reload();
+  await page.goto('/');
   await expectPlainFields(['London']);
 
   await slot(page, 'London').click();

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { readDuration } from './index';
+import { readDuration, writeDuration } from './index';
 
 test.each([
   ['10', { hours: 10, minutes: 0 }],
@@ -108,3 +108,15 @@ test.each(['1.5 days', '0.5 months', '1.5w', '2 hours 1.5 years'])(
     expect(readDuration(text)).toEqual({ problem: 'notWhole' });
   },
 );
+
+test.each([
+  [{ hours: 10, minutes: 0 }, '10h'],
+  [{ hours: 1, minutes: 30 }, '1h30m'],
+  [{ hours: 0, minutes: 45 }, '45m'],
+  [{ days: 1, hours: 2, minutes: 0 }, '1d2h'],
+  [{ years: 1, months: 6, hours: 0, minutes: 0 }, '1y6mo'],
+  [{ weeks: 2, days: 3, hours: 0, minutes: 5 }, '2w3d5m'],
+])('%o is written as "%s", which reads back as itself', (duration, text) => {
+  expect(writeDuration(duration)).toBe(text);
+  expect(readDuration(text)).toEqual({ duration });
+});

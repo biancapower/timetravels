@@ -53,6 +53,7 @@ export function About({ section, onClose }: AboutProps) {
         {text('about.privacyTitle')}
       </h2>
       <p>{text('about.privacyStorage')}</p>
+      <p>{text('about.privacyAddress')}</p>
       <p>{text('about.privacyAnalytics')}</p>
 
       <h2>{text('about.creditsTitle')}</h2>

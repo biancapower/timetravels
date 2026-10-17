@@ -191,6 +191,22 @@ export function readDuration(
     : { problem: 'unreadable' };
 }
 
+/** A duration in the short form `readDuration` reads, such as "1h30m" or "1y6mo". */
+export function writeDuration(duration: Duration): string {
+  const units = [
+    [duration.years, 'y'],
+    [duration.months, 'mo'],
+    [duration.weeks, 'w'],
+    [duration.days, 'd'],
+    [duration.hours, 'h'],
+    [duration.minutes, 'm'],
+  ] as const;
+  return units
+    .filter(([amount]) => amount)
+    .map(([amount, unit]) => `${String(amount)}${unit}`)
+    .join('');
+}
+
 function exact(totalMinutes: number): { duration: Duration } | DurationProblem {
   if (totalMinutes <= 0) return { problem: 'zero' };
   if (totalMinutes >= longestMinutes) return tooManyHours;

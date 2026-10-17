@@ -42,7 +42,7 @@ test('the longest sentence fits 360 px without scrolling sideways', async ({
       JSON.stringify({ city: 'London', zone: 'Europe/London' }),
     );
   });
-  await page.reload();
+  await page.goto('/');
   const heading = page.getByRole('heading', { level: 1 });
   await heading.getByRole('button', { name: 'right now' }).click();
   await page.getByRole('menuitemradio', { name: 'after a time' }).click();
@@ -140,7 +140,7 @@ test('the open slot’s fill keeps a gap to the word before it', async ({
       JSON.stringify({ city: 'London', zone: 'Europe/London' }),
     );
   });
-  await page.reload();
+  await page.goto('/');
   const heading = page.getByRole('heading', { level: 1 });
   await heading.getByRole('button', { name: 'right now' }).click();
   await page.getByRole('menuitemradio', { name: 'after a time' }).click();

@@ -20,6 +20,7 @@ import {
   saveSavedPlaces,
 } from './places/storage';
 import type { When } from './sentence/DirectionPicker';
+import { readAddress, writeAddress } from './sentence/address';
 import { LiveAnswer } from './sentence/LiveAnswer';
 import {
   resolveAnswer,
@@ -49,14 +50,74 @@ export function App({
     );
   });
   const [saved, setSaved] = useState(() => loadSavedPlaces(places));
-  const [where, setWhere] = useState(() => loadPlace(places, saved));
+  // A question in the address wins over what's saved, without changing it.
+  const [opened] = useState(() =>
+    readAddress(location.search, {
+      places,
+      deviceZone: zone,
+      now: Temporal.Now.instant(),
+      where: loadPlace(places, saved),
+    }),
+  );
+  const [where, setWhere] = useState(() =>
+    opened ? opened.where : loadPlace(places, saved),
+  );
   const place = where?.place;
-  const [when, setWhen] = useState<When>('now');
-  const [duration, setDuration] = useState<Duration>({ hours: 1, minutes: 0 });
-  const [anchor, setAnchor] = useState<AnchorSetting>(() => ({
-    ...nextWholeHour(Temporal.Now.instant(), zone),
-    whose: loadAnchorPlace(places) ?? 'mine',
-  }));
+  const [when, setWhen] = useState<When>(opened?.when ?? 'now');
+  const [duration, setDuration] = useState<Duration>(
+    opened?.duration ?? { hours: 1, minutes: 0 },
+  );
+  const [anchor, setAnchor] = useState<AnchorSetting>(() =>
+    opened && isAnchored(opened.when)
+      ? opened.anchor
+      : {
+          ...nextWholeHour(Temporal.Now.instant(), zone),
+          whose: loadAnchorPlace(places) ?? 'mine',
+        },
+  );
+
+  // Each change to the question is a step for Back. Tidying the address the
+  // page opened at, or one reached by Back or Forward, replaces its entry
+  // rather than adding one.
+  const address = writeAddress({ where, when, duration, anchor }, zone);
+  const replaceNext = useRef(true);
+  useEffect(() => {
+    if (location.search !== address) {
+      const url = location.pathname + address + location.hash;
+      if (replaceNext.current) history.replaceState(history.state, '', url);
+      else history.pushState(null, '', url);
+    }
+    replaceNext.current = false;
+  }, [address]);
+  useEffect(() => {
+    const back = () => {
+      if (location.search === address) return;
+      const asked = readAddress(location.search, {
+        places,
+        deviceZone: zone,
+        now: Temporal.Now.instant(),
+        where,
+      });
+      if (!asked) return;
+      if (writeAddress(asked, zone) === address) {
+        history.replaceState(
+          history.state,
+          '',
+          location.pathname + address + location.hash,
+        );
+        return;
+      }
+      replaceNext.current = true;
+      setWhere(asked.where);
+      setWhen(asked.when);
+      if (asked.when !== 'now') setDuration(asked.duration);
+      if (isAnchored(asked.when)) setAnchor(asked.anchor);
+    };
+    addEventListener('popstate', back);
+    return () => {
+      removeEventListener('popstate', back);
+    };
+  }, [address, places, zone, where]);
 
   const { route, open, close } = useRoute();
   // The control on the sentence screen that opened Help, to return focus to
@@ -146,6 +207,10 @@ export function App({
       <UpdateNotice />
     </IntlProvider>
   );
+}
+
+function isAnchored(when: When): boolean {
+  return when === 'after' || when === 'before';
 }
 
 function anchorCityOf(
