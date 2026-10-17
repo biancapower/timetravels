@@ -115,7 +115,7 @@ const en = {
     'Your question is written as an everyday sentence, the way you’d say it out loud. The underlined words are the parts you can change: tap one, pick something else, and the answer updates straight away.',
   'help.choicesTitle': 'What you can change',
   'help.place':
-    '<b>The place</b>, “here” at first: search for a city to ask about its time. The answer gives your own time too, when the clocks differ. Your choice is remembered on this device.',
+    '<b>The place</b>, “here” at first: search for a city, country, state or province to ask about its time. The answer gives your own time too, when the clocks differ. Your choice is remembered on this device.',
   'help.named':
     '<b>Your own places</b>, in the same list: set up “Home”, or use “Name a place” to give a place a name of your own, such as “Mark’s place”, so the question reads “at Mark’s place”. Use Edit beside one to rename it, move it or remove it.',
   'help.direction':
