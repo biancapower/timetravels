@@ -4,7 +4,7 @@ A time calculator you ask in plain words, the way you’d ask a person.
 
 > What time will it be in **London** **10 hours** **from now**?
 
-Tap an underlined word to change it; the answer sits underneath and updates as you go. Time-zone conversion, hours from now and ago, and warnings when a daylight-saving change is about to move the goalposts. A web app you can install on your phone, which works offline.
+Tap an underlined word to change it; the answer sits underneath and updates as you go. Time-zone conversion, times from now and ago in anything from minutes to years, the time somewhere when it's a given time elsewhere, and warnings when a daylight-saving change is about to move the goalposts. A web app you can install on your phone, which works offline.
 
 **Use it:** [timetravels.dev](https://timetravels.dev), in any browser, or add it to your home screen to install it. The live site uses Cloudflare Web Analytics to count page views and measure page speed; Cloudflare says it does not collect or use visitors' personal data ([decision 0012](docs/decisions/0012-web-analytics.md)).
 
