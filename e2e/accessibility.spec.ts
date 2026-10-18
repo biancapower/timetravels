@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 test.use({ timezoneId: 'Australia/Sydney', locale: 'en-AU' });
 
-// 22:00 on Saturday 3 October 2026 in Sydney, the evening before its
+// 21:00 on Saturday 3 October 2026 in Sydney, the evening before its
 // clocks go forward, so a 10-hour answer shows the clock-change note.
 test.beforeEach(async ({ page }) => {
   await page.clock.install({ time: new Date('2026-10-03T11:00:00Z') });
