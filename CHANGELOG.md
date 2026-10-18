@@ -11,7 +11,7 @@ The place slot grows up: places by country, state or a name of your own, lengths
 ### Added
 
 - **Days, weeks, months and years** in the duration. "6 months from now" moves the date and keeps the clock time, using the month's last day when that day doesn't exist; hours and minutes stay exact. The common durations now include a day, a week and a month.
-- **Home and your own named places,** such as "Mark's place", set up from the place picker. The question reads "at home" or "at Mark's place", and the answer names the place before its city.
+- **Home and your own named places,** such as "Mark's place", set up from the place picker and saved on this device. The question reads "at home" or "at Mark's place", and the answer names the place before its city.
 - **Another place's time to count from:** "What time will it be in London 10 hours after 3 pm in Tokyo?"
 - **A tick** beside the current choice in every picker.
 - **Your own time** under another place's answer: "Saturday 9:41 am your time", naming your day only when it differs from the place's. There's no line when both clocks read the same.
