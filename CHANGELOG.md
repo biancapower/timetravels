@@ -30,6 +30,7 @@ The place slot grows up: places by country, state or a name of your own, a time 
 ### Fixed
 
 - **The page no longer scrolls** when everything fits on the screen.
+- **Screen readers read the place field's name** as the place, not as stored data.
 
 ### What it doesn't do yet
 
