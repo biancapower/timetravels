@@ -8,7 +8,7 @@ const instant = (text: string) => Temporal.Instant.from(text);
 
 test('finds a clocks-forward change inside the span', () => {
   const found = transitionsBetween(
-    instant('2026-10-03T11:00:00Z'), // 22:00 Saturday, Sydney
+    instant('2026-10-03T11:00:00Z'), // 21:00 Saturday, Sydney
     instant('2026-10-03T21:00:00Z'), // 10 hours later
     ['Australia/Sydney'],
   );
