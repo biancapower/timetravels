@@ -4,7 +4,7 @@ What changed in each release of TimeTravels, newest first. Versions follow [sema
 
 ## Unreleased
 
-## 0.2.0, 2026-10-18
+## 0.2.0, 2026-10-20
 
 The place slot grows up: places by country, state or a name of your own, a time when it's a given time somewhere else, lengths in days, weeks, months and years, a time in a third place, and the question in the address.
 
