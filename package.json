@@ -17,7 +17,7 @@
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "react-intl": "12.1.4",
-    "temporal-polyfill": "1.0.5",
+    "temporal-polyfill": "1.0.6",
     "workbox-window": "7.4.1"
   },
   "devDependencies": {
