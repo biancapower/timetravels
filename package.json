@@ -14,8 +14,8 @@
   "dependencies": {
     "@base-ui/react": "1.9.0",
     "open-props": "1.7.23",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "react-intl": "12.1.4",
     "temporal-polyfill": "1.0.5",
     "workbox-window": "7.4.1"
